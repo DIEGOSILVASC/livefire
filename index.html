@@ -1,456 +1,988 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>Live Fire Classifier</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
+/* =====================================================
+   VARIÁVEIS
+===================================================== */
+
 :root{
+
     --bg:#101010;
+
     --card:#1b1b1b;
+
     --card2:#151515;
+
     --border:#333;
+
     --red:#e50909;
+
     --red2:#ff1a1a;
+
     --white:#fff;
+
     --muted:#a7a7a7;
+
     --green:#35d07f;
+
 }
+
+
+/* =====================================================
+   RESET
+===================================================== */
 
 *{
     box-sizing:border-box;
 }
 
-body{
-    margin:0;
-    background:var(--bg);
-    color:var(--white);
-    font-family:Arial,Helvetica,sans-serif;
+
+html{
+    scroll-behavior:smooth;
 }
 
-button,input,select,textarea{
-    font:inherit;
+
+body{
+
+    margin:0;
+
+    background:var(--bg);
+
+    color:var(--white);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
 }
+
+
+button,
+input,
+select,
+textarea{
+
+    font:inherit;
+
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
 
 .container{
+
     width:min(1200px,94%);
+
     margin:auto;
+
 }
 
-/* =========================
+
+/* =====================================================
    LOGIN
-========================= */
+===================================================== */
 
 #loginScreen{
+
     min-height:100vh;
+
     display:flex;
+
     align-items:center;
+
     justify-content:center;
+
     padding:25px;
+
 }
+
 
 .login-card{
+
     width:min(500px,100%);
+
     background:var(--card);
+
     border:1px solid var(--border);
+
     border-radius:24px;
+
     padding:38px;
-    box-shadow:0 20px 60px rgba(0,0,0,.45);
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.45);
+
 }
+
 
 .logo-title{
+
     font-size:38px;
+
     font-weight:800;
+
     margin-bottom:8px;
+
 }
+
 
 .logo-title span{
+
     color:var(--red);
+
 }
+
 
 .subtitle{
+
     color:var(--muted);
+
     font-size:18px;
+
     margin-bottom:32px;
+
 }
+
 
 label{
+
     display:block;
+
     margin:18px 0 8px;
+
     font-weight:700;
+
 }
 
-input,select,textarea{
+
+input,
+select,
+textarea{
+
     width:100%;
+
     padding:14px 15px;
+
     background:#101010;
+
     color:#fff;
+
     border:1px solid #444;
+
     border-radius:10px;
+
     outline:none;
+
 }
 
-input:focus,select:focus,textarea:focus{
+
+input:focus,
+select:focus,
+textarea:focus{
+
     border-color:var(--red);
+
 }
+
 
 .btn{
+
     border:0;
+
     border-radius:10px;
+
     padding:14px 20px;
+
     cursor:pointer;
+
     font-weight:800;
+
     transition:.2s;
+
 }
+
+
+.btn:hover{
+
+    transform:translateY(-1px);
+
+}
+
 
 .btn-red{
+
     background:var(--red);
+
     color:#fff;
+
 }
+
 
 .btn-red:hover{
+
     background:var(--red2);
-    transform:translateY(-1px);
+
 }
+
 
 .btn-dark{
+
     background:#292929;
+
     color:#fff;
+
     border:1px solid #444;
+
 }
+
 
 .full{
+
     width:100%;
+
     margin-top:25px;
+
 }
+
 
 .message{
+
     margin-top:18px;
+
     padding:14px;
+
     border-radius:10px;
+
     background:#111;
+
     color:var(--muted);
+
 }
+
 
 .message.error{
+
     color:#ff6565;
+
 }
+
 
 .message.success{
+
     color:var(--green);
+
 }
 
-/* =========================
+
+/* =====================================================
    APP
-========================= */
+===================================================== */
 
 #app{
+
     display:none;
+
 }
+
 
 header{
+
     border-bottom:1px solid var(--border);
+
     background:#111;
+
     position:sticky;
+
     top:0;
+
     z-index:20;
+
 }
+
 
 .header-inner{
+
     min-height:82px;
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
+
     gap:20px;
+
 }
+
 
 .brand{
+
     font-size:24px;
+
     font-weight:900;
+
 }
+
 
 .brand span{
+
     color:var(--red);
+
 }
+
 
 .user-area{
+
     display:flex;
+
     align-items:center;
+
     gap:15px;
+
     color:var(--muted);
+
     font-size:14px;
+
 }
+
 
 .logout{
+
     padding:9px 14px;
+
     border-radius:8px;
+
     background:#222;
+
     border:1px solid #444;
+
     color:#fff;
+
     cursor:pointer;
+
 }
+
+
+/* =====================================================
+   HERO
+===================================================== */
 
 .hero{
+
     padding:45px 0 25px;
+
 }
+
 
 .hero h1{
+
     margin:0;
+
     font-size:42px;
+
 }
+
 
 .hero p{
+
     color:var(--muted);
+
     font-size:18px;
+
     margin-top:10px;
+
 }
+
+
+/* =====================================================
+   TABS
+===================================================== */
 
 .tabs{
+
     display:flex;
+
     gap:10px;
+
     margin:20px 0 30px;
+
     flex-wrap:wrap;
+
 }
+
 
 .tab{
+
     background:#1b1b1b;
+
     color:#aaa;
+
     border:1px solid #333;
+
     padding:12px 20px;
+
     border-radius:10px;
+
     cursor:pointer;
+
     font-weight:700;
+
 }
+
 
 .tab.active{
+
     background:var(--red);
+
     color:white;
+
     border-color:var(--red);
+
 }
 
-/* =========================
+
+/* =====================================================
    KPIs
-========================= */
+===================================================== */
 
 .kpis{
+
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+
+    grid-template-columns:
+        repeat(4,1fr);
+
     gap:15px;
+
     margin-bottom:30px;
+
 }
+
 
 .kpi{
+
     background:var(--card);
+
     border:1px solid var(--border);
+
     border-radius:15px;
+
     padding:22px;
+
 }
+
 
 .kpi-title{
+
     color:var(--muted);
+
     font-size:14px;
+
     text-transform:uppercase;
+
 }
+
 
 .kpi-value{
+
     font-size:32px;
+
     font-weight:900;
+
     margin-top:8px;
+
 }
 
-/* =========================
-   CARDS
-========================= */
+
+/* =====================================================
+   SECTIONS
+===================================================== */
 
 .section{
+
     background:var(--card);
+
     border:1px solid var(--border);
+
     border-radius:18px;
+
     padding:25px;
+
     margin-bottom:25px;
+
 }
+
 
 .section-header{
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
+
     gap:15px;
+
     margin-bottom:20px;
+
 }
+
 
 .section h2{
+
     margin:0;
+
 }
+
+
+/* =====================================================
+   CLASSIFIERS
+===================================================== */
 
 .classifiers{
+
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(3,1fr);
+
     gap:15px;
+
 }
+
 
 .classifier{
+
     background:#141414;
+
     border:1px solid #333;
+
     border-radius:14px;
+
     padding:20px;
+
+    display:flex;
+
+    flex-direction:column;
+
 }
+
 
 .classifier-number{
+
     color:var(--red);
+
     font-size:13px;
+
     font-weight:900;
+
 }
+
 
 .classifier h3{
+
     margin:8px 0;
+
+    font-size:22px;
+
 }
 
-.classifier p{
-    color:var(--muted);
-    font-size:14px;
+
+.classifier-type{
+
+    color:#aaa;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    margin-bottom:12px;
+
 }
 
-.classifier button{
+
+/* =====================================================
+   CLASSIFIER INFO
+===================================================== */
+
+.classifier-info{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:7px;
+
+    margin:10px 0 15px;
+
+}
+
+
+.classifier-info-item{
+
+    background:#202020;
+
+    border:1px solid #333;
+
+    border-radius:8px;
+
+    padding:8px 5px;
+
+    text-align:center;
+
+}
+
+
+.classifier-info-value{
+
+    display:block;
+
+    font-size:16px;
+
+    font-weight:900;
+
+    color:#fff;
+
+}
+
+
+.classifier-info-label{
+
+    display:block;
+
+    margin-top:3px;
+
+    font-size:10px;
+
+    color:#888;
+
+    text-transform:uppercase;
+
+}
+
+
+/* =====================================================
+   CLASSIFIER ACTIONS
+===================================================== */
+
+.classifier-actions{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:8px;
+
+    margin-top:auto;
+
+    padding-top:10px;
+
+}
+
+
+.classifier-actions .btn{
+
     width:100%;
-    margin-top:12px;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    font-size:12px;
+
+    padding:11px 8px;
+
 }
 
-/* =========================
+
+.classifier-actions .register{
+
+    grid-column:
+        1 / -1;
+
+}
+
+
+/* =====================================================
    TABLE
-========================= */
+===================================================== */
 
 .table-wrap{
+
     overflow-x:auto;
+
 }
+
 
 table{
+
     width:100%;
+
     border-collapse:collapse;
+
 }
 
-th,td{
+
+th,
+td{
+
     padding:14px 12px;
+
     border-bottom:1px solid #333;
+
     text-align:left;
+
 }
+
 
 th{
+
     color:#aaa;
+
     font-size:13px;
+
     text-transform:uppercase;
+
 }
+
 
 td{
+
     font-size:14px;
+
 }
 
-/* =========================
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.empty-state{
+
+    color:#888;
+
+    padding:20px 0;
+
+}
+
+
+/* =====================================================
    MODAL
-========================= */
+===================================================== */
 
 .modal{
+
     position:fixed;
+
     inset:0;
-    background:rgba(0,0,0,.75);
+
+    background:
+        rgba(0,0,0,.75);
+
     display:none;
+
     align-items:center;
+
     justify-content:center;
+
     padding:20px;
+
     z-index:100;
+
 }
+
 
 .modal-card{
+
     width:min(550px,100%);
+
+    max-height:
+        90vh;
+
+    overflow-y:auto;
+
     background:#1b1b1b;
+
     border:1px solid #444;
+
     border-radius:20px;
+
     padding:28px;
+
 }
+
 
 .modal-header{
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
+
 }
+
 
 .close{
+
     background:none;
+
     border:0;
+
     color:#aaa;
+
     font-size:28px;
+
     cursor:pointer;
+
 }
 
-/* =========================
+
+/* =====================================================
    RESPONSIVE
-========================= */
+===================================================== */
 
 @media(max-width:900px){
+
     .kpis{
-        grid-template-columns:repeat(2,1fr);
+
+        grid-template-columns:
+            repeat(2,1fr);
+
     }
 
+
     .classifiers{
-        grid-template-columns:repeat(2,1fr);
+
+        grid-template-columns:
+            repeat(2,1fr);
+
     }
+
 }
+
 
 @media(max-width:600px){
+
     .login-card{
+
         padding:25px;
+
     }
+
 
     .hero h1{
+
         font-size:31px;
+
     }
+
 
     .kpis{
-        grid-template-columns:1fr 1fr;
+
+        grid-template-columns:
+            1fr 1fr;
+
     }
+
 
     .classifiers{
-        grid-template-columns:1fr;
+
+        grid-template-columns:
+            1fr;
+
     }
+
 
     .header-inner{
+
         align-items:flex-start;
+
         padding:15px 0;
+
         flex-direction:column;
+
     }
 
+
     .user-area{
+
         width:100%;
+
         justify-content:space-between;
+
     }
+
+
+    .classifier-info{
+
+        grid-template-columns:
+            repeat(3,1fr);
+
+    }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
-<!-- =========================
+
+<!-- =====================================================
      LOGIN
-========================= -->
+===================================================== -->
 
 <section id="loginScreen">
 
     <div class="login-card">
 
         <div class="logo-title">
-            LIVE FIRE <span>CLASSIFIER</span>
+
+            LIVE FIRE
+            <span>CLASSIFIER</span>
+
         </div>
 
+
         <div class="subtitle">
-            Seu desempenho. Seus resultados. Sua evolução.
+
+            Seu desempenho.
+            Seus resultados.
+            Sua evolução.
+
         </div>
+
 
         <form id="loginForm">
 
-            <label>E-mail</label>
+            <label for="email">
+                E-mail
+            </label>
+
             <input
                 id="email"
                 type="email"
@@ -458,7 +990,11 @@ td{
                 autocomplete="email"
             >
 
-            <label>Senha</label>
+
+            <label for="password">
+                Senha
+            </label>
+
             <input
                 id="password"
                 type="password"
@@ -466,14 +1002,26 @@ td{
                 autocomplete="current-password"
             >
 
-            <button class="btn btn-red full" type="submit">
+
+            <button
+                class="btn btn-red full"
+                type="submit"
+            >
+
                 ENTRAR
+
             </button>
 
         </form>
 
-        <div id="loginMessage" class="message">
+
+        <div
+            id="loginMessage"
+            class="message"
+        >
+
             Aguardando login...
+
         </div>
 
     </div>
@@ -481,26 +1029,37 @@ td{
 </section>
 
 
-<!-- =========================
+
+<!-- =====================================================
      APP
-========================= -->
+===================================================== -->
 
 <div id="app">
+
 
 <header>
 
     <div class="container header-inner">
 
         <div class="brand">
-            TREINO A SECO <span>| LIVE FIRE</span>
+
+            TREINO A SECO
+            <span>| LIVE FIRE</span>
+
         </div>
+
 
         <div class="user-area">
 
             <span id="userEmail"></span>
 
-            <button class="logout" id="logoutBtn">
+            <button
+                class="logout"
+                id="logoutBtn"
+            >
+
                 Sair
+
             </button>
 
         </div>
@@ -510,89 +1069,144 @@ td{
 </header>
 
 
+
 <main class="container">
+
+
+    <!-- =================================================
+         HERO
+    ================================================== -->
 
     <section class="hero">
 
-        <h1>Live Fire Classifier</h1>
+        <h1>
+            Live Fire Classifier
+        </h1>
 
         <p>
-            Acompanhe seus resultados e sua evolução nos classifiers.
+            Acompanhe seus resultados
+            e sua evolução nos classifiers.
         </p>
 
     </section>
 
 
+
+    <!-- =================================================
+         TABS
+    ================================================== -->
+
     <div class="tabs">
 
-        <button class="tab active" data-tab="dashboard">
+        <button
+            class="tab active"
+            data-tab="dashboard"
+        >
             Dashboard
         </button>
 
-        <button class="tab" data-tab="classifiers">
+
+        <button
+            class="tab"
+            data-tab="classifiers"
+        >
             Classifiers
         </button>
 
-        <button class="tab" data-tab="history">
+
+        <button
+            class="tab"
+            data-tab="history"
+        >
             Histórico
         </button>
 
     </div>
 
 
-    <!-- DASHBOARD -->
+
+    <!-- =================================================
+         DASHBOARD
+    ================================================== -->
 
     <section id="dashboardTab">
 
+
         <div class="kpis">
 
+
             <div class="kpi">
+
                 <div class="kpi-title">
                     Resultados
                 </div>
 
-                <div class="kpi-value" id="totalResults">
+                <div
+                    class="kpi-value"
+                    id="totalResults"
+                >
                     0
                 </div>
+
             </div>
 
 
+
             <div class="kpi">
+
                 <div class="kpi-title">
                     Classifiers
                 </div>
 
-                <div class="kpi-value" id="totalClassifiers">
+                <div
+                    class="kpi-value"
+                    id="totalClassifiers"
+                >
                     0
                 </div>
+
             </div>
 
 
+
             <div class="kpi">
+
                 <div class="kpi-title">
                     Melhor Hit Factor
                 </div>
 
-                <div class="kpi-value" id="bestHF">
+                <div
+                    class="kpi-value"
+                    id="bestHF"
+                >
                     -
                 </div>
+
             </div>
 
 
+
             <div class="kpi">
+
                 <div class="kpi-title">
                     Média Hit Factor
                 </div>
 
-                <div class="kpi-value" id="averageHF">
+                <div
+                    class="kpi-value"
+                    id="averageHF"
+                >
                     -
                 </div>
+
             </div>
 
         </div>
 
 
+
         <section class="section">
+
 
             <div class="section-header">
 
@@ -600,14 +1214,19 @@ td{
                     Últimos resultados
                 </h2>
 
+
                 <button
                     class="btn btn-red"
                     id="newResultBtn"
                 >
+
                     + Novo resultado
+
                 </button>
 
             </div>
+
+
 
             <div class="table-wrap">
 
@@ -616,15 +1235,31 @@ td{
                     <thead>
 
                         <tr>
-                            <th>Data</th>
-                            <th>Classifier</th>
-                            <th>Hit Factor</th>
-                            <th>Observações</th>
+
+                            <th>
+                                Data
+                            </th>
+
+                            <th>
+                                Classifier
+                            </th>
+
+                            <th>
+                                Hit Factor
+                            </th>
+
+                            <th>
+                                Observações
+                            </th>
+
                         </tr>
 
                     </thead>
 
-                    <tbody id="resultsTable">
+
+                    <tbody
+                        id="resultsTable"
+                    >
                     </tbody>
 
                 </table>
@@ -636,11 +1271,19 @@ td{
     </section>
 
 
-    <!-- CLASSIFIERS -->
 
-    <section id="classifiersTab" style="display:none">
+    <!-- =================================================
+         CLASSIFIERS
+    ================================================== -->
+
+    <section
+        id="classifiersTab"
+        style="display:none"
+    >
+
 
         <section class="section">
+
 
             <div class="section-header">
 
@@ -648,9 +1291,12 @@ td{
                     Classifiers disponíveis
                 </h2>
 
+
                 <span id="classifierCount"></span>
 
             </div>
+
+
 
             <div
                 class="classifiers"
@@ -663,11 +1309,19 @@ td{
     </section>
 
 
-    <!-- HISTORY -->
 
-    <section id="historyTab" style="display:none">
+    <!-- =================================================
+         HISTORY
+    ================================================== -->
+
+    <section
+        id="historyTab"
+        style="display:none"
+    >
+
 
         <section class="section">
+
 
             <div class="section-header">
 
@@ -677,6 +1331,8 @@ td{
 
             </div>
 
+
+
             <div class="table-wrap">
 
                 <table>
@@ -684,15 +1340,31 @@ td{
                     <thead>
 
                         <tr>
-                            <th>Data</th>
-                            <th>Classifier</th>
-                            <th>Hit Factor</th>
-                            <th>Observações</th>
+
+                            <th>
+                                Data
+                            </th>
+
+                            <th>
+                                Classifier
+                            </th>
+
+                            <th>
+                                Hit Factor
+                            </th>
+
+                            <th>
+                                Observações
+                            </th>
+
                         </tr>
 
                     </thead>
 
-                    <tbody id="historyTable">
+
+                    <tbody
+                        id="historyTable"
+                    >
                     </tbody>
 
                 </table>
@@ -708,40 +1380,65 @@ td{
 </div>
 
 
-<!-- =========================
-     MODAL NOVO RESULTADO
-========================= -->
 
-<div class="modal" id="resultModal">
+<!-- =====================================================
+     MODAL NOVO RESULTADO
+===================================================== -->
+
+<div
+    class="modal"
+    id="resultModal"
+>
 
     <div class="modal-card">
 
+
         <div class="modal-header">
 
-            <h2>Novo resultado</h2>
+            <h2>
+                Novo resultado
+            </h2>
+
 
             <button
                 class="close"
                 id="closeModal"
+                type="button"
             >
+
                 ×
+
             </button>
 
         </div>
 
 
+
         <form id="resultForm">
 
-            <label>Classifier</label>
+
+            <label for="classifierSelect">
+                Classifier
+            </label>
+
 
             <select
                 id="classifierSelect"
                 required
             >
+
+                <option value="">
+                    Selecione...
+                </option>
+
             </select>
 
 
-            <label>Data</label>
+
+            <label for="resultDate">
+                Data
+            </label>
+
 
             <input
                 id="resultDate"
@@ -750,7 +1447,11 @@ td{
             >
 
 
-            <label>Hit Factor</label>
+
+            <label for="hitFactor">
+                Hit Factor
+            </label>
+
 
             <input
                 id="hitFactor"
@@ -761,7 +1462,11 @@ td{
             >
 
 
-            <label>Observações</label>
+
+            <label for="observations">
+                Observações
+            </label>
+
 
             <textarea
                 id="observations"
@@ -769,23 +1474,30 @@ td{
             ></textarea>
 
 
+
             <button
                 class="btn btn-red full"
                 type="submit"
             >
+
                 SALVAR RESULTADO
+
             </button>
 
         </form>
 
+
+
         <div
             id="resultMessage"
             class="message"
-        ></div>
+        >
+        </div>
 
     </div>
 
 </div>
+
 
 
 <script>
@@ -796,6 +1508,18 @@ td{
 
 const SUPABASE_URL =
     "https://pzbvaskwyjgfgclwdzbp.supabase.co";
+
+
+/*
+=========================================================
+IMPORTANTE
+
+SUBSTITUA SOMENTE O VALOR ABAIXO PELA SUA CHAVE
+PÚBLICA DO SUPABASE.
+
+NÃO ALTERE O SUPABASE_URL.
+=========================================================
+*/
 
 const SUPABASE_KEY =
     "sb_publishable_M18H8TMwBV-EeM6YMLtlbQ_pyx0u_BZ";
@@ -813,7 +1537,9 @@ const supabaseClient =
 ===================================================== */
 
 let currentUser = null;
+
 let classifiers = [];
+
 let results = [];
 
 
@@ -822,13 +1548,316 @@ let results = [];
 ===================================================== */
 
 const loginScreen =
-    document.getElementById("loginScreen");
+    document.getElementById(
+        "loginScreen"
+    );
+
 
 const app =
-    document.getElementById("app");
+    document.getElementById(
+        "app"
+    );
+
 
 const loginMessage =
-    document.getElementById("loginMessage");
+    document.getElementById(
+        "loginMessage"
+    );
+
+
+const modal =
+    document.getElementById(
+        "resultModal"
+    );
+
+
+/* =====================================================
+   DADOS OFICIAIS IPSC
+===================================================== */
+
+const IPSC_CLASSIFIERS = {
+
+
+    "CLC-01":{
+        course:"Short Course",
+        targets:2,
+        poppers:3,
+        rounds:7,
+        image:"https://drive.google.com/file/d/1lZFV8SbioN5e5noxjy9Z4lenzP3leP7x/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1M7xVvSVIzr8G4oYb9m81Y-cOAl8ZrpGt/view?usp=drive_link"
+    },
+
+
+    "CLC-03":{
+        course:"Short Course",
+        targets:2,
+        poppers:2,
+        rounds:6,
+        image:"https://drive.google.com/file/d/1hFzI6jNoIurRuI3WwbJDMVZzZv_Z06iQ/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1jlP0mBj_kFdZ0KxL1o0hVVhbuMH5Qnzr/view?usp=drive_link"
+    },
+
+
+    "CLC-05":{
+        course:"Short Course",
+        targets:3,
+        poppers:2,
+        rounds:8,
+        image:"https://drive.google.com/file/d/1fMYDdYDXeyOQwvXPR9ensSvrlzfBjN3C/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1N4ie0x2PLpXDm9xATjctzGmRcmCHdt4a/view?usp=drive_link"
+    },
+
+
+    "CLC-07":{
+        course:"Medium Course",
+        targets:5,
+        poppers:4,
+        rounds:14,
+        image:"https://drive.google.com/file/d/1vlvLOENbAWh8YEM3p1Ome2AW2oRgOIDv/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1l-JqLq5-yfH0bpK7REk7x2sCNItb3218/view?usp=drive_link"
+    },
+
+
+    "CLC-11":{
+        course:"Short Course",
+        targets:4,
+        poppers:4,
+        rounds:12,
+        image:"https://drive.google.com/file/d/1XsNfB6JaG1boDO3rITRn86iVQokYzHQ7/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1RnO7IthgmQV-UDSZ4Tg1s-iiR8ll0hRz/view?usp=drive_link"
+    },
+
+
+    "CLC-15":{
+        course:"Short Course",
+        targets:4,
+        poppers:1,
+        rounds:9,
+        image:"https://drive.google.com/file/d/1y6M7ANqicWc_OUn40Ru5bjLnOcgpE8-J/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1FrNkz5L9HW5sFtol8JYAXclE2x6IEtPR/view?usp=drive_link"
+    },
+
+
+    "CLC-19":{
+        course:"Medium Course",
+        targets:3,
+        poppers:0,
+        rounds:18,
+        image:"https://drive.google.com/file/d/1gqmAvz-_Q8BlPXLNdhq_k_O1siHgh2Jd/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/18NR-5J0pdYTmLRywukWGj2JrGe4ZIJx6/view?usp=drive_link"
+    },
+
+
+    "CLC-21":{
+        course:"Short Course",
+        targets:4,
+        poppers:4,
+        rounds:12,
+        image:"https://drive.google.com/file/d/1BE6AOBkjlft6_KtOMOagEuHN9S0lpDc8/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1EV7sWEhmECuFbRAhqgum9GriS2pzVmkT/view?usp=drive_link"
+    },
+
+
+    "CLC-25":{
+        course:"Medium Course",
+        targets:3,
+        poppers:3,
+        rounds:21,
+        image:"https://drive.google.com/file/d/1mBjqSZh9bjMoHkQ5qsOZeL3U_vx_2qUq/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1YsBt2aQeegpl-0c-Xij1Y7y0WI0iFZcS/view?usp=drive_link"
+    },
+
+
+    "CLC-31":{
+        course:"Short Course",
+        targets:2,
+        poppers:2,
+        rounds:6,
+        image:"https://drive.google.com/file/d/1U5BNhbzj9-L_2M41JlXcKfblSwdooy0t/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/12E3F4E2QifehzqXxnRe9ji0PBYTL92ZO/view?usp=drive_link"
+    },
+
+
+    "CLC-33":{
+        course:"Short Course",
+        targets:3,
+        poppers:0,
+        rounds:6,
+        image:"https://drive.google.com/file/d/1hZ_BRxceG_f2jB-iIeEXaXBl4I2CpSku/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1-dEBaLq4FTHrB4fImkQYg8iSwFKPT0jl/view?usp=drive_link"
+    },
+
+
+    "CLC-35":{
+        course:"Short Course",
+        targets:2,
+        poppers:2,
+        rounds:6,
+        image:"https://drive.google.com/file/d/1n0Km6PcABN1vJPczoDXzaap0z2MBN4Nu/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1RMhFwCu--t7v5gaorcVyVIMQkX8VHhY7/view?usp=drive_link"
+    },
+
+
+    "CLC-37":{
+        course:"Short Course",
+        targets:5,
+        poppers:2,
+        rounds:12,
+        image:"https://drive.google.com/file/d/1l-nc9Vvx4MYHbuII2Em3YeM7R8Tb_oYZ/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1TR1O2Wdu5cNsupSjMZXMbSt_zCAN1cbe/view?usp=drive_link"
+    },
+
+
+    "CLC-41":{
+        course:"Short Course",
+        targets:6,
+        poppers:0,
+        rounds:12,
+        image:"https://drive.google.com/file/d/1LJYa0zb4UGGzuMzTx3lPN2gEOr7BD9tM/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1-W5VLAjtqgNe0uoMZtlHv2z_TBCLLZBj/view?usp=drive_link"
+    },
+
+
+    "CLC-45":{
+        course:"Short Course",
+        targets:2,
+        poppers:4,
+        rounds:8,
+        image:"https://drive.google.com/file/d/1FGCTnarfZHuOYW5U7aQ4S3RJsIoJAKc5/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/16vL_Zz0KiFwxAhSss7Ev8FDkOPYGRQvP/view?usp=drive_link"
+    },
+
+
+    "CLC-47":{
+        course:"Short Course",
+        targets:2,
+        poppers:2,
+        rounds:6,
+        image:"https://drive.google.com/file/d/1R2mU27gNKecyoFDjfXgWchF89IyC0Jzp/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1gOnWlW35f8LTaaT_1tnRf77B6gSV3Zk2/view?usp=drive_link"
+    },
+
+
+    "CLC-49":{
+        course:"Medium Course",
+        targets:5,
+        poppers:4,
+        rounds:14,
+        image:"https://drive.google.com/file/d/1B_BMgXi5v4gMYqr2pjvx8ikvZUeC_Msm/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1GJVjj7fQZTKjVlM3DfrHNFm0wHISXEcE/view?usp=drive_link"
+    },
+
+
+    "CLC-51":{
+        course:"Short Course",
+        targets:3,
+        poppers:0,
+        rounds:6,
+        image:"https://drive.google.com/file/d/1e4btmC8FsKF_A-HIGLf-elfyrIMJ4ec9/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1-LtZUYcpe-ISukx4cR05QtIHKXAvxhYb/view?usp=drive_link"
+    },
+
+
+    "CLC-53":{
+        course:"Medium Course",
+        targets:4,
+        poppers:6,
+        rounds:14,
+        image:"https://drive.google.com/file/d/1LmGBxwX3NM_WG41i1_DDW3Y7PvBPogmE/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/10arCZ-ZUeFJ4kmS_sRbjs9kZgxZETSMw/view?usp=drive_link"
+    },
+
+
+    "CLC-55":{
+        course:"Short Course",
+        targets:5,
+        poppers:2,
+        rounds:12,
+        image:"https://drive.google.com/file/d/1WPsCR0HyfU6VJma5sdMtRj68O5JyZais/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1QdSFCqNkRoYZA9AJd-gmFxJWIr0Jvy6j/view?usp=drive_link"
+    },
+
+
+    "CLC-57":{
+        course:"Short Course",
+        targets:5,
+        poppers:2,
+        rounds:12,
+        image:"https://drive.google.com/file/d/1jqtflNbtAgq56Eh85pBwyNntwxPwwvrF/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1Y_g6Ae0H2zJqkkxRevpabne3hK61YbUx/view?usp=drive_link"
+    },
+
+
+    "CLC-59":{
+        course:"Short Course",
+        targets:6,
+        poppers:0,
+        rounds:12,
+        image:"https://drive.google.com/file/d/1nHjlx4QXcBvTsYPnqesAM6ao9TajDs3w/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1zt9YuwO0yxZ1FH8_-ovNwZlSsafbl1Da/view?usp=drive_link"
+    },
+
+
+    "CLC-63":{
+        course:"Medium Course",
+        targets:7,
+        poppers:2,
+        rounds:16,
+        image:"https://drive.google.com/file/d/1kkBAJGAAqb2q03pn1C9stHSjni0A3e3f/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1Cv6cfkvtDGD_2AOaW4gvTPyV3zJfJ5AY/view?usp=drive_link"
+    },
+
+
+    "CLC-65":{
+        course:"Short Course",
+        targets:1,
+        poppers:4,
+        rounds:6,
+        image:"https://drive.google.com/file/d/10pmoFakgPQ3HLQW6pP91ZngTZ0R0ZGbL/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1uJoQakTGYxF-P34jrrlPvq2tU9AcEh6j/view?usp=drive_link"
+    },
+
+
+    "CLC-67":{
+        course:"Short Course",
+        targets:6,
+        poppers:0,
+        rounds:12,
+        image:"https://drive.google.com/file/d/18F0JHTqVxkm2ES6MydhZE9vxJsM2tUoi/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/13_w9X3tL1g3FYp6c7WGcmVbcKj6KDReO/view?usp=drive_link"
+    },
+
+
+    "CLC-69":{
+        course:"Medium Course",
+        targets:3,
+        poppers:0,
+        rounds:24,
+        image:"https://drive.google.com/file/d/1h5Lxmc4VtXTbZee3JF9Kkkz_uFknGbMv/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1Binl3nIAKQVkt0tl19T42w6fvM7hTMr_/view?usp=drive_link"
+    },
+
+
+    "CLC-71":{
+        course:"Short Course",
+        targets:3,
+        poppers:2,
+        rounds:8,
+        image:"https://drive.google.com/file/d/1dId_WEvpVSQ3SScnTBUvYABD19CtnJRW/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1RY6hns9teolJOTv-UDD_7f0Jw8Yx4buM/view?usp=drive_link"
+    },
+
+
+    "CLC-73":{
+        course:"Short Course",
+        targets:2,
+        poppers:2,
+        rounds:6,
+        image:"https://drive.google.com/file/d/1qYEXMaUyxyezxR5891-7VNTlzBJKnMpd/view?usp=drive_link",
+        document:"https://drive.google.com/file/d/1ZL9zszWNzS0C8J0KUjRRDuQXaHzjtKmw/view?usp=drive_link"
+    }
+
+};
 
 
 /* =====================================================
@@ -836,47 +1865,91 @@ const loginMessage =
 ===================================================== */
 
 document
-.getElementById("loginForm")
-.addEventListener("submit", async function(e){
+    .getElementById("loginForm")
+    .addEventListener(
+        "submit",
+        async function(e){
 
-    e.preventDefault();
-
-    loginMessage.className = "message";
-    loginMessage.textContent = "Entrando...";
-
-    const email =
-        document.getElementById("email").value.trim();
-
-    const password =
-        document.getElementById("password").value;
+            e.preventDefault();
 
 
-    const { data, error } =
-        await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-        });
+            loginMessage.className =
+                "message";
 
 
-    if(error){
-
-        console.error(error);
-
-        loginMessage.className =
-            "message error";
-
-        loginMessage.textContent =
-            "Erro ao entrar: " + error.message;
-
-        return;
-    }
+            loginMessage.textContent =
+                "Entrando...";
 
 
-    currentUser = data.user;
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
 
-    await showApp();
 
-});
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
+
+
+            try{
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient
+                        .auth
+                        .signInWithPassword({
+
+                            email,
+                            password
+
+                        });
+
+
+                if(error)
+                    throw error;
+
+
+                currentUser =
+                    data.user;
+
+
+                loginMessage.className =
+                    "message success";
+
+
+                loginMessage.textContent =
+                    "Login realizado com sucesso!";
+
+
+                await showApp();
+
+            }
+
+            catch(error){
+
+                console.error(
+                    "Erro de login:",
+                    error
+                );
+
+
+                loginMessage.className =
+                    "message error";
+
+
+                loginMessage.textContent =
+                    "Erro ao entrar: "
+                    + error.message;
+
+            }
+
+        }
+    );
 
 
 /* =====================================================
@@ -884,17 +1957,28 @@ document
 ===================================================== */
 
 document
-.getElementById("logoutBtn")
-.addEventListener("click", async function(){
+    .getElementById("logoutBtn")
+    .addEventListener(
+        "click",
+        async function(){
 
-    await supabaseClient.auth.signOut();
+            await supabaseClient
+                .auth
+                .signOut();
 
-    currentUser = null;
 
-    app.style.display = "none";
-    loginScreen.style.display = "flex";
+            currentUser = null;
 
-});
+
+            app.style.display =
+                "none";
+
+
+            loginScreen.style.display =
+                "flex";
+
+        }
+    );
 
 
 /* =====================================================
@@ -903,18 +1987,39 @@ document
 
 async function init(){
 
-    const {
-        data: {
-            session
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .auth
+                .getSession();
+
+
+        if(error)
+            throw error;
+
+
+        if(data.session){
+
+            currentUser =
+                data.session.user;
+
+
+            await showApp();
+
         }
-    } = await supabaseClient.auth.getSession();
 
+    }
 
-    if(session){
+    catch(error){
 
-        currentUser = session.user;
-
-        await showApp();
+        console.error(
+            "Erro ao iniciar:",
+            error
+        );
 
     }
 
@@ -927,64 +2032,23 @@ async function init(){
 
 async function showApp(){
 
-    loginScreen.style.display = "none";
+    loginScreen.style.display =
+        "none";
 
-    app.style.display = "block";
 
-    document.getElementById("userEmail")
-        .textContent = currentUser.email;
+    app.style.display =
+        "block";
+
+
+    document
+        .getElementById("userEmail")
+        .textContent =
+            currentUser.email;
 
 
     await loadClassifiers();
 
     await loadResults();
-
-}
-
-
-/* =====================================================
-   CLASSIFIERS
-===================================================== */
-
-async function loadClassifiers(){
-
-    const {
-        data,
-        error
-    } = await supabaseClient
-        .from("classifiers")
-        .select("*")
-        .order("id");
-
-
-    if(error){
-
-        console.error(error);
-
-        alert(
-            "Erro ao carregar classifiers: "
-            + error.message
-        );
-
-        return;
-    }
-
-
-    classifiers = data || [];
-
-    document.getElementById(
-        "totalClassifiers"
-    ).textContent = classifiers.length;
-
-    document.getElementById(
-        "classifierCount"
-    ).textContent =
-        classifiers.length + " classifiers";
-
-
-    renderClassifiers();
-
-    populateClassifierSelect();
 
 }
 
@@ -996,13 +2060,162 @@ async function loadClassifiers(){
 function classifierName(item){
 
     return (
+
         item.name ||
+
         item.title ||
+
         item.classifier_name ||
+
         item.classifier ||
+
         item.description ||
+
         "Classifier"
+
     );
+
+}
+
+
+/* =====================================================
+   IDENTIFICAR CÓDIGO CLC
+===================================================== */
+
+function getClassifierCode(item){
+
+    const text =
+        classifierName(item)
+            .toUpperCase();
+
+
+    const match =
+        text.match(
+            /CLC-\d+/i
+        );
+
+
+    return match
+        ? match[0].toUpperCase()
+        : null;
+
+}
+
+
+/* =====================================================
+   CARREGAR CLASSIFIERS
+===================================================== */
+
+async function loadClassifiers(){
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+
+            .from("classifiers")
+
+            .select("*");
+
+
+    if(error){
+
+        console.error(
+            "Erro ao carregar classifiers:",
+            error
+        );
+
+
+        alert(
+            "Erro ao carregar classifiers: "
+            + error.message
+        );
+
+
+        return;
+
+    }
+
+
+    classifiers =
+        (data || [])
+            .map(item => {
+
+                const code =
+                    getClassifierCode(item);
+
+
+                return {
+
+                    ...item,
+
+                    officialCode:
+                        code,
+
+                    official:
+                        code
+                            ? IPSC_CLASSIFIERS[code]
+                            : null
+
+                };
+
+            });
+
+
+    /*
+    =====================================================
+    ORDENA PELO CÓDIGO CLC
+    =====================================================
+    */
+
+    classifiers.sort(
+        (a,b) => {
+
+            const aNum =
+                a.officialCode
+                    ? Number(
+                        a.officialCode
+                            .replace("CLC-","")
+                    )
+                    : 9999;
+
+
+            const bNum =
+                b.officialCode
+                    ? Number(
+                        b.officialCode
+                            .replace("CLC-","")
+                    )
+                    : 9999;
+
+
+            return aNum - bNum;
+
+        }
+    );
+
+
+    document
+        .getElementById(
+            "totalClassifiers"
+        )
+        .textContent =
+            classifiers.length;
+
+
+    document
+        .getElementById(
+            "classifierCount"
+        )
+        .textContent =
+            classifiers.length
+            + " classifiers";
+
+
+    renderClassifiers();
+
+    populateClassifierSelect();
 
 }
 
@@ -1014,46 +2227,255 @@ function classifierName(item){
 function renderClassifiers(){
 
     const grid =
-        document.getElementById(
-            "classifiersGrid"
-        );
+        document
+            .getElementById(
+                "classifiersGrid"
+            );
+
 
     grid.innerHTML = "";
 
 
-    classifiers.forEach((item,index)=>{
+    if(!classifiers.length){
 
-        const card =
-            document.createElement("div");
+        grid.innerHTML = `
 
-        card.className = "classifier";
+            <div class="empty-state">
 
-        card.innerHTML = `
+                Nenhum classifier
+                encontrado no Supabase.
 
-            <div class="classifier-number">
-                CLASSIFIER ${String(index+1).padStart(2,"0")}
             </div>
-
-            <h3>
-                ${escapeHTML(classifierName(item))}
-            </h3>
-
-            <p>
-                Registre seu resultado e acompanhe sua evolução.
-            </p>
-
-            <button
-                class="btn btn-red"
-                onclick="openResultForClassifier('${item.id}')"
-            >
-                REGISTRAR RESULTADO
-            </button>
 
         `;
 
-        grid.appendChild(card);
+        return;
 
-    });
+    }
+
+
+    classifiers.forEach(
+        (item,index)=>{
+
+
+            const official =
+                item.official;
+
+
+            const code =
+                item.officialCode
+                || classifierName(item);
+
+
+            const card =
+                document
+                    .createElement("div");
+
+
+            card.className =
+                "classifier";
+
+
+            const course =
+                official
+                    ? official.course
+                    : "Classifier";
+
+
+            const targets =
+                official
+                    ? official.targets
+                    : "-";
+
+
+            const poppers =
+                official
+                    ? official.poppers
+                    : "-";
+
+
+            const rounds =
+                official
+                    ? official.rounds
+                    : "-";
+
+
+            card.innerHTML = `
+
+                <div class="classifier-number">
+
+                    CLASSIFIER
+                    ${String(index+1)
+                        .padStart(2,"0")}
+
+                </div>
+
+
+                <h3>
+
+                    ${escapeHTML(code)}
+
+                </h3>
+
+
+                <div class="classifier-type">
+
+                    ${escapeHTML(course)}
+
+                </div>
+
+
+                <div class="classifier-info">
+
+
+                    <div
+                        class="classifier-info-item"
+                    >
+
+                        <span
+                            class="classifier-info-value"
+                        >
+                            ${targets}
+                        </span>
+
+                        <span
+                            class="classifier-info-label"
+                        >
+                            Targets
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="classifier-info-item"
+                    >
+
+                        <span
+                            class="classifier-info-value"
+                        >
+                            ${poppers}
+                        </span>
+
+                        <span
+                            class="classifier-info-label"
+                        >
+                            Poppers
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="classifier-info-item"
+                    >
+
+                        <span
+                            class="classifier-info-value"
+                        >
+                            ${rounds}
+                        </span>
+
+                        <span
+                            class="classifier-info-label"
+                        >
+                            Rounds
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="classifier-actions">
+
+
+                    ${
+                        official
+                        ? `
+
+                            <a
+                                class="btn btn-dark"
+                                href="${official.image}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                DIAGRAMA
+                            </a>
+
+
+                            <a
+                                class="btn btn-dark"
+                                href="${official.document}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                PDF OFICIAL
+                            </a>
+
+                        `
+                        : `
+
+                            <div></div>
+
+                            <div></div>
+
+                        `
+                    }
+
+
+                    <button
+                        class="
+                            btn
+                            btn-red
+                            register
+                            classifier-register
+                        "
+                        type="button"
+                        data-id="${escapeHTML(item.id)}"
+                    >
+
+                        REGISTRAR RESULTADO
+
+                    </button>
+
+
+                </div>
+
+            `;
+
+
+            grid.appendChild(card);
+
+        }
+    );
+
+
+    /*
+    =====================================================
+    BOTÕES REGISTRAR RESULTADO
+    =====================================================
+    */
+
+    document
+        .querySelectorAll(
+            ".classifier-register"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function(){
+
+                    openResultForClassifier(
+                        this.dataset.id
+                    );
+
+                }
+            );
+
+        });
 
 }
 
@@ -1065,25 +2487,43 @@ function renderClassifiers(){
 function populateClassifierSelect(){
 
     const select =
-        document.getElementById(
-            "classifierSelect"
-        );
-
-    select.innerHTML =
-        `<option value="">Selecione...</option>`;
+        document
+            .getElementById(
+                "classifierSelect"
+            );
 
 
-    classifiers.forEach(item=>{
+    select.innerHTML = `
+
+        <option value="">
+
+            Selecione...
+
+        </option>
+
+    `;
+
+
+    classifiers.forEach(item => {
 
         const option =
-            document.createElement("option");
+            document.createElement(
+                "option"
+            );
 
-        option.value = item.id;
+
+        option.value =
+            item.id;
+
 
         option.textContent =
-            classifierName(item);
+            item.officialCode
+            || classifierName(item);
 
-        select.appendChild(option);
+
+        select.appendChild(
+            option
+        );
 
     });
 
@@ -1096,35 +2536,55 @@ function populateClassifierSelect(){
 
 async function loadResults(){
 
-    if(!currentUser) return;
+    if(!currentUser)
+        return;
 
 
     const {
         data,
         error
-    } = await supabaseClient
-        .from("training_results")
-        .select("*")
-        .eq("user_id", currentUser.id)
-        .order("date", {
-            ascending:false
-        });
+    } =
+        await supabaseClient
+
+            .from("training_results")
+
+            .select("*")
+
+            .eq(
+                "user_id",
+                currentUser.id
+            )
+
+            .order(
+                "date",
+                {
+                    ascending:false
+                }
+            );
 
 
     if(error){
 
-        console.error(error);
+        console.error(
+            "Erro ao carregar resultados:",
+            error
+        );
+
 
         alert(
             "Erro ao carregar resultados: "
             + error.message
         );
 
+
         return;
+
     }
 
 
-    results = data || [];
+    results =
+        data || [];
+
 
     updateKPIs();
 
@@ -1139,50 +2599,80 @@ async function loadResults(){
 
 function updateKPIs(){
 
-    document.getElementById(
-        "totalResults"
-    ).textContent = results.length;
+    document
+        .getElementById(
+            "totalResults"
+        )
+        .textContent =
+            results.length;
 
 
     const values =
         results
-            .map(r => Number(r.hit_factor))
-            .filter(v => Number.isFinite(v));
+
+            .map(
+                r =>
+                    Number(
+                        r.hit_factor
+                    )
+            )
+
+            .filter(
+                v =>
+                    Number.isFinite(v)
+            );
 
 
     if(!values.length){
 
-        document.getElementById(
-            "bestHF"
-        ).textContent = "-";
+        document
+            .getElementById(
+                "bestHF"
+            )
+            .textContent =
+                "-";
 
-        document.getElementById(
-            "averageHF"
-        ).textContent = "-";
+
+        document
+            .getElementById(
+                "averageHF"
+            )
+            .textContent =
+                "-";
+
 
         return;
+
     }
 
 
     const best =
         Math.max(...values);
 
+
     const average =
         values.reduce(
-            (a,b)=>a+b,0
-        ) / values.length;
+            (a,b) =>
+                a + b,
+            0
+        )
+        / values.length;
 
 
-    document.getElementById(
-        "bestHF"
-    ).textContent =
-        best.toFixed(3);
+    document
+        .getElementById(
+            "bestHF"
+        )
+        .textContent =
+            best.toFixed(3);
 
 
-    document.getElementById(
-        "averageHF"
-    ).textContent =
-        average.toFixed(3);
+    document
+        .getElementById(
+            "averageHF"
+        )
+        .textContent =
+            average.toFixed(3);
 
 }
 
@@ -1194,50 +2684,86 @@ function updateKPIs(){
 function renderResults(){
 
     const table =
-        document.getElementById(
-            "resultsTable"
-        );
+        document
+            .getElementById(
+                "resultsTable"
+            );
+
 
     const history =
-        document.getElementById(
-            "historyTable"
-        );
+        document
+            .getElementById(
+                "historyTable"
+            );
 
 
-    table.innerHTML = "";
-    history.innerHTML = "";
+    table.innerHTML =
+        "";
 
 
-    results.forEach(result=>{
+    history.innerHTML =
+        "";
+
+
+    results.forEach(result => {
+
 
         const classifier =
             classifiers.find(
-                c => c.id === result.classifier_id
+                c =>
+                    c.id ===
+                    result.classifier_id
             );
 
 
         const name =
             classifier
-            ? classifierName(classifier)
+
+            ? (
+                classifier.officialCode
+                || classifierName(
+                    classifier
+                )
+            )
+
             : "Classifier";
 
 
         const date =
             result.date
-            ? formatDate(result.date)
+
+            ? formatDate(
+                result.date
+            )
+
             : "-";
 
 
         const hitFactor =
-            result.hit_factor !== null &&
+
+            result.hit_factor !== null
+            &&
             result.hit_factor !== undefined
-            ? Number(result.hit_factor).toFixed(3)
-            : "-";
+
+            ?
+
+            Number(
+                result.hit_factor
+            ).toFixed(3)
+
+            :
+
+            "-";
 
 
         const observations =
-            result.observations ||
-            result.observation ||
+
+            result.observations
+            ||
+
+            result.observation
+            ||
+
             "-";
 
 
@@ -1245,17 +2771,24 @@ function renderResults(){
 
             <tr>
 
-                <td>${date}</td>
+                <td>
+                    ${escapeHTML(date)}
+                </td>
+
 
                 <td>
                     ${escapeHTML(name)}
                 </td>
 
+
                 <td>
+
                     <strong>
-                        ${hitFactor}
+                        ${escapeHTML(hitFactor)}
                     </strong>
+
                 </td>
+
 
                 <td>
                     ${escapeHTML(observations)}
@@ -1266,9 +2799,12 @@ function renderResults(){
         `;
 
 
-        table.innerHTML += row;
+        table.innerHTML +=
+            row;
 
-        history.innerHTML += row;
+
+        history.innerHTML +=
+            row;
 
     });
 
@@ -1278,15 +2814,28 @@ function renderResults(){
         const empty = `
 
             <tr>
-                <td colspan="4">
-                    Nenhum resultado registrado ainda.
+
+                <td
+                    colspan="4"
+                    class="empty-state"
+                >
+
+                    Nenhum resultado
+                    registrado ainda.
+
                 </td>
+
             </tr>
 
         `;
 
-        table.innerHTML = empty;
-        history.innerHTML = empty;
+
+        table.innerHTML =
+            empty;
+
+
+        history.innerHTML =
+            empty;
 
     }
 
@@ -1294,57 +2843,111 @@ function renderResults(){
 
 
 /* =====================================================
-   MODAL
+   ABRIR MODAL
 ===================================================== */
 
-const modal =
-    document.getElementById(
-        "resultModal"
+document
+    .getElementById(
+        "newResultBtn"
+    )
+    .addEventListener(
+        "click",
+        function(){
+
+            openResultModal();
+
+        }
     );
 
 
 document
-.getElementById("newResultBtn")
-.addEventListener("click", function(){
+    .getElementById(
+        "closeModal"
+    )
+    .addEventListener(
+        "click",
+        function(){
 
-    openResultModal();
+            closeResultModal();
 
-});
-
-
-document
-.getElementById("closeModal")
-.addEventListener("click", function(){
-
-    modal.style.display = "none";
-
-});
+        }
+    );
 
 
-function openResultModal(classifierId=null){
+/* =====================================================
+   FECHAR MODAL CLICANDO FORA
+===================================================== */
 
-    modal.style.display = "flex";
+modal.addEventListener(
+    "click",
+    function(e){
 
-    document.getElementById(
-        "resultMessage"
-    ).textContent = "";
+        if(e.target === modal){
+
+            closeResultModal();
+
+        }
+
+    }
+);
 
 
-    document.getElementById(
-        "resultDate"
-    ).value =
-        new Date()
-        .toISOString()
-        .slice(0,10);
+/* =====================================================
+   OPEN RESULT MODAL
+===================================================== */
+
+function openResultModal(
+    classifierId = null
+){
+
+    modal.style.display =
+        "flex";
 
 
-    document.getElementById(
-        "classifierSelect"
-    ).value =
-        classifierId || "";
+    document
+        .getElementById(
+            "resultMessage"
+        )
+        .className =
+            "message";
+
+
+    document
+        .getElementById(
+            "resultMessage"
+        )
+        .textContent =
+            "";
+
+
+    document
+        .getElementById(
+            "resultForm"
+        )
+        .reset();
+
+
+    document
+        .getElementById(
+            "resultDate"
+        )
+        .value =
+            getToday();
+
+
+    document
+        .getElementById(
+            "classifierSelect"
+        )
+        .value =
+            classifierId || "";
 
 }
 
+
+/* =====================================================
+   OPEN RESULT FOR CLASSIFIER
+===================================================== */
 
 function openResultForClassifier(id){
 
@@ -1354,120 +2957,250 @@ function openResultForClassifier(id){
 
 
 /* =====================================================
+   CLOSE MODAL
+===================================================== */
+
+function closeResultModal(){
+
+    modal.style.display =
+        "none";
+
+}
+
+
+/* =====================================================
    SALVAR RESULTADO
 ===================================================== */
 
 document
-.getElementById("resultForm")
-.addEventListener("submit", async function(e){
+    .getElementById(
+        "resultForm"
+    )
+    .addEventListener(
+        "submit",
+        async function(e){
 
-    e.preventDefault();
-
-
-    const classifierId =
-        document.getElementById(
-            "classifierSelect"
-        ).value;
+            e.preventDefault();
 
 
-    const date =
-        document.getElementById(
-            "resultDate"
-        ).value;
+            if(!currentUser){
+
+                showResultError(
+                    "Usuário não autenticado."
+                );
+
+                return;
+
+            }
 
 
-    const hitFactor =
-        Number(
-            document.getElementById(
-                "hitFactor"
-            ).value
-        );
+            const classifierId =
+                document
+                    .getElementById(
+                        "classifierSelect"
+                    )
+                    .value;
 
 
-    const observations =
-        document.getElementById(
-            "observations"
-        ).value.trim();
+            const date =
+                document
+                    .getElementById(
+                        "resultDate"
+                    )
+                    .value;
 
 
-    if(!classifierId){
-
-        alert("Selecione um classifier.");
-
-        return;
-
-    }
-
-
-    const {
-        error
-    } = await supabaseClient
-        .from("training_results")
-        .insert({
-
-            classifier_id:
-                classifierId,
-
-            user_id:
-                currentUser.id,
-
-            date:
-                date,
-
-            hit_factor:
-                hitFactor,
-
-            observations:
-                observations || null
-
-        });
+            const hitFactor =
+                Number(
+                    document
+                        .getElementById(
+                            "hitFactor"
+                        )
+                        .value
+                );
 
 
-    if(error){
-
-        console.error(error);
-
-        document.getElementById(
-            "resultMessage"
-        ).className =
-            "message error";
-
-        document.getElementById(
-            "resultMessage"
-        ).textContent =
-            "Erro ao salvar: "
-            + error.message;
-
-        return;
-
-    }
+            const observations =
+                document
+                    .getElementById(
+                        "observations"
+                    )
+                    .value
+                    .trim();
 
 
-    document.getElementById(
-        "resultMessage"
-    ).className =
-        "message success";
+            if(!classifierId){
 
-    document.getElementById(
-        "resultMessage"
-    ).textContent =
-        "Resultado salvo com sucesso!";
+                showResultError(
+                    "Selecione um classifier."
+                );
 
+                return;
 
-    document
-        .getElementById("resultForm")
-        .reset();
+            }
 
 
-    setTimeout(async()=>{
+            if(!date){
 
-        modal.style.display = "none";
+                showResultError(
+                    "Informe a data."
+                );
 
-        await loadResults();
+                return;
 
-    },700);
+            }
 
-});
+
+            if(
+                !Number.isFinite(
+                    hitFactor
+                )
+                ||
+                hitFactor < 0
+            ){
+
+                showResultError(
+                    "Informe um Hit Factor válido."
+                );
+
+                return;
+
+            }
+
+
+            const saveButton =
+                this.querySelector(
+                    'button[type="submit"]'
+                );
+
+
+            saveButton.disabled =
+                true;
+
+
+            saveButton.textContent =
+                "SALVANDO...";
+
+
+            try{
+
+
+                const {
+                    error
+                } =
+
+                    await supabaseClient
+
+                        .from(
+                            "training_results"
+                        )
+
+                        .insert({
+
+                            classifier_id:
+                                classifierId,
+
+                            user_id:
+                                currentUser.id,
+
+                            date:
+                                date,
+
+                            hit_factor:
+                                hitFactor,
+
+                            observations:
+                                observations
+                                || null
+
+                        });
+
+
+                if(error)
+                    throw error;
+
+
+                const resultMessage =
+                    document
+                        .getElementById(
+                            "resultMessage"
+                        );
+
+
+                resultMessage.className =
+                    "message success";
+
+
+                resultMessage.textContent =
+                    "Resultado salvo com sucesso!";
+
+
+                await loadResults();
+
+
+                setTimeout(
+                    function(){
+
+                        closeResultModal();
+
+                    },
+                    700
+                );
+
+
+            }
+
+            catch(error){
+
+                console.error(
+                    "Erro ao salvar resultado:",
+                    error
+                );
+
+
+                showResultError(
+                    "Erro ao salvar: "
+                    + error.message
+                );
+
+            }
+
+            finally{
+
+                saveButton.disabled =
+                    false;
+
+
+                saveButton.textContent =
+                    "SALVAR RESULTADO";
+
+            }
+
+        }
+    );
+
+
+/* =====================================================
+   MENSAGEM DE ERRO
+===================================================== */
+
+function showResultError(message){
+
+    const element =
+        document
+            .getElementById(
+                "resultMessage"
+            );
+
+
+    element.className =
+        "message error";
+
+
+    element.textContent =
+        message;
+
+}
 
 
 /* =====================================================
@@ -1475,76 +3208,226 @@ document
 ===================================================== */
 
 document
-.querySelectorAll(".tab")
-.forEach(tab=>{
+    .querySelectorAll(".tab")
+    .forEach(tab => {
 
-    tab.addEventListener("click",function(){
+        tab.addEventListener(
+            "click",
+            function(){
 
-        document
-            .querySelectorAll(".tab")
-            .forEach(t =>
-                t.classList.remove("active")
-            );
-
-
-        this.classList.add("active");
-
-
-        document.getElementById(
-            "dashboardTab"
-        ).style.display =
-            this.dataset.tab === "dashboard"
-            ? "block"
-            : "none";
+                document
+                    .querySelectorAll(
+                        ".tab"
+                    )
+                    .forEach(t =>
+                        t.classList.remove(
+                            "active"
+                        )
+                    );
 
 
-        document.getElementById(
-            "classifiersTab"
-        ).style.display =
-            this.dataset.tab === "classifiers"
-            ? "block"
-            : "none";
+                this.classList.add(
+                    "active"
+                );
 
 
-        document.getElementById(
-            "historyTab"
-        ).style.display =
-            this.dataset.tab === "history"
-            ? "block"
-            : "none";
+                const selected =
+                    this.dataset.tab;
+
+
+                document
+                    .getElementById(
+                        "dashboardTab"
+                    )
+                    .style.display =
+
+                        selected ===
+                        "dashboard"
+
+                        ? "block"
+                        : "none";
+
+
+                document
+                    .getElementById(
+                        "classifiersTab"
+                    )
+                    .style.display =
+
+                        selected ===
+                        "classifiers"
+
+                        ? "block"
+                        : "none";
+
+
+                document
+                    .getElementById(
+                        "historyTab"
+                    )
+                    .style.display =
+
+                        selected ===
+                        "history"
+
+                        ? "block"
+                        : "none";
+
+            }
+        );
 
     });
 
-});
-
 
 /* =====================================================
-   UTILITÁRIOS
+   FORMATAR DATA
 ===================================================== */
 
 function formatDate(date){
 
+    if(!date)
+        return "-";
+
+
     const parts =
-        date.split("-");
+        String(date).split("-");
+
 
     if(parts.length !== 3)
         return date;
 
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+    return (
+
+        parts[2]
+        + "/"
+        + parts[1]
+        + "/"
+        + parts[0]
+
+    );
 
 }
 
+
+/* =====================================================
+   DATA ATUAL
+===================================================== */
+
+function getToday(){
+
+    const now =
+        new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(2,"0");
+
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(2,"0");
+
+
+    return (
+
+        year
+        + "-"
+        + month
+        + "-"
+        + day
+
+    );
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
 
 function escapeHTML(value){
 
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    return String(
+        value ?? ""
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
+
+
+/* =====================================================
+   AUTH STATE
+===================================================== */
+
+supabaseClient
+    .auth
+    .onAuthStateChange(
+        async (event,session) => {
+
+            if(
+                session
+                &&
+                !currentUser
+            ){
+
+                currentUser =
+                    session.user;
+
+                await showApp();
+
+            }
+
+            else if(
+                !session
+                &&
+                currentUser
+            ){
+
+                currentUser =
+                    null;
+
+                app.style.display =
+                    "none";
+
+                loginScreen.style.display =
+                    "flex";
+
+            }
+
+        }
+    );
 
 
 /* =====================================================
@@ -1556,4 +3439,5 @@ init();
 </script>
 
 </body>
+
 </html>
