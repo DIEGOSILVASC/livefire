@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -15,15 +13,13 @@
 :root{
     --bg:#101010;
     --card:#1b1b1b;
-    --card2:#151515;
     --border:#333;
     --red:#e50909;
     --red2:#ff1a1a;
     --white:#fff;
     --muted:#a7a7a7;
     --green:#35d07f;
-    --tag:#252525;
-    --tag-border:#414141;
+    --yellow:#f5c542;
 }
 
 *{
@@ -37,10 +33,7 @@ body{
     font-family:Arial,Helvetica,sans-serif;
 }
 
-button,
-input,
-select,
-textarea{
+button,input,select,textarea{
     font:inherit;
 }
 
@@ -142,6 +135,26 @@ textarea:focus{
     background:#292929;
     color:#fff;
     border:1px solid #444;
+}
+
+.btn-danger{
+    background:#5e1616;
+    color:#fff;
+    border:1px solid #8d2929;
+}
+
+.btn-danger:hover{
+    background:#7b1c1c;
+}
+
+.btn-edit{
+    background:#292929;
+    color:#fff;
+    border:1px solid #444;
+}
+
+.btn-edit:hover{
+    background:#383838;
 }
 
 .full{
@@ -312,7 +325,7 @@ header{
 
 
 /* =====================================================
-   FILTROS
+   FILTROS CLASSIFIERS
 ===================================================== */
 
 .filters-box{
@@ -456,22 +469,14 @@ header{
 
 .tag{
     display:inline-block;
-    background:var(--tag);
-    border:1px solid var(--tag-border);
+    background:#252525;
+    border:1px solid #414141;
     color:#ccc;
     border-radius:5px;
     padding:5px 7px;
     font-size:10px;
     font-weight:800;
     line-height:1;
-}
-
-.tag.competency{
-    color:#fff;
-}
-
-.tag.feature{
-    color:#aaa;
 }
 
 
@@ -507,18 +512,35 @@ header{
     transform:translateY(-1px);
 }
 
-.official-btn.diagram{
-    border-color:#555;
-}
-
-.official-btn.document{
-    border-color:#555;
-}
-
 
 /* =====================================================
-   RESULTADO
+   RESULTADO POR CLASSIFIER
 ===================================================== */
+
+.best-hf{
+    margin-top:15px;
+    padding:10px 12px;
+    background:#181818;
+    border:1px solid #333;
+    border-radius:8px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.best-hf-label{
+    color:#777;
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+}
+
+.best-hf-value{
+    color:var(--yellow);
+    font-size:18px;
+    font-weight:900;
+}
 
 .classifier button.register-result{
     width:100%;
@@ -536,7 +558,66 @@ header{
 
 
 /* =====================================================
-   TABLE
+   HISTÓRICO - FILTROS
+===================================================== */
+
+.history-filters{
+    background:#141414;
+    border:1px solid #333;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.history-filter-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1.5fr;
+    gap:15px;
+    align-items:end;
+}
+
+.history-filter-item label{
+    margin:0 0 8px;
+    font-size:12px;
+    color:#aaa;
+    text-transform:uppercase;
+}
+
+.history-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:15px;
+}
+
+.history-actions .btn{
+    margin:0;
+}
+
+.danger-zone{
+    margin-top:20px;
+    padding-top:20px;
+    border-top:1px solid #333;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.danger-zone-text{
+    color:#777;
+    font-size:13px;
+}
+
+.filtered-summary{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+
+/* =====================================================
+   TABELA
 ===================================================== */
 
 .table-wrap{
@@ -563,6 +644,32 @@ th{
 
 td{
     font-size:14px;
+}
+
+.action-buttons{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+}
+
+.action-btn{
+    border-radius:7px;
+    padding:7px 10px;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:900;
+}
+
+.action-btn.edit{
+    background:#292929;
+    color:#fff;
+    border:1px solid #444;
+}
+
+.action-btn.delete{
+    background:#421515;
+    color:#fff;
+    border:1px solid #692222;
 }
 
 
@@ -609,6 +716,34 @@ td{
     color:#fff;
 }
 
+.confirm-card{
+    width:min(500px,100%);
+    background:#1b1b1b;
+    border:1px solid #444;
+    border-radius:20px;
+    padding:28px;
+}
+
+.confirm-card h2{
+    margin-top:0;
+}
+
+.confirm-text{
+    color:#aaa;
+    line-height:1.5;
+}
+
+.confirm-actions{
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+    margin-top:25px;
+}
+
+.confirm-actions .btn{
+    margin:0;
+}
+
 
 /* =====================================================
    RESPONSIVE
@@ -622,6 +757,10 @@ td{
 
     .classifiers{
         grid-template-columns:repeat(2,1fr);
+    }
+
+    .history-filter-grid{
+        grid-template-columns:1fr 1fr;
     }
 
 }
@@ -664,6 +803,19 @@ td{
         flex-direction:column;
     }
 
+    .history-filter-grid{
+        grid-template-columns:1fr;
+    }
+
+    .danger-zone{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .official-links{
+        grid-template-columns:1fr;
+    }
+
 }
 
 @media(max-width:400px){
@@ -676,17 +828,14 @@ td{
         font-size:30px;
     }
 
-    .official-links{
-        grid-template-columns:1fr;
-    }
-
 }
 
 </style>
-
 </head>
 
+
 <body>
+
 
 <!-- =====================================================
      LOGIN
@@ -694,7 +843,6 @@ td{
 
 <section id="loginScreen">
 
-```
 <div class="login-card">
 
     <div class="logo-title">
@@ -746,9 +894,10 @@ td{
     </div>
 
 </div>
-```
 
 </section>
+
+
 
 <!-- =====================================================
      APP
@@ -758,7 +907,6 @@ td{
 
 <header>
 
-```
 <div class="container header-inner">
 
     <div class="brand">
@@ -779,52 +927,52 @@ td{
     </div>
 
 </div>
-```
 
 </header>
 
+
 <main class="container">
+
 
 <section class="hero">
 
-```
-<h1>
-    Live Fire Classifier
-</h1>
+    <h1>
+        Live Fire Classifier
+    </h1>
 
-<p>
-    Acompanhe seus resultados e sua evolução nos classifiers.
-</p>
-```
+    <p>
+        Acompanhe seus resultados e sua evolução nos classifiers.
+    </p>
 
 </section>
 
+
 <div class="tabs">
 
-```
-<button
-    class="tab active"
-    data-tab="dashboard"
->
-    Dashboard
-</button>
+    <button
+        class="tab active"
+        data-tab="dashboard"
+    >
+        Dashboard
+    </button>
 
-<button
-    class="tab"
-    data-tab="classifiers"
->
-    Classifiers
-</button>
+    <button
+        class="tab"
+        data-tab="classifiers"
+    >
+        Classifiers
+    </button>
 
-<button
-    class="tab"
-    data-tab="history"
->
-    Histórico
-</button>
-```
+    <button
+        class="tab"
+        data-tab="history"
+    >
+        Histórico
+    </button>
 
 </div>
+
+
 
 <!-- =====================================================
      DASHBOARD
@@ -832,7 +980,6 @@ td{
 
 <section id="dashboardTab">
 
-```
 <div class="kpis">
 
     <div class="kpi">
@@ -854,12 +1001,12 @@ td{
     <div class="kpi">
 
         <div class="kpi-title">
-            Classifiers
+            Classifiers Treinados
         </div>
 
         <div
             class="kpi-value"
-            id="totalClassifiers"
+            id="trainedClassifiers"
         >
             0
         </div>
@@ -942,9 +1089,29 @@ td{
     </div>
 
 </section>
-```
+
+
+<section class="section">
+
+    <div class="section-header">
+
+        <h2>
+            Melhor resultado por classifier
+        </h2>
+
+    </div>
+
+    <div
+        class="classifiers"
+        id="bestResultsGrid"
+    >
+    </div>
 
 </section>
+
+</section>
+
+
 
 <!-- =====================================================
      CLASSIFIERS
@@ -957,85 +1124,79 @@ td{
 
 <section class="section">
 
-```
-<div class="section-header">
+    <div class="section-header">
 
-    <h2>
-        Classifiers disponíveis
-    </h2>
+        <h2>
+            Classifiers disponíveis
+        </h2>
 
-    <span
-        id="classifierCount"
-        class="filter-status"
-    >
-    </span>
-
-</div>
-
-
-<!-- FILTROS -->
-
-<div class="filters-box">
-
-
-    <div class="filter-group">
-
-        <div class="filter-title">
-            Competências
-        </div>
-
-        <div
-            class="filter-buttons"
-            id="competencyFilters"
-        >
-        </div>
+        <span
+            id="classifierCount"
+            class="filter-status"
+        ></span>
 
     </div>
 
 
-    <div class="filter-group">
+    <div class="filters-box">
 
-        <div class="filter-title">
-            Características
+
+        <div class="filter-group">
+
+            <div class="filter-title">
+                Competências
+            </div>
+
+            <div
+                class="filter-buttons"
+                id="competencyFilters"
+            ></div>
+
         </div>
 
-        <div
-            class="filter-buttons"
-            id="featureFilters"
+
+        <div class="filter-group">
+
+            <div class="filter-title">
+                Características
+            </div>
+
+            <div
+                class="filter-buttons"
+                id="featureFilters"
+            ></div>
+
+        </div>
+
+
+        <button
+            class="clear-filters"
+            id="clearFilters"
         >
+            LIMPAR FILTROS
+        </button>
+
+
+        <div
+            class="filter-status"
+            id="filterStatus"
+        >
+            Exibindo todos os classifiers.
         </div>
 
     </div>
-
-
-    <button
-        class="clear-filters"
-        id="clearFilters"
-    >
-        LIMPAR FILTROS
-    </button>
 
 
     <div
-        class="filter-status"
-        id="filterStatus"
-    >
-        Exibindo todos os classifiers.
-    </div>
-
-</div>
-
-
-<div
-    class="classifiers"
-    id="classifiersGrid"
->
-</div>
-```
+        class="classifiers"
+        id="classifiersGrid"
+    ></div>
 
 </section>
 
 </section>
+
+
 
 <!-- =====================================================
      HISTÓRICO
@@ -1048,49 +1209,153 @@ td{
 
 <section class="section">
 
-```
-<div class="section-header">
+    <div class="section-header">
 
-    <h2>
-        Histórico de desempenho
-    </h2>
+        <h2>
+            Histórico de desempenho
+        </h2>
 
-</div>
+    </div>
 
 
-<div class="table-wrap">
+    <!-- FILTROS DO HISTÓRICO -->
 
-    <table>
+    <div class="history-filters">
 
-        <thead>
+        <div class="history-filter-grid">
 
-            <tr>
-                <th>Data</th>
-                <th>Classifier</th>
-                <th>Hit Factor</th>
-                <th>Observações</th>
-            </tr>
 
-        </thead>
+            <div class="history-filter-item">
 
-        <tbody id="historyTable">
-        </tbody>
+                <label for="historyStartDate">
+                    Data inicial
+                </label>
 
-    </table>
+                <input
+                    id="historyStartDate"
+                    type="date"
+                >
 
-</div>
-```
+            </div>
+
+
+            <div class="history-filter-item">
+
+                <label for="historyEndDate">
+                    Data final
+                </label>
+
+                <input
+                    id="historyEndDate"
+                    type="date"
+                >
+
+            </div>
+
+
+            <div class="history-filter-item">
+
+                <label for="historyClassifier">
+                    Classifier
+                </label>
+
+                <select
+                    id="historyClassifier"
+                >
+                    <option value="">
+                        Todos os classifiers
+                    </option>
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="history-actions">
+
+            <button
+                class="btn btn-red"
+                id="applyHistoryFilters"
+                type="button"
+            >
+                FILTRAR
+            </button>
+
+            <button
+                class="btn btn-dark"
+                id="clearHistoryFilters"
+                type="button"
+            >
+                LIMPAR FILTROS
+            </button>
+
+        </div>
+
+
+        <div
+            class="filtered-summary"
+            id="historySummary"
+        >
+            Exibindo todos os resultados.
+        </div>
+
+
+        <div class="danger-zone">
+
+            <div class="danger-zone-text">
+                Excluir todos os seus resultados registrados.
+            </div>
+
+            <button
+                class="btn btn-danger"
+                id="clearAllHistory"
+                type="button"
+            >
+                LIMPAR TODO O HISTÓRICO
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Data</th>
+                    <th>Classifier</th>
+                    <th>Hit Factor</th>
+                    <th>Observações</th>
+                    <th>Ações</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="historyTable">
+            </tbody>
+
+        </table>
+
+    </div>
 
 </section>
 
 </section>
+
 
 </main>
 
 </div>
 
+
+
 <!-- =====================================================
-     MODAL NOVO RESULTADO
+     MODAL RESULTADO
 ===================================================== -->
 
 <div
@@ -1100,91 +1365,138 @@ td{
 
 <div class="modal-card">
 
-```
-<div class="modal-header">
+    <div class="modal-header">
 
-    <h2>
-        Novo resultado
-    </h2>
+        <h2 id="resultModalTitle">
+            Novo resultado
+        </h2>
 
-    <button
-        class="close"
-        id="closeModal"
-        type="button"
-    >
-        ×
-    </button>
+        <button
+            class="close"
+            id="closeModal"
+            type="button"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <form id="resultForm">
+
+        <label for="classifierSelect">
+            Classifier
+        </label>
+
+        <select
+            id="classifierSelect"
+            required
+        ></select>
+
+
+        <label for="resultDate">
+            Data
+        </label>
+
+        <input
+            id="resultDate"
+            type="date"
+            required
+        >
+
+
+        <label for="hitFactor">
+            Hit Factor
+        </label>
+
+        <input
+            id="hitFactor"
+            type="number"
+            step="0.001"
+            min="0"
+            required
+        >
+
+
+        <label for="observations">
+            Observações
+        </label>
+
+        <textarea
+            id="observations"
+            rows="4"
+        ></textarea>
+
+
+        <button
+            class="btn btn-red full"
+            type="submit"
+            id="saveResultBtn"
+        >
+            SALVAR RESULTADO
+        </button>
+
+    </form>
+
+
+    <div
+        id="resultMessage"
+        class="message"
+    ></div>
+
+</div>
 
 </div>
 
 
-<form id="resultForm">
 
-
-    <label for="classifierSelect">
-        Classifier
-    </label>
-
-    <select
-        id="classifierSelect"
-        required
-    >
-    </select>
-
-
-    <label for="resultDate">
-        Data
-    </label>
-
-    <input
-        id="resultDate"
-        type="date"
-        required
-    >
-
-
-    <label for="hitFactor">
-        Hit Factor
-    </label>
-
-    <input
-        id="hitFactor"
-        type="number"
-        step="0.001"
-        min="0"
-        required
-    >
-
-
-    <label for="observations">
-        Observações
-    </label>
-
-    <textarea
-        id="observations"
-        rows="4"
-    ></textarea>
-
-
-    <button
-        class="btn btn-red full"
-        type="submit"
-    >
-        SALVAR RESULTADO
-    </button>
-
-</form>
-
+<!-- =====================================================
+     MODAL CONFIRMAÇÃO
+===================================================== -->
 
 <div
-    id="resultMessage"
-    class="message"
-></div>
-```
+    class="modal"
+    id="confirmModal"
+>
+
+<div class="confirm-card">
+
+    <h2 id="confirmTitle">
+        Confirmar ação
+    </h2>
+
+    <div
+        class="confirm-text"
+        id="confirmText"
+    >
+    </div>
+
+
+    <div class="confirm-actions">
+
+        <button
+            class="btn btn-dark"
+            id="confirmCancel"
+            type="button"
+        >
+            CANCELAR
+        </button>
+
+        <button
+            class="btn btn-danger"
+            id="confirmOk"
+            type="button"
+        >
+            CONFIRMAR
+        </button>
+
+    </div>
 
 </div>
 
 </div>
+
+
 
 <script>
 
@@ -1199,10 +1511,7 @@ const SUPABASE_URL =
 
 /*
 =========================================================
-   ATENÇÃO:
-
-   SUBSTITUA SOMENTE O VALOR ABAIXO PELA SUA
-   CHAVE PÚBLICA / PUBLISHABLE KEY DO SUPABASE.
+   SUBSTITUA SOMENTE ESTA CHAVE
 =========================================================
 */
 
@@ -1227,505 +1536,271 @@ let classifiers = [];
 
 let results = [];
 
+let filteredHistory = [];
+
 let selectedCompetency = "ALL";
 
 let selectedFeature = "ALL";
 
+let editingResultId = null;
+
+let confirmAction = null;
+
 
 /* =====================================================
-   METADADOS DOS 28 CLASSIFIERS
+   METADADOS
 ===================================================== */
 
 const classifierMetadata = {
 
-
     "CLC-01":{
         type:"Short",
         rounds:7,
-        competencies:[
-            "Mão Forte",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "No Shoot",
-            "Posição Inicial Especial"
-        ],
+        competencies:["Mão Forte","Transição","Precisão"],
+        features:["No Shoot","Posição Inicial Especial"],
         diagramUrl:"https://drive.google.com/file/d/1lZFV8SbioN5e5noxjy9Z4lenzP3leP7x/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1M7xVvSVIzr8G4oYb9m81Y-cOAl8ZrpGt/view?usp=drive_link"
     },
 
-
     "CLC-03":{
         type:"Short",
         rounds:6,
-        competencies:[
-            "Mão Fraca",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Posição Inicial Especial"
-        ],
+        competencies:["Mão Fraca","Transição","Precisão"],
+        features:["Posição Inicial Especial"],
         diagramUrl:"https://drive.google.com/file/d/1hFzI6jNoIurRuI3WwbJDMVZzZv_Z06iQ/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1jlP0mBj_kFdZ0KxL1o0hVVhbuMH5Qnzr/view?usp=drive_link"
     },
 
-
     "CLC-05":{
         type:"Short",
         rounds:8,
-        competencies:[
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "No Shoot"
-        ],
+        competencies:["Transição","Precisão"],
+        features:["No Shoot"],
         diagramUrl:"https://drive.google.com/file/d/1fMYDdYDXeyOQwvXPR9ensSvrlzfBjN3C/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1N4ie0x2PLpXDm9xATjctzGmRcmCHdt4a/view?usp=drive_link"
     },
 
-
     "CLC-07":{
         type:"Short",
         rounds:12,
-        competencies:[
-            "Movimento",
-            "Entrada de Posição",
-            "Saída de Posição",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "No Shoot",
-            "Múltiplas Posições",
-            "Barreira Visual"
-        ],
+        competencies:["Movimento","Entrada de Posição","Saída de Posição","Transição","Precisão"],
+        features:["No Shoot","Múltiplas Posições","Barreira Visual"],
         diagramUrl:"https://drive.google.com/file/d/1vlvLOENbAWh8YEM3p1Ome2AW2oRgOIDv/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1l-JqLq5-yfH0bpK7REk7x2sCNItb3218/view?usp=drive_link"
     },
 
-
     "CLC-11":{
         type:"Short",
         rounds:12,
-        competencies:[
-            "Recarga",
-            "Mudança de Lado",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Barricada",
-            "Posição Inicial Especial"
-        ],
+        competencies:["Recarga","Mudança de Lado","Transição","Precisão"],
+        features:["Barricada","Posição Inicial Especial"],
         diagramUrl:"https://drive.google.com/file/d/1XsNfB6JaG1boDO3rITRn86iVQokYzHQ7/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1RnO7IthgmQV-UDSZ4Tg1s-iiR8ll0hRz/view?usp=drive_link"
     },
 
-
     "CLC-15":{
         type:"Short",
         rounds:9,
-        competencies:[
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Ângulos"
-        ],
+        competencies:["Transição","Precisão"],
+        features:["Ângulos"],
         diagramUrl:"https://drive.google.com/file/d/1y6M7ANqicWc_OUn40Ru5bjLnOcgpE8-J/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1FrNkz5L9HW5sFtol8JYAXclE2x6IEtPR/view?usp=drive_link"
     },
 
-
     "CLC-19":{
         type:"Short",
         rounds:6,
-        competencies:[
-            "Recarga",
-            "Mão Forte",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Distâncias Diferentes"
-        ],
+        competencies:["Recarga","Mão Forte","Transição","Precisão"],
+        features:["Distâncias Diferentes"],
         diagramUrl:"https://drive.google.com/file/d/1gqmAvz-_Q8BlPXLNdhq_k_O1siHgh2Jd/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/18NR-5J0pdYTmLRywukWGj2JrGe4ZIJx6/view?usp=drive_link"
     },
 
-
     "CLC-21":{
         type:"Short",
         rounds:12,
-        competencies:[
-            "Recarga",
-            "Mudança de Lado",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Barricada",
-            "Portas",
-            "Barreira Visual",
-            "No Shoot"
-        ],
+        competencies:["Recarga","Mudança de Lado","Transição","Precisão"],
+        features:["Barricada","Portas","Barreira Visual","No Shoot"],
         diagramUrl:"https://drive.google.com/file/d/1BE6AOBkjlft6_KtOMOagEuHN9S0lpDc8/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1EV7sWEhmECuFbRAhqgum9GriS2pzVmkT/view?usp=drive_link"
     },
 
-
     "CLC-25":{
         type:"Medium",
         rounds:21,
-        competencies:[
-            "Recarga",
-            "Mão Forte",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Hard Cover",
-            "Distâncias Diferentes"
-        ],
+        competencies:["Recarga","Mão Forte","Transição","Precisão"],
+        features:["Hard Cover","Distâncias Diferentes"],
         diagramUrl:"https://drive.google.com/file/d/1mBjqSZh9bjMoHkQ5qsOZeL3U_vx_2qUq/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1YsBt2aQeegpl-0c-Xij1Y7y0WI0iFZcS/view?usp=drive_link"
     },
 
-
     "CLC-31":{
         type:"Short",
         rounds:6,
-        competencies:[
-            "Mão Fraca",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "No Shoot",
-            "Posição Inicial Especial"
-        ],
+        competencies:["Mão Fraca","Transição","Precisão"],
+        features:["No Shoot","Posição Inicial Especial"],
         diagramUrl:"https://drive.google.com/file/d/1U5BNhbz9-L_2M41JlXcKfblSwdooy0t/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/12E3F4E2QifehzqXxnRe9ji0PBYTL92ZO/view?usp=drive_link"
     },
 
-
     "CLC-33":{
         type:"Short",
         rounds:6,
-        competencies:[
-            "Mão Forte",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Hard Cover"
-        ],
+        competencies:["Mão Forte","Transição","Precisão"],
+        features:["Hard Cover"],
         diagramUrl:"https://drive.google.com/file/d/1hZ_BRxceG_f2jB-iIeEXaXBl4I2CpSku/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1-dEBaLq4FTHrB4fImkQYg8iSwFKPT0jl/view?usp=drive_link"
     },
 
-
     "CLC-35":{
         type:"Short",
         rounds:6,
-        competencies:[
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "No Shoot",
-            "Posição Inicial Especial"
-        ],
+        competencies:["Transição","Precisão"],
+        features:["No Shoot","Posição Inicial Especial"],
         diagramUrl:"https://drive.google.com/file/d/1n0Km6PcABN1vJPczoDXzaap0z2MBN4Nu/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1RMhFwCu--t7v5gaorcVyVIMQkX8VHhY7/view?usp=drive_link"
     },
 
-
     "CLC-37":{
         type:"Short",
         rounds:12,
-        competencies:[
-            "Movimento",
-            "Entrada de Posição",
-            "Saída de Posição",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Hard Cover",
-            "No Shoot",
-            "Múltiplas Posições",
-            "Barreira Visual"
-        ],
+        competencies:["Movimento","Entrada de Posição","Saída de Posição","Transição","Precisão"],
+        features:["Hard Cover","No Shoot","Múltiplas Posições","Barreira Visual"],
         diagramUrl:"https://drive.google.com/file/d/1l-nc9Vvx4MYHbuII2Em3YeM7R8Tb_oYZ/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1TR1O2Wdu5cNsupSjMZXMbSt_zCAN1cbe/view?usp=drive_link"
     },
 
-
     "CLC-41":{
         type:"Short",
         rounds:12,
-        competencies:[
-            "Recarga",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "No Shoot",
-            "Posição Inicial Especial"
-        ],
+        competencies:["Recarga","Transição","Precisão"],
+        features:["No Shoot","Posição Inicial Especial"],
         diagramUrl:"https://drive.google.com/file/d/1LJYa0zb4UGGzuMzTx3lPN2gEOr7BD9tM/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1-W5VLAjtqgNe0uoMZtlHv2z_TBCLLZBj/view?usp=drive_link"
     },
 
-
     "CLC-45":{
         type:"Short",
         rounds:8,
-        competencies:[
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Hard Cover",
-            "Ângulos",
-            "Posição Inicial Especial"
-        ],
+        competencies:["Transição","Precisão"],
+        features:["Hard Cover","Ângulos","Posição Inicial Especial"],
         diagramUrl:"https://drive.google.com/file/d/1FGCTnarfZHuOYW5U7aQ4S3RJsIoJAKc5/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/16vL_Zz0KiFwxAhSss7Ev8FDkOPYGRQvP/view?usp=drive_link"
     },
 
-
     "CLC-47":{
         type:"Short",
         rounds:6,
-        competencies:[
-            "Mão Forte",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Poppers"
-        ],
+        competencies:["Mão Forte","Transição","Precisão"],
+        features:["Poppers"],
         diagramUrl:"https://drive.google.com/file/d/1R2mU27gNKecyoFDjfXgWchF89IyC0Jzp/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1gOnWlW35f8LTaaT_1tnRf77B6gSV3Zk2/view?usp=drive_link"
     },
 
-
     "CLC-49":{
         type:"Medium",
         rounds:14,
-        competencies:[
-            "Movimento",
-            "Entrada de Posição",
-            "Saída de Posição",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Barricada",
-            "Hard Cover",
-            "Múltiplas Posições",
-            "Posição Inicial Especial"
-        ],
+        competencies:["Movimento","Entrada de Posição","Saída de Posição","Transição","Precisão"],
+        features:["Barricada","Hard Cover","Múltiplas Posições","Posição Inicial Especial"],
         diagramUrl:"https://drive.google.com/file/d/1B_BMgXi5v4gMYqr2pjvx8ikvZUeC_Msm/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1GJVjj7fQZTKjVlM3DfrHNFm0wHISXEcE/view?usp=drive_link"
     },
 
-
     "CLC-51":{
         type:"Short",
         rounds:6,
-        competencies:[
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Hard Cover"
-        ],
+        competencies:["Transição","Precisão"],
+        features:["Hard Cover"],
         diagramUrl:"https://drive.google.com/file/d/1e4btmC8FsKF_A-HIGLf-elfyrIMJ4ec9/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1-LtZUYcpe-ISukx4cR05QtIHKXAvxhYb/view?usp=drive_link"
     },
 
-
     "CLC-53":{
         type:"Medium",
         rounds:14,
-        competencies:[
-            "Movimento",
-            "Entrada de Posição",
-            "Saída de Posição",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Barricada",
-            "Múltiplas Posições"
-        ],
+        competencies:["Movimento","Entrada de Posição","Saída de Posição","Transição","Precisão"],
+        features:["Barricada","Múltiplas Posições"],
         diagramUrl:"https://drive.google.com/file/d/1LmGBxwX3NM_WG41i1_DDW3Y7PvBPogmE/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/10arCZ-ZUeFJ4kmS_sRbjs9kZgxZETSMw/view?usp=drive_link"
     },
 
-
     "CLC-55":{
         type:"Short",
         rounds:12,
-        competencies:[
-            "Movimento",
-            "Tiro em Movimento",
-            "Entrada de Posição",
-            "Saída de Posição",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "No Shoot",
-            "Múltiplas Posições",
-            "Barril"
-        ],
+        competencies:["Movimento","Tiro em Movimento","Entrada de Posição","Saída de Posição","Transição","Precisão"],
+        features:["No Shoot","Múltiplas Posições","Barril"],
         diagramUrl:"https://drive.google.com/file/d/1WPsCR0HyfU6VJma5sdMtRj68O5JyZais/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1QdSFCqNkRoYZA9AJd-gmFxJWIr0Jvy6j/view?usp=drive_link"
     },
 
-
     "CLC-57":{
         type:"Short",
         rounds:12,
-        competencies:[
-            "Recarga",
-            "Mudança de Lado",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Barricada",
-            "Poppers"
-        ],
+        competencies:["Recarga","Mudança de Lado","Transição","Precisão"],
+        features:["Barricada","Poppers"],
         diagramUrl:"https://drive.google.com/file/d/1jqtflNbtAgq56Eh85pBwyNntwxPwwvrF/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1Y_g6Ae0H2zJqkkxRevpabne3hK61YbUx/view?usp=drive_link"
     },
 
-
     "CLC-59":{
         type:"Short",
         rounds:12,
-        competencies:[
-            "Recarga",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "No Shoot",
-            "Distâncias Diferentes",
-            "Alturas Diferentes"
-        ],
+        competencies:["Recarga","Transição","Precisão"],
+        features:["No Shoot","Distâncias Diferentes","Alturas Diferentes"],
         diagramUrl:"https://drive.google.com/file/d/1nHjlx4QXcBvTsYPnqesAM6ao9TajDs3w/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1zt9YuwO0yxZ1FH8_-ovNwZlSsafbl1Da/view?usp=drive_link"
     },
 
-
     "CLC-63":{
         type:"Medium",
         rounds:16,
-        competencies:[
-            "Movimento",
-            "Entrada de Posição",
-            "Saída de Posição",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "No Shoot",
-            "Múltiplas Posições",
-            "Poppers",
-            "Distâncias Diferentes"
-        ],
+        competencies:["Movimento","Entrada de Posição","Saída de Posição","Transição","Precisão"],
+        features:["No Shoot","Múltiplas Posições","Poppers","Distâncias Diferentes"],
         diagramUrl:"https://drive.google.com/file/d/1kkBAJGAAqb2q03pn1C9stHSjni0A3e3f/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1Cv6cfkvtDGD_2AOaW4gvTPyV3zJfJ5AY/view?usp=drive_link"
     },
 
-
     "CLC-65":{
         type:"Short",
         rounds:6,
-        competencies:[
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Poppers",
-            "Distâncias Diferentes"
-        ],
+        competencies:["Transição","Precisão"],
+        features:["Poppers","Distâncias Diferentes"],
         diagramUrl:"https://drive.google.com/file/d/10pmoFakgPQ3HLQW6pP91ZngTZ0R0ZGbL/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1uJoQakTGYxF-P34jrrlPvq2tU9AcEh6j/view?usp=drive_link"
     },
 
-
     "CLC-67":{
         type:"Short",
         rounds:12,
-        competencies:[
-            "Recarga",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Hard Cover",
-            "No Shoot"
-        ],
+        competencies:["Recarga","Transição","Precisão"],
+        features:["Hard Cover","No Shoot"],
         diagramUrl:"https://drive.google.com/file/d/18F0JHTqVxkm2ES6MydhZE9vxJsM2tUoi/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/13_w9X3tL1g3FYp6c7WGcmVbcKj6KDReO/view?usp=drive_link"
     },
 
-
     "CLC-69":{
         type:"Medium",
         rounds:24,
-        competencies:[
-            "Movimento",
-            "Entrada de Posição",
-            "Saída de Posição",
-            "Recarga",
-            "Transição"
-        ],
-        features:[
-            "Múltiplas Posições",
-            "Distâncias Diferentes"
-        ],
+        competencies:["Movimento","Entrada de Posição","Saída de Posição","Recarga","Transição"],
+        features:["Múltiplas Posições","Distâncias Diferentes"],
         diagramUrl:"https://drive.google.com/file/d/1h5Lxmc4VtXTbZee3JF9Kkkz_uFknGbMv/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1Binl3nIAKQVkt0tl19T42w6fvM7hTMr_/view?usp=drive_link"
     },
 
-
     "CLC-71":{
         type:"Short",
         rounds:8,
-        competencies:[
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "Barricada"
-        ],
+        competencies:["Transição","Precisão"],
+        features:["Barricada"],
         diagramUrl:"https://drive.google.com/file/d/1dId_WEvpVSQ3SScnTBUvYABD19CtnJRW/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1RY6hns9teolJOTv-UDD_7f0Jw8Yx4buM/view?usp=drive_link"
     },
 
-
     "CLC-73":{
         type:"Short",
         rounds:6,
-        competencies:[
-            "Mão Forte",
-            "Transição",
-            "Precisão"
-        ],
-        features:[
-            "No Shoot"
-        ],
+        competencies:["Mão Forte","Transição","Precisão"],
+        features:["No Shoot"],
         diagramUrl:"https://drive.google.com/file/d/1qYEXMaUyxyezxR5891-7VNTlzBJKnMpd/view?usp=drive_link",
         documentUrl:"https://drive.google.com/file/d/1ZL9zszWNzS0C8J0KUjRRDuQXaHzjtKmw/view?usp=drive_link"
     }
@@ -1746,8 +1821,11 @@ const app =
 const loginMessage =
     document.getElementById("loginMessage");
 
-const modal =
+const resultModal =
     document.getElementById("resultModal");
+
+const confirmModal =
+    document.getElementById("confirmModal");
 
 
 /* =====================================================
@@ -1813,7 +1891,6 @@ document
         currentUser =
             data.user;
 
-
         await showApp();
 
     }
@@ -1847,7 +1924,7 @@ document
 
 
 /* =====================================================
-   INICIALIZAÇÃO
+   INIT
 ===================================================== */
 
 async function init(){
@@ -1886,7 +1963,7 @@ async function init(){
 
 
 /* =====================================================
-   MOSTRAR APP
+   SHOW APP
 ===================================================== */
 
 async function showApp(){
@@ -1912,7 +1989,7 @@ async function showApp(){
 
 
 /* =====================================================
-   CLASSIFIERS
+   LOAD CLASSIFIERS
 ===================================================== */
 
 async function loadClassifiers(){
@@ -1933,7 +2010,8 @@ async function loadClassifiers(){
 
         alert(
             "Erro ao carregar classifiers: "
-            + error.message
+            +
+            error.message
         );
 
         return;
@@ -1946,22 +2024,25 @@ async function loadClassifiers(){
 
 
     document
-    .getElementById("totalClassifiers")
-    .textContent =
-        classifiers.length;
-
+    .getElementById(
+        "totalClassifiers"
+    );
 
     populateFilters();
 
+    populateClassifierSelect();
+
+    populateHistoryClassifier();
+
     renderClassifiers();
 
-    populateClassifierSelect();
+    renderBestResults();
 
 }
 
 
 /* =====================================================
-   IDENTIFICAR CÓDIGO
+   CÓDIGO CLASSIFIER
 ===================================================== */
 
 function getClassifierCode(
@@ -1969,7 +2050,7 @@ function getClassifierCode(
     index
 ){
 
-    const possibleValues = [
+    const values = [
 
         item?.code,
         item?.classifier_code,
@@ -1983,7 +2064,7 @@ function getClassifierCode(
 
 
     for(
-        const value of possibleValues
+        const value of values
     ){
 
         if(!value)
@@ -2050,7 +2131,7 @@ function getMetadata(
 
 
 /* =====================================================
-   FILTROS
+   POPULAR FILTROS
 ===================================================== */
 
 function populateFilters(){
@@ -2091,7 +2172,6 @@ function populateFilters(){
             competencies.add(item)
         );
 
-
         metadata.features
         .forEach(item =>
             features.add(item)
@@ -2109,6 +2189,7 @@ function populateFilters(){
 
 
     [...competencies]
+    .sort()
     .forEach(item=>{
 
         createFilterButton(
@@ -2130,6 +2211,7 @@ function populateFilters(){
 
 
     [...features]
+    .sort()
     .forEach(item=>{
 
         createFilterButton(
@@ -2145,7 +2227,7 @@ function populateFilters(){
 
 
 /* =====================================================
-   BOTÃO DE FILTRO
+   FILTER BUTTON
 ===================================================== */
 
 function createFilterButton(
@@ -2164,10 +2246,8 @@ function createFilterButton(
     button.type =
         "button";
 
-
     button.className =
         "filter-btn";
-
 
     button.dataset.value =
         value;
@@ -2231,7 +2311,7 @@ function createFilterButton(
 
 
 /* =====================================================
-   ATUALIZAR FILTROS
+   UPDATE FILTER BUTTONS
 ===================================================== */
 
 function updateFilterButtons(){
@@ -2269,7 +2349,7 @@ function updateFilterButtons(){
 
 
 /* =====================================================
-   LIMPAR FILTROS
+   CLEAR FILTERS
 ===================================================== */
 
 document
@@ -2293,7 +2373,7 @@ document
 
 
 /* =====================================================
-   MATCH DOS FILTROS
+   MATCH FILTERS
 ===================================================== */
 
 function classifierMatchesFilters(
@@ -2322,6 +2402,44 @@ function classifierMatchesFilters(
         competencyMatch
         &&
         featureMatch
+    );
+
+}
+
+
+/* =====================================================
+   BEST HF CLASSIFIER
+===================================================== */
+
+function getBestHFForClassifier(
+    classifierId
+){
+
+    const values =
+        results
+        .filter(
+            result =>
+                result.classifier_id ===
+                classifierId
+        )
+        .map(
+            result =>
+                Number(
+                    result.hit_factor
+                )
+        )
+        .filter(
+            value =>
+                Number.isFinite(value)
+        );
+
+
+    if(!values.length)
+        return null;
+
+
+    return Math.max(
+        ...values
     );
 
 }
@@ -2444,7 +2562,7 @@ function renderClassifiers(){
 
     filtered.forEach(item=>{
 
-        const originalIndex =
+        const index =
             classifiers.indexOf(
                 item
             );
@@ -2453,7 +2571,7 @@ function renderClassifiers(){
         const metadata =
             getMetadata(
                 item,
-                originalIndex
+                index
             );
 
 
@@ -2469,54 +2587,90 @@ function renderClassifiers(){
 
         const competencyTags =
             metadata.competencies
-            .map(item=>`
-
-                <span class="tag competency">
-                    ${escapeHTML(item)}
+            .map(
+                value =>
+                `
+                <span class="tag">
+                    ${escapeHTML(value)}
                 </span>
-
-            `)
+                `
+            )
             .join("");
 
 
         const featureTags =
             metadata.features
-            .map(item=>`
-
-                <span class="tag feature">
-                    ${escapeHTML(item)}
+            .map(
+                value =>
+                `
+                <span class="tag">
+                    ${escapeHTML(value)}
                 </span>
-
-            `)
+                `
+            )
             .join("");
 
 
-        const officialLinks = `
-
-            <div class="official-links">
-
-                <a
-                    class="official-btn diagram"
-                    href="${metadata.diagramUrl}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    DIAGRAMA
-                </a>
+        const bestHF =
+            getBestHFForClassifier(
+                item.id
+            );
 
 
-                <a
-                    class="official-btn document"
-                    href="${metadata.documentUrl}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    DOCUMENTO OFICIAL
-                </a>
+        let officialLinks =
+            "";
 
-            </div>
 
-        `;
+        if(
+            metadata.diagramUrl
+            ||
+            metadata.documentUrl
+        ){
+
+            officialLinks = `
+
+                <div class="official-links">
+
+                    ${
+                        metadata.diagramUrl
+                        ?
+                        `
+                        <a
+                            class="official-btn"
+                            href="${metadata.diagramUrl}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            DIAGRAMA
+                        </a>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    ${
+                        metadata.documentUrl
+                        ?
+                        `
+                        <a
+                            class="official-btn"
+                            href="${metadata.documentUrl}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            DOCUMENTO OFICIAL
+                        </a>
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
+
+            `;
+
+        }
 
 
         card.innerHTML = `
@@ -2574,9 +2728,28 @@ function renderClassifiers(){
                     ${
                         featureTags
                         ||
-                        '<span class="tag feature">Nenhuma</span>'
+                        '<span class="tag">Nenhuma</span>'
                     }
                 </div>
+
+            </div>
+
+
+            <div class="best-hf">
+
+                <span class="best-hf-label">
+                    Melhor HF
+                </span>
+
+                <span class="best-hf-value">
+                    ${
+                        bestHF !== null
+                        ?
+                        bestHF.toFixed(3)
+                        :
+                        "-"
+                    }
+                </span>
 
             </div>
 
@@ -2640,6 +2813,13 @@ function populateClassifierSelect(){
     classifiers.forEach(
         (item,index)=>{
 
+            const metadata =
+                getMetadata(
+                    item,
+                    index
+                );
+
+
             const option =
                 document.createElement(
                     "option"
@@ -2650,16 +2830,8 @@ function populateClassifierSelect(){
                 item.id;
 
 
-            const metadata =
-                getMetadata(
-                    item,
-                    index
-                );
-
-
             option.textContent =
-                metadata.code
-                ||
+                metadata.code ||
                 "Classifier";
 
 
@@ -2674,7 +2846,60 @@ function populateClassifierSelect(){
 
 
 /* =====================================================
-   RESULTADOS
+   SELECT CLASSIFIER HISTÓRICO
+===================================================== */
+
+function populateHistoryClassifier(){
+
+    const select =
+        document.getElementById(
+            "historyClassifier"
+        );
+
+
+    select.innerHTML =
+        `<option value="">
+            Todos os classifiers
+        </option>`;
+
+
+    classifiers.forEach(
+        (item,index)=>{
+
+            const metadata =
+                getMetadata(
+                    item,
+                    index
+                );
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                item.id;
+
+
+            option.textContent =
+                metadata.code ||
+                "Classifier";
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   LOAD RESULTS
 ===================================================== */
 
 async function loadResults(){
@@ -2721,9 +2946,19 @@ async function loadResults(){
         data || [];
 
 
+    filteredHistory =
+        [...results];
+
+
     updateKPIs();
 
     renderResults();
+
+    renderHistory();
+
+    renderBestResults();
+
+    renderClassifiers();
 
 }
 
@@ -2742,17 +2977,34 @@ function updateKPIs(){
         results.length;
 
 
+    const trained =
+        new Set(
+            results.map(
+                result =>
+                    result.classifier_id
+            )
+        );
+
+
+    document
+    .getElementById(
+        "trainedClassifiers"
+    )
+    .textContent =
+        trained.size;
+
+
     const values =
         results
         .map(
-            r =>
+            result =>
                 Number(
-                    r.hit_factor
+                    result.hit_factor
                 )
         )
         .filter(
-            v =>
-                Number.isFinite(v)
+            value =>
+                Number.isFinite(value)
         );
 
 
@@ -2813,7 +3065,7 @@ function updateKPIs(){
 
 
 /* =====================================================
-   RENDER RESULTADOS
+   RENDER RESULTADOS RECENTES
 ===================================================== */
 
 function renderResults(){
@@ -2824,92 +3076,64 @@ function renderResults(){
         );
 
 
-    const history =
-        document.getElementById(
-            "historyTable"
-        );
-
-
     table.innerHTML =
         "";
 
-    history.innerHTML =
-        "";
 
-
-    results.forEach(result=>{
+    results
+    .slice(0,10)
+    .forEach(result=>{
 
         const classifier =
             classifiers.find(
-                c =>
-                    c.id ===
+                item =>
+                    item.id ===
                     result.classifier_id
             );
 
 
-        const classifierIndex =
+        const index =
             classifier
             ?
-                classifiers.indexOf(
-                    classifier
-                )
+            classifiers.indexOf(
+                classifier
+            )
             :
-                -1;
+            -1;
 
 
         const metadata =
             classifier
             ?
-                getMetadata(
-                    classifier,
-                    classifierIndex
-                )
+            getMetadata(
+                classifier,
+                index
+            )
             :
-                null;
+            null;
 
 
         const name =
-            metadata?.code
-            ||
+            metadata?.code ||
             "Classifier";
 
 
-        const date =
-            result.date
-            ?
-                formatDate(
-                    result.date
-                )
-            :
-                "-";
-
-
         const hitFactor =
-            result.hit_factor !== null
-            &&
-            result.hit_factor !== undefined
-            ?
-                Number(
-                    result.hit_factor
-                ).toFixed(3)
-            :
-                "-";
+            Number(
+                result.hit_factor
+            );
 
 
-        const observations =
-            result.observations
-            ||
-            result.observation
-            ||
-            "-";
-
-
-        const rowHTML = `
+        const row = `
 
             <tr>
 
                 <td>
-                    ${escapeHTML(date)}
+                    ${escapeHTML(
+                        formatDate(
+                            result.date
+                        )
+                    )}
                 </td>
 
                 <td>
@@ -2918,12 +3142,21 @@ function renderResults(){
 
                 <td>
                     <strong>
-                        ${escapeHTML(hitFactor)}
+                        ${
+                            Number.isFinite(hitFactor)
+                            ?
+                            hitFactor.toFixed(3)
+                            :
+                            "-"
+                        }
                     </strong>
                 </td>
 
                 <td>
-                    ${escapeHTML(observations)}
+                    ${escapeHTML(
+                        result.observations ||
+                        "-"
+                    )}
                 </td>
 
             </tr>
@@ -2932,18 +3165,14 @@ function renderResults(){
 
 
         table.innerHTML +=
-            rowHTML;
-
-
-        history.innerHTML +=
-            rowHTML;
+            row;
 
     });
 
 
     if(!results.length){
 
-        const empty = `
+        table.innerHTML = `
 
             <tr>
 
@@ -2955,12 +3184,141 @@ function renderResults(){
 
         `;
 
+    }
 
-        table.innerHTML =
-            empty;
+}
 
-        history.innerHTML =
-            empty;
+
+/* =====================================================
+   MELHORES RESULTADOS
+===================================================== */
+
+function renderBestResults(){
+
+    const grid =
+        document.getElementById(
+            "bestResultsGrid"
+        );
+
+
+    grid.innerHTML =
+        "";
+
+
+    classifiers.forEach(
+        (item,index)=>{
+
+            const metadata =
+                getMetadata(
+                    item,
+                    index
+                );
+
+
+            const best =
+                getBestHFForClassifier(
+                    item.id
+                );
+
+
+            if(best === null)
+                return;
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "classifier";
+
+
+            card.innerHTML = `
+
+                <div class="classifier-number">
+                    ${escapeHTML(
+                        metadata.code
+                    )}
+                </div>
+
+                <h3>
+                    ${escapeHTML(
+                        metadata.code
+                    )}
+                </h3>
+
+                <div class="classifier-meta">
+                    ${escapeHTML(
+                        metadata.type
+                    )}
+                    ·
+                    ${escapeHTML(
+                        String(
+                            metadata.rounds
+                        )
+                    )}
+                    tiros
+                </div>
+
+                <div class="best-hf">
+
+                    <span class="best-hf-label">
+                        Melhor HF
+                    </span>
+
+                    <span class="best-hf-value">
+                        ${best.toFixed(3)}
+                    </span>
+
+                </div>
+
+                <button
+                    class="btn btn-red register-result"
+                    type="button"
+                >
+                    REGISTRAR NOVO RESULTADO
+                </button>
+
+            `;
+
+
+            card
+            .querySelector(
+                ".register-result"
+            )
+            .addEventListener(
+                "click",
+                function(){
+
+                    openResultForClassifier(
+                        item.id
+                    );
+
+                }
+            );
+
+
+            grid.appendChild(
+                card
+            );
+
+        }
+    );
+
+
+    if(!grid.children.length){
+
+        grid.innerHTML = `
+
+            <div class="no-classifiers">
+
+                Você ainda não possui resultados registrados.
+
+            </div>
+
+        `;
 
     }
 
@@ -2968,48 +3326,361 @@ function renderResults(){
 
 
 /* =====================================================
-   NOVO RESULTADO
+   HISTÓRICO FILTRADO
+===================================================== */
+
+function applyHistoryFilters(){
+
+    const startDate =
+        document
+        .getElementById(
+            "historyStartDate"
+        )
+        .value;
+
+
+    const endDate =
+        document
+        .getElementById(
+            "historyEndDate"
+        )
+        .value;
+
+
+    const classifierId =
+        document
+        .getElementById(
+            "historyClassifier"
+        )
+        .value;
+
+
+    filteredHistory =
+        results.filter(
+            result=>{
+
+                if(
+                    startDate
+                    &&
+                    result.date < startDate
+                ){
+
+                    return false;
+
+                }
+
+
+                if(
+                    endDate
+                    &&
+                    result.date > endDate
+                ){
+
+                    return false;
+
+                }
+
+
+                if(
+                    classifierId
+                    &&
+                    result.classifier_id !==
+                    classifierId
+                ){
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            }
+        );
+
+
+    renderHistory();
+
+
+    const summary =
+        document.getElementById(
+            "historySummary"
+        );
+
+
+    summary.textContent =
+        `Exibindo ${filteredHistory.length} de ${results.length} resultado(s).`;
+
+}
+
+
+/* =====================================================
+   BOTÃO FILTRAR
 ===================================================== */
 
 document
-.getElementById("newResultBtn")
+.getElementById(
+    "applyHistoryFilters"
+)
 .addEventListener(
     "click",
     function(){
 
-        openResultModal();
+        applyHistoryFilters();
 
     }
 );
 
 
 /* =====================================================
-   FECHAR MODAL
+   LIMPAR FILTROS HISTÓRICO
 ===================================================== */
 
 document
-.getElementById("closeModal")
+.getElementById(
+    "clearHistoryFilters"
+)
 .addEventListener(
     "click",
     function(){
 
-        modal.style.display =
-            "none";
+        document
+        .getElementById(
+            "historyStartDate"
+        )
+        .value =
+            "";
+
+
+        document
+        .getElementById(
+            "historyEndDate"
+        )
+        .value =
+            "";
+
+
+        document
+        .getElementById(
+            "historyClassifier"
+        )
+        .value =
+            "";
+
+
+        filteredHistory =
+            [...results];
+
+
+        renderHistory();
+
+
+        document
+        .getElementById(
+            "historySummary"
+        )
+        .textContent =
+            "Exibindo todos os resultados.";
 
     }
 );
 
 
-modal.addEventListener(
+/* =====================================================
+   RENDER HISTÓRICO
+===================================================== */
+
+function renderHistory(){
+
+    const table =
+        document.getElementById(
+            "historyTable"
+        );
+
+
+    table.innerHTML =
+        "";
+
+
+    if(!filteredHistory.length){
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="5">
+                    Nenhum resultado encontrado.
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    filteredHistory.forEach(result=>{
+
+        const classifier =
+            classifiers.find(
+                item =>
+                    item.id ===
+                    result.classifier_id
+            );
+
+
+        const index =
+            classifier
+            ?
+            classifiers.indexOf(
+                classifier
+            )
+            :
+            -1;
+
+
+        const metadata =
+            classifier
+            ?
+            getMetadata(
+                classifier,
+                index
+            )
+            :
+            null;
+
+
+        const name =
+            metadata?.code ||
+            "Classifier";
+
+
+        const hitFactor =
+            Number(
+                result.hit_factor
+            );
+
+
+        const row =
+            document.createElement(
+                "tr"
+            );
+
+
+        row.innerHTML = `
+
+            <td>
+                ${escapeHTML(
+                    formatDate(
+                        result.date
+                    )
+                )}
+            </td>
+
+            <td>
+                ${escapeHTML(name)}
+            </td>
+
+            <td>
+                <strong>
+                    ${
+                        Number.isFinite(
+                            hitFactor
+                        )
+                        ?
+                        hitFactor.toFixed(3)
+                        :
+                        "-"
+                    }
+                </strong>
+            </td>
+
+            <td>
+                ${escapeHTML(
+                    result.observations ||
+                    "-"
+                )}
+            </td>
+
+            <td>
+
+                <div class="action-buttons">
+
+                    <button
+                        class="action-btn edit"
+                        type="button"
+                        data-id="${result.id}"
+                    >
+                        EDITAR
+                    </button>
+
+                    <button
+                        class="action-btn delete"
+                        type="button"
+                        data-id="${result.id}"
+                    >
+                        EXCLUIR
+                    </button>
+
+                </div>
+
+            </td>
+
+        `;
+
+
+        row
+        .querySelector(".edit")
+        .addEventListener(
+            "click",
+            function(){
+
+                editResult(
+                    result.id
+                );
+
+            }
+        );
+
+
+        row
+        .querySelector(".delete")
+        .addEventListener(
+            "click",
+            function(){
+
+                confirmDeleteResult(
+                    result.id
+                );
+
+            }
+        );
+
+
+        table.appendChild(
+            row
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   ABRIR MODAL NOVO RESULTADO
+===================================================== */
+
+document
+.getElementById(
+    "newResultBtn"
+)
+.addEventListener(
     "click",
-    function(e){
+    function(){
 
-        if(e.target === modal){
-
-            modal.style.display =
-                "none";
-
-        }
+        openResultModal();
 
     }
 );
@@ -3023,24 +3694,31 @@ function openResultModal(
     classifierId=null
 ){
 
-    modal.style.display =
-        "flex";
+    editingResultId =
+        null;
 
 
     document
     .getElementById(
-        "resultMessage"
-    )
-    .className =
-        "message";
-
-
-    document
-    .getElementById(
-        "resultMessage"
+        "resultModalTitle"
     )
     .textContent =
-        "";
+        "Novo resultado";
+
+
+    document
+    .getElementById(
+        "saveResultBtn"
+    )
+    .textContent =
+        "SALVAR RESULTADO";
+
+
+    document
+    .getElementById(
+        "resultForm"
+    )
+    .reset();
 
 
     document
@@ -3053,32 +3731,35 @@ function openResultModal(
 
     document
     .getElementById(
-        "hitFactor"
-    )
-    .value =
-        "";
-
-
-    document
-    .getElementById(
-        "observations"
-    )
-    .value =
-        "";
-
-
-    document
-    .getElementById(
         "classifierSelect"
     )
     .value =
         classifierId || "";
 
+
+    const message =
+        document
+        .getElementById(
+            "resultMessage"
+        );
+
+
+    message.className =
+        "message";
+
+
+    message.textContent =
+        "";
+
+
+    resultModal.style.display =
+        "flex";
+
 }
 
 
 /* =====================================================
-   ABRIR CLASSIFIER
+   RESULTADO POR CLASSIFIER
 ===================================================== */
 
 function openResultForClassifier(
@@ -3091,11 +3772,129 @@ function openResultForClassifier(
 
 
 /* =====================================================
-   SALVAR RESULTADO
+   EDITAR RESULTADO
+===================================================== */
+
+function editResult(
+    resultId
+){
+
+    const result =
+        results.find(
+            item =>
+                item.id ===
+                resultId
+        );
+
+
+    if(!result){
+
+        alert(
+            "Resultado não encontrado."
+        );
+
+        return;
+
+    }
+
+
+    editingResultId =
+        resultId;
+
+
+    document
+    .getElementById(
+        "resultModalTitle"
+    )
+    .textContent =
+        "Editar resultado";
+
+
+    document
+    .getElementById(
+        "saveResultBtn"
+    )
+    .textContent =
+        "SALVAR ALTERAÇÕES";
+
+
+    document
+    .getElementById(
+        "classifierSelect"
+    )
+    .value =
+        result.classifier_id;
+
+
+    document
+    .getElementById(
+        "resultDate"
+    )
+    .value =
+        result.date;
+
+
+    document
+    .getElementById(
+        "hitFactor"
+    )
+    .value =
+        result.hit_factor;
+
+
+    document
+    .getElementById(
+        "observations"
+    )
+    .value =
+        result.observations ||
+        "";
+
+
+    document
+    .getElementById(
+        "resultMessage"
+    )
+    .textContent =
+        "";
+
+
+    resultModal.style.display =
+        "flex";
+
+}
+
+
+/* =====================================================
+   FECHAR MODAL RESULTADO
 ===================================================== */
 
 document
-.getElementById("resultForm")
+.getElementById(
+    "closeModal"
+)
+.addEventListener(
+    "click",
+    function(){
+
+        resultModal.style.display =
+            "none";
+
+        editingResultId =
+            null;
+
+    }
+);
+
+
+/* =====================================================
+   SALVAR / ATUALIZAR
+===================================================== */
+
+document
+.getElementById(
+    "resultForm"
+)
 .addEventListener(
     "submit",
     async function(e){
@@ -3159,6 +3958,8 @@ document
 
 
         if(
+            !date
+            ||
             !Number.isFinite(
                 hitFactor
             )
@@ -3168,7 +3969,7 @@ document
                 "message error";
 
             message.textContent =
-                "Informe um Hit Factor válido.";
+                "Preencha a data e informe um Hit Factor válido.";
 
             return;
 
@@ -3179,32 +3980,80 @@ document
             "message";
 
         message.textContent =
+            editingResultId
+            ?
+            "Salvando alterações..."
+            :
             "Salvando...";
 
 
-        const {
-            error
-        } =
-            await supabaseClient
-            .from("training_results")
-            .insert({
+        let error;
 
-                classifier_id:
-                    classifierId,
 
-                user_id:
-                    currentUser.id,
+        if(editingResultId){
 
-                date:
-                    date,
+            const response =
+                await supabaseClient
+                .from("training_results")
+                .update({
 
-                hit_factor:
-                    hitFactor,
+                    classifier_id:
+                        classifierId,
 
-                observations:
-                    observations || null
+                    date:
+                        date,
 
-            });
+                    hit_factor:
+                        hitFactor,
+
+                    observations:
+                        observations ||
+                        null
+
+                })
+                .eq(
+                    "id",
+                    editingResultId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                );
+
+
+            error =
+                response.error;
+
+        }else{
+
+            const response =
+                await supabaseClient
+                .from("training_results")
+                .insert({
+
+                    classifier_id:
+                        classifierId,
+
+                    user_id:
+                        currentUser.id,
+
+                    date:
+                        date,
+
+                    hit_factor:
+                        hitFactor,
+
+                    observations:
+                        observations ||
+                        null
+
+                });
+
+
+            error =
+                response.error;
+
+        }
 
 
         if(error){
@@ -3228,6 +4077,10 @@ document
             "message success";
 
         message.textContent =
+            editingResultId
+            ?
+            "Alterações salvas com sucesso!"
+            :
             "Resultado salvo com sucesso!";
 
 
@@ -3237,12 +4090,293 @@ document
         setTimeout(
             function(){
 
-                modal.style.display =
+                resultModal.style.display =
                     "none";
+
+                editingResultId =
+                    null;
 
             },
             700
         );
+
+    }
+);
+
+
+/* =====================================================
+   CONFIRMAÇÃO GENÉRICA
+===================================================== */
+
+function openConfirmation(
+    title,
+    text,
+    action
+){
+
+    document
+    .getElementById(
+        "confirmTitle"
+    )
+    .textContent =
+        title;
+
+
+    document
+    .getElementById(
+        "confirmText"
+    )
+    .textContent =
+        text;
+
+
+    confirmAction =
+        action;
+
+
+    confirmModal.style.display =
+        "flex";
+
+}
+
+
+/* =====================================================
+   CANCELAR CONFIRMAÇÃO
+===================================================== */
+
+document
+.getElementById(
+    "confirmCancel"
+)
+.addEventListener(
+    "click",
+    function(){
+
+        confirmAction =
+            null;
+
+        confirmModal.style.display =
+            "none";
+
+    }
+);
+
+
+/* =====================================================
+   CONFIRMAR
+===================================================== */
+
+document
+.getElementById(
+    "confirmOk"
+)
+.addEventListener(
+    "click",
+    async function(){
+
+        if(!confirmAction)
+            return;
+
+
+        const action =
+            confirmAction;
+
+
+        confirmAction =
+            null;
+
+
+        confirmModal.style.display =
+            "none";
+
+
+        await action();
+
+    }
+);
+
+
+/* =====================================================
+   EXCLUIR RESULTADO
+===================================================== */
+
+function confirmDeleteResult(
+    resultId
+){
+
+    const result =
+        results.find(
+            item =>
+                item.id ===
+                resultId
+        );
+
+
+    if(!result)
+        return;
+
+
+    openConfirmation(
+
+        "Excluir resultado?",
+
+        "Tem certeza que deseja excluir este resultado? Esta ação não pode ser desfeita.",
+
+        async function(){
+
+            const {
+                error
+            } =
+                await supabaseClient
+                .from("training_results")
+                .delete()
+                .eq(
+                    "id",
+                    resultId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                );
+
+
+            if(error){
+
+                console.error(error);
+
+                alert(
+                    "Erro ao excluir: "
+                    +
+                    error.message
+                );
+
+                return;
+
+            }
+
+
+            await loadResults();
+
+            applyHistoryFilters();
+
+        }
+
+    );
+
+}
+
+
+/* =====================================================
+   LIMPAR TODO HISTÓRICO
+===================================================== */
+
+document
+.getElementById(
+    "clearAllHistory"
+)
+.addEventListener(
+    "click",
+    function(){
+
+        if(!results.length){
+
+            alert(
+                "Você não possui resultados para excluir."
+            );
+
+            return;
+
+        }
+
+
+        openConfirmation(
+
+            "Limpar todo o histórico?",
+
+            "ATENÇÃO: todos os seus resultados serão excluídos permanentemente. Os resultados de outros usuários não serão afetados. Esta ação não pode ser desfeita.",
+
+            async function(){
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                    .from("training_results")
+                    .delete()
+                    .eq(
+                        "user_id",
+                        currentUser.id
+                    );
+
+
+                if(error){
+
+                    console.error(error);
+
+                    alert(
+                        "Erro ao limpar histórico: "
+                        +
+                        error.message
+                    );
+
+                    return;
+
+                }
+
+
+                await loadResults();
+
+
+                document
+                .getElementById(
+                    "historySummary"
+                )
+                .textContent =
+                    "Histórico limpo com sucesso.";
+
+            }
+
+        );
+
+    }
+);
+
+
+/* =====================================================
+   FECHAR MODAIS CLICANDO FORA
+===================================================== */
+
+resultModal.addEventListener(
+    "click",
+    function(e){
+
+        if(e.target === resultModal){
+
+            resultModal.style.display =
+                "none";
+
+            editingResultId =
+                null;
+
+        }
+
+    }
+);
+
+
+confirmModal.addEventListener(
+    "click",
+    function(e){
+
+        if(e.target === confirmModal){
+
+            confirmAction =
+                null;
+
+            confirmModal.style.display =
+                "none";
+
+        }
 
     }
 );
@@ -3262,10 +4396,11 @@ document
 
             document
             .querySelectorAll(".tab")
-            .forEach(t =>
-                t.classList.remove(
-                    "active"
-                )
+            .forEach(
+                t =>
+                    t.classList.remove(
+                        "active"
+                    )
             );
 
 
@@ -3286,9 +4421,9 @@ document
                 selectedTab ===
                 "dashboard"
                 ?
-                    "block"
+                "block"
                 :
-                    "none";
+                "none";
 
 
             document
@@ -3299,9 +4434,9 @@ document
                 selectedTab ===
                 "classifiers"
                 ?
-                    "block"
+                "block"
                 :
-                    "none";
+                "none";
 
 
             document
@@ -3312,9 +4447,9 @@ document
                 selectedTab ===
                 "history"
                 ?
-                    "block"
+                "block"
                 :
-                    "none";
+                "none";
 
         }
     );
@@ -3367,8 +4502,13 @@ function getTodayLocal(){
 
 function formatDate(date){
 
+    if(!date)
+        return "-";
+
+
     const parts =
-        date.split("-");
+        String(date)
+        .split("-");
 
 
     if(parts.length !== 3)
@@ -3423,4 +4563,3 @@ init();
 
 </body>
 </html>
-```
