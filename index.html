@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Live Fire Classifier</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #111;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+        }
+
+        .card {
+            background: #1c1c1c;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.35);
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #111;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: 0;
+            border-radius: 8px;
+            background: #e00000;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #c00000;
+        }
+
+        #status {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #111;
+            color: #aaa;
+            font-size: 14px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .success {
+            color: #5ee68a !important;
+        }
+
+        .error {
+            color: #ff6b6b !important;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Live Fire Classifier</h1>
+
+        <div class="subtitle">
+            Teste de conexão com o Supabase
+        </div>
+
+        <label for="email">E-mail</label>
+        <input
+            type="email"
+            id="email"
+            placeholder="seu@email.com"
+        >
+
+        <label for="password">Senha</label>
+        <input
+            type="password"
+            id="password"
+            placeholder="Sua senha"
+        >
+
+        <button onclick="login()">
+            Entrar
+        </button>
+
+        <div id="status">
+            Aguardando login...
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    // ============================================================
+    // CONFIGURAÇÃO SUPABASE
+    // ============================================================
+
+    const SUPABASE_URL =
+        "https://pzbvaskwyjfgclwdzbp.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_M18H8TMwBV-EeM6YMLtlbQ_pyx0u_BZ";
+
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+
+    // ============================================================
+    // LOGIN
+    // ============================================================
+
+    async function login() {
+
+        const email =
+            document.getElementById("email").value.trim();
+
+        const password =
+            document.getElementById("password").value;
+
+        const status =
+            document.getElementById("status");
+
+
+        if (!email || !password) {
+
+            status.textContent =
+                "Informe seu e-mail e sua senha.";
+
+            status.className = "error";
+
+            return;
+        }
+
+
+        status.textContent =
+            "Entrando...";
+
+        status.className = "";
+
+
+        const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+
+                email: email,
+
+                password: password
+
+            });
+
+
+        if (error) {
+
+            console.error(error);
+
+            status.textContent =
+                "Erro: " + error.message;
+
+            status.className = "error";
+
+            return;
+        }
+
+
+        status.textContent =
+            "Login realizado com sucesso!";
+
+        status.className = "success";
+
+
+        console.log(
+            "Usuário autenticado:",
+            data.user
+        );
+
+    }
+
+</script>
+
+</body>
+</html>
