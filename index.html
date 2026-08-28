@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
 
@@ -45,6 +46,10 @@ textarea{
 
 button{
     -webkit-tap-highlight-color:transparent;
+}
+
+a{
+    text-decoration:none;
 }
 
 .container{
@@ -282,7 +287,7 @@ header{
 
 
 /* =====================================================
-   CARDS
+   SECTIONS
 ===================================================== */
 
 .section{
@@ -322,7 +327,7 @@ header{
     margin-bottom:18px;
 }
 
-.filter-group:last-child{
+.filter-group:last-of-type{
     margin-bottom:0;
 }
 
@@ -381,7 +386,6 @@ header{
 }
 
 .filter-status{
-    margin-top:15px;
     color:var(--muted);
     font-size:14px;
 }
@@ -427,10 +431,10 @@ header{
     margin-bottom:14px;
 }
 
-.classifier p{
-    color:var(--muted);
-    font-size:14px;
-}
+
+/* =====================================================
+   TAGS
+===================================================== */
 
 .tag-section{
     margin-top:15px;
@@ -470,12 +474,59 @@ header{
     color:#aaa;
 }
 
-.classifier button{
-    width:100%;
+
+/* =====================================================
+   LINKS OFICIAIS
+===================================================== */
+
+.official-links{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
     margin-top:18px;
 }
 
+.official-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    min-height:42px;
+    background:#202020;
+    color:#fff;
+    border:1px solid #444;
+    border-radius:9px;
+    font-size:11px;
+    font-weight:900;
+    transition:.2s;
+}
+
+.official-btn:hover{
+    background:#292929;
+    border-color:#777;
+    transform:translateY(-1px);
+}
+
+.official-btn.diagram{
+    border-color:#555;
+}
+
+.official-btn.document{
+    border-color:#555;
+}
+
+
+/* =====================================================
+   RESULTADO
+===================================================== */
+
+.classifier button.register-result{
+    width:100%;
+    margin-top:10px;
+}
+
 .no-classifiers{
+    grid-column:1/-1;
     padding:35px 15px;
     text-align:center;
     color:var(--muted);
@@ -615,11 +666,6 @@ td{
 
 }
 
-
-/* =====================================================
-   SMALL MOBILE
-===================================================== */
-
 @media(max-width:400px){
 
     .kpis{
@@ -630,14 +676,17 @@ td{
         font-size:30px;
     }
 
+    .official-links{
+        grid-template-columns:1fr;
+    }
+
 }
 
 </style>
+
 </head>
 
-
 <body>
-
 
 <!-- =====================================================
      LOGIN
@@ -645,63 +694,61 @@ td{
 
 <section id="loginScreen">
 
-    <div class="login-card">
+```
+<div class="login-card">
 
-        <div class="logo-title">
-            LIVE FIRE <span>CLASSIFIER</span>
-        </div>
-
-        <div class="subtitle">
-            Seu desempenho. Seus resultados. Sua evolução.
-        </div>
-
-        <form id="loginForm">
-
-            <label for="email">
-                E-mail
-            </label>
-
-            <input
-                id="email"
-                type="email"
-                required
-                autocomplete="email"
-            >
-
-
-            <label for="password">
-                Senha
-            </label>
-
-            <input
-                id="password"
-                type="password"
-                required
-                autocomplete="current-password"
-            >
-
-
-            <button
-                class="btn btn-red full"
-                type="submit"
-            >
-                ENTRAR
-            </button>
-
-        </form>
-
-        <div
-            id="loginMessage"
-            class="message"
-        >
-            Aguardando login...
-        </div>
-
+    <div class="logo-title">
+        LIVE FIRE <span>CLASSIFIER</span>
     </div>
 
+    <div class="subtitle">
+        Seu desempenho. Seus resultados. Sua evolução.
+    </div>
+
+    <form id="loginForm">
+
+        <label for="email">
+            E-mail
+        </label>
+
+        <input
+            id="email"
+            type="email"
+            required
+            autocomplete="email"
+        >
+
+        <label for="password">
+            Senha
+        </label>
+
+        <input
+            id="password"
+            type="password"
+            required
+            autocomplete="current-password"
+        >
+
+        <button
+            class="btn btn-red full"
+            type="submit"
+        >
+            ENTRAR
+        </button>
+
+    </form>
+
+    <div
+        id="loginMessage"
+        class="message"
+    >
+        Aguardando login...
+    </div>
+
+</div>
+```
+
 </section>
-
-
 
 <!-- =====================================================
      APP
@@ -711,351 +758,336 @@ td{
 
 <header>
 
-    <div class="container header-inner">
+```
+<div class="container header-inner">
 
-        <div class="brand">
-            TREINO A SECO <span>| LIVE FIRE</span>
-        </div>
+    <div class="brand">
+        TREINO A SECO <span>| LIVE FIRE</span>
+    </div>
 
-        <div class="user-area">
+    <div class="user-area">
 
-            <span id="userEmail"></span>
+        <span id="userEmail"></span>
 
-            <button
-                class="logout"
-                id="logoutBtn"
-            >
-                Sair
-            </button>
-
-        </div>
+        <button
+            class="logout"
+            id="logoutBtn"
+        >
+            Sair
+        </button>
 
     </div>
+
+</div>
+```
 
 </header>
 
-
 <main class="container">
 
+<section class="hero">
 
-    <!-- =================================================
-         HERO
-    ================================================= -->
+```
+<h1>
+    Live Fire Classifier
+</h1>
 
-    <section class="hero">
+<p>
+    Acompanhe seus resultados e sua evolução nos classifiers.
+</p>
+```
 
-        <h1>
-            Live Fire Classifier
-        </h1>
+</section>
 
-        <p>
-            Acompanhe seus resultados e sua evolução nos classifiers.
-        </p>
+<div class="tabs">
 
-    </section>
+```
+<button
+    class="tab active"
+    data-tab="dashboard"
+>
+    Dashboard
+</button>
 
+<button
+    class="tab"
+    data-tab="classifiers"
+>
+    Classifiers
+</button>
 
-    <!-- =================================================
-         ABAS
-    ================================================= -->
+<button
+    class="tab"
+    data-tab="history"
+>
+    Histórico
+</button>
+```
 
-    <div class="tabs">
+</div>
 
-        <button
-            class="tab active"
-            data-tab="dashboard"
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section id="dashboardTab">
+
+```
+<div class="kpis">
+
+    <div class="kpi">
+
+        <div class="kpi-title">
+            Resultados
+        </div>
+
+        <div
+            class="kpi-value"
+            id="totalResults"
         >
-            Dashboard
-        </button>
-
-        <button
-            class="tab"
-            data-tab="classifiers"
-        >
-            Classifiers
-        </button>
-
-        <button
-            class="tab"
-            data-tab="history"
-        >
-            Histórico
-        </button>
+            0
+        </div>
 
     </div>
 
 
-    <!-- =================================================
-         DASHBOARD
-    ================================================= -->
+    <div class="kpi">
 
-    <section
-        id="dashboardTab"
-    >
-
-        <div class="kpis">
-
-            <div class="kpi">
-
-                <div class="kpi-title">
-                    Resultados
-                </div>
-
-                <div
-                    class="kpi-value"
-                    id="totalResults"
-                >
-                    0
-                </div>
-
-            </div>
-
-
-            <div class="kpi">
-
-                <div class="kpi-title">
-                    Classifiers
-                </div>
-
-                <div
-                    class="kpi-value"
-                    id="totalClassifiers"
-                >
-                    0
-                </div>
-
-            </div>
-
-
-            <div class="kpi">
-
-                <div class="kpi-title">
-                    Melhor Hit Factor
-                </div>
-
-                <div
-                    class="kpi-value"
-                    id="bestHF"
-                >
-                    -
-                </div>
-
-            </div>
-
-
-            <div class="kpi">
-
-                <div class="kpi-title">
-                    Média Hit Factor
-                </div>
-
-                <div
-                    class="kpi-value"
-                    id="averageHF"
-                >
-                    -
-                </div>
-
-            </div>
-
+        <div class="kpi-title">
+            Classifiers
         </div>
 
+        <div
+            class="kpi-value"
+            id="totalClassifiers"
+        >
+            0
+        </div>
 
-        <section class="section">
+    </div>
 
-            <div class="section-header">
 
-                <h2>
-                    Últimos resultados
-                </h2>
+    <div class="kpi">
 
-                <button
-                    class="btn btn-red"
-                    id="newResultBtn"
-                >
-                    + Novo resultado
-                </button>
+        <div class="kpi-title">
+            Melhor Hit Factor
+        </div>
 
-            </div>
+        <div
+            class="kpi-value"
+            id="bestHF"
+        >
+            -
+        </div>
 
+    </div>
 
-            <div class="table-wrap">
 
-                <table>
+    <div class="kpi">
 
-                    <thead>
+        <div class="kpi-title">
+            Média Hit Factor
+        </div>
 
-                        <tr>
-                            <th>Data</th>
-                            <th>Classifier</th>
-                            <th>Hit Factor</th>
-                            <th>Observações</th>
-                        </tr>
+        <div
+            class="kpi-value"
+            id="averageHF"
+        >
+            -
+        </div>
 
-                    </thead>
-
-                    <tbody id="resultsTable">
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-    </section>
-
-
-
-    <!-- =================================================
-         CLASSIFIERS
-    ================================================= -->
-
-    <section
-        id="classifiersTab"
-        style="display:none"
-    >
-
-        <section class="section">
-
-            <div class="section-header">
-
-                <h2>
-                    Classifiers disponíveis
-                </h2>
-
-                <span
-                    id="classifierCount"
-                    class="filter-status"
-                >
-                </span>
-
-            </div>
-
-
-            <!-- =============================================
-                 FILTROS
-            ============================================== -->
-
-            <div class="filters-box">
-
-
-                <div class="filter-group">
-
-                    <div class="filter-title">
-                        Competências
-                    </div>
-
-                    <div
-                        class="filter-buttons"
-                        id="competencyFilters"
-                    >
-                    </div>
-
-                </div>
-
-
-                <div class="filter-group">
-
-                    <div class="filter-title">
-                        Características
-                    </div>
-
-                    <div
-                        class="filter-buttons"
-                        id="featureFilters"
-                    >
-                    </div>
-
-                </div>
-
-
-                <button
-                    class="clear-filters"
-                    id="clearFilters"
-                >
-                    LIMPAR FILTROS
-                </button>
-
-
-                <div
-                    class="filter-status"
-                    id="filterStatus"
-                >
-                    Exibindo todos os classifiers.
-                </div>
-
-            </div>
-
-
-            <!-- =============================================
-                 GRID
-            ============================================== -->
-
-            <div
-                class="classifiers"
-                id="classifiersGrid"
-            >
-            </div>
-
-        </section>
-
-    </section>
-
-
-
-    <!-- =================================================
-         HISTÓRICO
-    ================================================= -->
-
-    <section
-        id="historyTab"
-        style="display:none"
-    >
-
-        <section class="section">
-
-            <div class="section-header">
-
-                <h2>
-                    Histórico de desempenho
-                </h2>
-
-            </div>
-
-
-            <div class="table-wrap">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Data</th>
-                            <th>Classifier</th>
-                            <th>Hit Factor</th>
-                            <th>Observações</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="historyTable">
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-    </section>
-
-
-</main>
+    </div>
 
 </div>
 
 
+<section class="section">
+
+    <div class="section-header">
+
+        <h2>
+            Últimos resultados
+        </h2>
+
+        <button
+            class="btn btn-red"
+            id="newResultBtn"
+        >
+            + Novo resultado
+        </button>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Data</th>
+                    <th>Classifier</th>
+                    <th>Hit Factor</th>
+                    <th>Observações</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="resultsTable">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+```
+
+</section>
+
+<!-- =====================================================
+     CLASSIFIERS
+===================================================== -->
+
+<section
+    id="classifiersTab"
+    style="display:none"
+>
+
+<section class="section">
+
+```
+<div class="section-header">
+
+    <h2>
+        Classifiers disponíveis
+    </h2>
+
+    <span
+        id="classifierCount"
+        class="filter-status"
+    >
+    </span>
+
+</div>
+
+
+<!-- FILTROS -->
+
+<div class="filters-box">
+
+
+    <div class="filter-group">
+
+        <div class="filter-title">
+            Competências
+        </div>
+
+        <div
+            class="filter-buttons"
+            id="competencyFilters"
+        >
+        </div>
+
+    </div>
+
+
+    <div class="filter-group">
+
+        <div class="filter-title">
+            Características
+        </div>
+
+        <div
+            class="filter-buttons"
+            id="featureFilters"
+        >
+        </div>
+
+    </div>
+
+
+    <button
+        class="clear-filters"
+        id="clearFilters"
+    >
+        LIMPAR FILTROS
+    </button>
+
+
+    <div
+        class="filter-status"
+        id="filterStatus"
+    >
+        Exibindo todos os classifiers.
+    </div>
+
+</div>
+
+
+<div
+    class="classifiers"
+    id="classifiersGrid"
+>
+</div>
+```
+
+</section>
+
+</section>
+
+<!-- =====================================================
+     HISTÓRICO
+===================================================== -->
+
+<section
+    id="historyTab"
+    style="display:none"
+>
+
+<section class="section">
+
+```
+<div class="section-header">
+
+    <h2>
+        Histórico de desempenho
+    </h2>
+
+</div>
+
+
+<div class="table-wrap">
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Data</th>
+                <th>Classifier</th>
+                <th>Hit Factor</th>
+                <th>Observações</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="historyTable">
+        </tbody>
+
+    </table>
+
+</div>
+```
+
+</section>
+
+</section>
+
+</main>
+
+</div>
 
 <!-- =====================================================
      MODAL NOVO RESULTADO
@@ -1066,94 +1098,93 @@ td{
     id="resultModal"
 >
 
-    <div class="modal-card">
+<div class="modal-card">
 
+```
+<div class="modal-header">
 
-        <div class="modal-header">
+    <h2>
+        Novo resultado
+    </h2>
 
-            <h2>
-                Novo resultado
-            </h2>
-
-            <button
-                class="close"
-                id="closeModal"
-                type="button"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <form id="resultForm">
-
-
-            <label for="classifierSelect">
-                Classifier
-            </label>
-
-            <select
-                id="classifierSelect"
-                required
-            >
-            </select>
-
-
-            <label for="resultDate">
-                Data
-            </label>
-
-            <input
-                id="resultDate"
-                type="date"
-                required
-            >
-
-
-            <label for="hitFactor">
-                Hit Factor
-            </label>
-
-            <input
-                id="hitFactor"
-                type="number"
-                step="0.001"
-                min="0"
-                required
-            >
-
-
-            <label for="observations">
-                Observações
-            </label>
-
-            <textarea
-                id="observations"
-                rows="4"
-            ></textarea>
-
-
-            <button
-                class="btn btn-red full"
-                type="submit"
-            >
-                SALVAR RESULTADO
-            </button>
-
-        </form>
-
-
-        <div
-            id="resultMessage"
-            class="message"
-        ></div>
-
-    </div>
+    <button
+        class="close"
+        id="closeModal"
+        type="button"
+    >
+        ×
+    </button>
 
 </div>
 
 
+<form id="resultForm">
+
+
+    <label for="classifierSelect">
+        Classifier
+    </label>
+
+    <select
+        id="classifierSelect"
+        required
+    >
+    </select>
+
+
+    <label for="resultDate">
+        Data
+    </label>
+
+    <input
+        id="resultDate"
+        type="date"
+        required
+    >
+
+
+    <label for="hitFactor">
+        Hit Factor
+    </label>
+
+    <input
+        id="hitFactor"
+        type="number"
+        step="0.001"
+        min="0"
+        required
+    >
+
+
+    <label for="observations">
+        Observações
+    </label>
+
+    <textarea
+        id="observations"
+        rows="4"
+    ></textarea>
+
+
+    <button
+        class="btn btn-red full"
+        type="submit"
+    >
+        SALVAR RESULTADO
+    </button>
+
+</form>
+
+
+<div
+    id="resultMessage"
+    class="message"
+></div>
+```
+
+</div>
+
+</div>
 
 <script>
 
@@ -1167,9 +1198,12 @@ const SUPABASE_URL =
 
 
 /*
-   ======================================================
-   COLE AQUI SUA CHAVE PUBLICA DO SUPABASE
-   ======================================================
+=========================================================
+   ATENÇÃO:
+
+   SUBSTITUA SOMENTE O VALOR ABAIXO PELA SUA
+   CHAVE PÚBLICA / PUBLISHABLE KEY DO SUPABASE.
+=========================================================
 */
 
 const SUPABASE_KEY =
@@ -1199,13 +1233,13 @@ let selectedFeature = "ALL";
 
 
 /* =====================================================
-   MATRIZ DOS CLASSIFIERS
+   METADADOS DOS 28 CLASSIFIERS
 ===================================================== */
 
 const classifierMetadata = {
 
 
-    "CLC-01": {
+    "CLC-01":{
         type:"Short",
         rounds:7,
         competencies:[
@@ -1216,11 +1250,13 @@ const classifierMetadata = {
         features:[
             "No Shoot",
             "Posição Inicial Especial"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1lZFV8SbioN5e5noxjy9Z4lenzP3leP7x/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1M7xVvSVIzr8G4oYb9m81Y-cOAl8ZrpGt/view?usp=drive_link"
     },
 
 
-    "CLC-03": {
+    "CLC-03":{
         type:"Short",
         rounds:6,
         competencies:[
@@ -1230,11 +1266,13 @@ const classifierMetadata = {
         ],
         features:[
             "Posição Inicial Especial"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1hFzI6jNoIurRuI3WwbJDMVZzZv_Z06iQ/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1jlP0mBj_kFdZ0KxL1o0hVVhbuMH5Qnzr/view?usp=drive_link"
     },
 
 
-    "CLC-05": {
+    "CLC-05":{
         type:"Short",
         rounds:8,
         competencies:[
@@ -1243,11 +1281,13 @@ const classifierMetadata = {
         ],
         features:[
             "No Shoot"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1fMYDdYDXeyOQwvXPR9ensSvrlzfBjN3C/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1N4ie0x2PLpXDm9xATjctzGmRcmCHdt4a/view?usp=drive_link"
     },
 
 
-    "CLC-07": {
+    "CLC-07":{
         type:"Short",
         rounds:12,
         competencies:[
@@ -1261,11 +1301,13 @@ const classifierMetadata = {
             "No Shoot",
             "Múltiplas Posições",
             "Barreira Visual"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1vlvLOENbAWh8YEM3p1Ome2AW2oRgOIDv/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1l-JqLq5-yfH0bpK7REk7x2sCNItb3218/view?usp=drive_link"
     },
 
 
-    "CLC-11": {
+    "CLC-11":{
         type:"Short",
         rounds:12,
         competencies:[
@@ -1277,11 +1319,13 @@ const classifierMetadata = {
         features:[
             "Barricada",
             "Posição Inicial Especial"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1XsNfB6JaG1boDO3rITRn86iVQokYzHQ7/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1RnO7IthgmQV-UDSZ4Tg1s-iiR8ll0hRz/view?usp=drive_link"
     },
 
 
-    "CLC-15": {
+    "CLC-15":{
         type:"Short",
         rounds:9,
         competencies:[
@@ -1290,11 +1334,13 @@ const classifierMetadata = {
         ],
         features:[
             "Ângulos"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1y6M7ANqicWc_OUn40Ru5bjLnOcgpE8-J/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1FrNkz5L9HW5sFtol8JYAXclE2x6IEtPR/view?usp=drive_link"
     },
 
 
-    "CLC-19": {
+    "CLC-19":{
         type:"Short",
         rounds:6,
         competencies:[
@@ -1305,11 +1351,13 @@ const classifierMetadata = {
         ],
         features:[
             "Distâncias Diferentes"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1gqmAvz-_Q8BlPXLNdhq_k_O1siHgh2Jd/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/18NR-5J0pdYTmLRywukWGj2JrGe4ZIJx6/view?usp=drive_link"
     },
 
 
-    "CLC-21": {
+    "CLC-21":{
         type:"Short",
         rounds:12,
         competencies:[
@@ -1323,11 +1371,13 @@ const classifierMetadata = {
             "Portas",
             "Barreira Visual",
             "No Shoot"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1BE6AOBkjlft6_KtOMOagEuHN9S0lpDc8/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1EV7sWEhmECuFbRAhqgum9GriS2pzVmkT/view?usp=drive_link"
     },
 
 
-    "CLC-25": {
+    "CLC-25":{
         type:"Medium",
         rounds:21,
         competencies:[
@@ -1339,11 +1389,13 @@ const classifierMetadata = {
         features:[
             "Hard Cover",
             "Distâncias Diferentes"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1mBjqSZh9bjMoHkQ5qsOZeL3U_vx_2qUq/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1YsBt2aQeegpl-0c-Xij1Y7y0WI0iFZcS/view?usp=drive_link"
     },
 
 
-    "CLC-31": {
+    "CLC-31":{
         type:"Short",
         rounds:6,
         competencies:[
@@ -1354,11 +1406,13 @@ const classifierMetadata = {
         features:[
             "No Shoot",
             "Posição Inicial Especial"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1U5BNhbz9-L_2M41JlXcKfblSwdooy0t/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/12E3F4E2QifehzqXxnRe9ji0PBYTL92ZO/view?usp=drive_link"
     },
 
 
-    "CLC-33": {
+    "CLC-33":{
         type:"Short",
         rounds:6,
         competencies:[
@@ -1368,11 +1422,13 @@ const classifierMetadata = {
         ],
         features:[
             "Hard Cover"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1hZ_BRxceG_f2jB-iIeEXaXBl4I2CpSku/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1-dEBaLq4FTHrB4fImkQYg8iSwFKPT0jl/view?usp=drive_link"
     },
 
 
-    "CLC-35": {
+    "CLC-35":{
         type:"Short",
         rounds:6,
         competencies:[
@@ -1382,11 +1438,13 @@ const classifierMetadata = {
         features:[
             "No Shoot",
             "Posição Inicial Especial"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1n0Km6PcABN1vJPczoDXzaap0z2MBN4Nu/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1RMhFwCu--t7v5gaorcVyVIMQkX8VHhY7/view?usp=drive_link"
     },
 
 
-    "CLC-37": {
+    "CLC-37":{
         type:"Short",
         rounds:12,
         competencies:[
@@ -1401,11 +1459,13 @@ const classifierMetadata = {
             "No Shoot",
             "Múltiplas Posições",
             "Barreira Visual"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1l-nc9Vvx4MYHbuII2Em3YeM7R8Tb_oYZ/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1TR1O2Wdu5cNsupSjMZXMbSt_zCAN1cbe/view?usp=drive_link"
     },
 
 
-    "CLC-41": {
+    "CLC-41":{
         type:"Short",
         rounds:12,
         competencies:[
@@ -1416,11 +1476,13 @@ const classifierMetadata = {
         features:[
             "No Shoot",
             "Posição Inicial Especial"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1LJYa0zb4UGGzuMzTx3lPN2gEOr7BD9tM/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1-W5VLAjtqgNe0uoMZtlHv2z_TBCLLZBj/view?usp=drive_link"
     },
 
 
-    "CLC-45": {
+    "CLC-45":{
         type:"Short",
         rounds:8,
         competencies:[
@@ -1431,11 +1493,13 @@ const classifierMetadata = {
             "Hard Cover",
             "Ângulos",
             "Posição Inicial Especial"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1FGCTnarfZHuOYW5U7aQ4S3RJsIoJAKc5/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/16vL_Zz0KiFwxAhSss7Ev8FDkOPYGRQvP/view?usp=drive_link"
     },
 
 
-    "CLC-47": {
+    "CLC-47":{
         type:"Short",
         rounds:6,
         competencies:[
@@ -1445,11 +1509,13 @@ const classifierMetadata = {
         ],
         features:[
             "Poppers"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1R2mU27gNKecyoFDjfXgWchF89IyC0Jzp/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1gOnWlW35f8LTaaT_1tnRf77B6gSV3Zk2/view?usp=drive_link"
     },
 
 
-    "CLC-49": {
+    "CLC-49":{
         type:"Medium",
         rounds:14,
         competencies:[
@@ -1464,11 +1530,13 @@ const classifierMetadata = {
             "Hard Cover",
             "Múltiplas Posições",
             "Posição Inicial Especial"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1B_BMgXi5v4gMYqr2pjvx8ikvZUeC_Msm/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1GJVjj7fQZTKjVlM3DfrHNFm0wHISXEcE/view?usp=drive_link"
     },
 
 
-    "CLC-51": {
+    "CLC-51":{
         type:"Short",
         rounds:6,
         competencies:[
@@ -1477,11 +1545,13 @@ const classifierMetadata = {
         ],
         features:[
             "Hard Cover"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1e4btmC8FsKF_A-HIGLf-elfyrIMJ4ec9/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1-LtZUYcpe-ISukx4cR05QtIHKXAvxhYb/view?usp=drive_link"
     },
 
 
-    "CLC-53": {
+    "CLC-53":{
         type:"Medium",
         rounds:14,
         competencies:[
@@ -1494,11 +1564,13 @@ const classifierMetadata = {
         features:[
             "Barricada",
             "Múltiplas Posições"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1LmGBxwX3NM_WG41i1_DDW3Y7PvBPogmE/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/10arCZ-ZUeFJ4kmS_sRbjs9kZgxZETSMw/view?usp=drive_link"
     },
 
 
-    "CLC-55": {
+    "CLC-55":{
         type:"Short",
         rounds:12,
         competencies:[
@@ -1513,11 +1585,13 @@ const classifierMetadata = {
             "No Shoot",
             "Múltiplas Posições",
             "Barril"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1WPsCR0HyfU6VJma5sdMtRj68O5JyZais/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1QdSFCqNkRoYZA9AJd-gmFxJWIr0Jvy6j/view?usp=drive_link"
     },
 
 
-    "CLC-57": {
+    "CLC-57":{
         type:"Short",
         rounds:12,
         competencies:[
@@ -1529,11 +1603,13 @@ const classifierMetadata = {
         features:[
             "Barricada",
             "Poppers"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1jqtflNbtAgq56Eh85pBwyNntwxPwwvrF/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1Y_g6Ae0H2zJqkkxRevpabne3hK61YbUx/view?usp=drive_link"
     },
 
 
-    "CLC-59": {
+    "CLC-59":{
         type:"Short",
         rounds:12,
         competencies:[
@@ -1545,11 +1621,13 @@ const classifierMetadata = {
             "No Shoot",
             "Distâncias Diferentes",
             "Alturas Diferentes"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1nHjlx4QXcBvTsYPnqesAM6ao9TajDs3w/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1zt9YuwO0yxZ1FH8_-ovNwZlSsafbl1Da/view?usp=drive_link"
     },
 
 
-    "CLC-63": {
+    "CLC-63":{
         type:"Medium",
         rounds:16,
         competencies:[
@@ -1564,11 +1642,13 @@ const classifierMetadata = {
             "Múltiplas Posições",
             "Poppers",
             "Distâncias Diferentes"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1kkBAJGAAqb2q03pn1C9stHSjni0A3e3f/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1Cv6cfkvtDGD_2AOaW4gvTPyV3zJfJ5AY/view?usp=drive_link"
     },
 
 
-    "CLC-65": {
+    "CLC-65":{
         type:"Short",
         rounds:6,
         competencies:[
@@ -1578,11 +1658,13 @@ const classifierMetadata = {
         features:[
             "Poppers",
             "Distâncias Diferentes"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/10pmoFakgPQ3HLQW6pP91ZngTZ0R0ZGbL/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1uJoQakTGYxF-P34jrrlPvq2tU9AcEh6j/view?usp=drive_link"
     },
 
 
-    "CLC-67": {
+    "CLC-67":{
         type:"Short",
         rounds:12,
         competencies:[
@@ -1593,11 +1675,13 @@ const classifierMetadata = {
         features:[
             "Hard Cover",
             "No Shoot"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/18F0JHTqVxkm2ES6MydhZE9vxJsM2tUoi/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/13_w9X3tL1g3FYp6c7WGcmVbcKj6KDReO/view?usp=drive_link"
     },
 
 
-    "CLC-69": {
+    "CLC-69":{
         type:"Medium",
         rounds:24,
         competencies:[
@@ -1610,11 +1694,13 @@ const classifierMetadata = {
         features:[
             "Múltiplas Posições",
             "Distâncias Diferentes"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1h5Lxmc4VtXTbZee3JF9Kkkz_uFknGbMv/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1Binl3nIAKQVkt0tl19T42w6fvM7hTMr_/view?usp=drive_link"
     },
 
 
-    "CLC-71": {
+    "CLC-71":{
         type:"Short",
         rounds:8,
         competencies:[
@@ -1623,11 +1709,13 @@ const classifierMetadata = {
         ],
         features:[
             "Barricada"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1dId_WEvpVSQ3SScnTBUvYABD19CtnJRW/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1RY6hns9teolJOTv-UDD_7f0Jw8Yx4buM/view?usp=drive_link"
     },
 
 
-    "CLC-73": {
+    "CLC-73":{
         type:"Short",
         rounds:6,
         competencies:[
@@ -1637,7 +1725,9 @@ const classifierMetadata = {
         ],
         features:[
             "No Shoot"
-        ]
+        ],
+        diagramUrl:"https://drive.google.com/file/d/1qYEXMaUyxyezxR5891-7VNTlzBJKnMpd/view?usp=drive_link",
+        documentUrl:"https://drive.google.com/file/d/1ZL9zszWNzS0C8J0KUjRRDuQXaHzjtKmw/view?usp=drive_link"
     }
 
 };
@@ -1666,72 +1756,68 @@ const modal =
 
 document
 .getElementById("loginForm")
-.addEventListener("submit", async function(e){
+.addEventListener(
+    "submit",
+    async function(e){
 
-    e.preventDefault();
-
-    loginMessage.className =
-        "message";
-
-    loginMessage.textContent =
-        "Entrando...";
-
-
-    const email =
-        document
-        .getElementById("email")
-        .value
-        .trim();
-
-
-    const password =
-        document
-        .getElementById("password")
-        .value;
-
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient.auth.signInWithPassword({
-
-            email,
-            password
-
-        });
-
-
-    if(error){
-
-        console.error(error);
+        e.preventDefault();
 
         loginMessage.className =
-            "message error";
+            "message";
 
         loginMessage.textContent =
-            "Erro ao entrar: "
-            + error.message;
+            "Entrando...";
 
-        return;
+
+        const email =
+            document
+            .getElementById("email")
+            .value
+            .trim();
+
+
+        const password =
+            document
+            .getElementById("password")
+            .value;
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+            .auth
+            .signInWithPassword({
+                email,
+                password
+            });
+
+
+        if(error){
+
+            console.error(error);
+
+            loginMessage.className =
+                "message error";
+
+            loginMessage.textContent =
+                "Erro ao entrar: "
+                + error.message;
+
+            return;
+
+        }
+
+
+        currentUser =
+            data.user;
+
+
+        await showApp();
 
     }
-
-
-    currentUser =
-        data.user;
-
-
-    loginMessage.className =
-        "message success";
-
-    loginMessage.textContent =
-        "Login realizado com sucesso!";
-
-
-    await showApp();
-
-});
+);
 
 
 /* =====================================================
@@ -1740,19 +1826,24 @@ document
 
 document
 .getElementById("logoutBtn")
-.addEventListener("click", async function(){
+.addEventListener(
+    "click",
+    async function(){
 
-    await supabaseClient.auth.signOut();
+        await supabaseClient
+            .auth
+            .signOut();
 
-    currentUser = null;
+        currentUser = null;
 
-    app.style.display =
-        "none";
+        app.style.display =
+            "none";
 
-    loginScreen.style.display =
-        "flex";
+        loginScreen.style.display =
+            "flex";
 
-});
+    }
+);
 
 
 /* =====================================================
@@ -1764,7 +1855,7 @@ async function init(){
     try{
 
         const {
-            data: {
+            data:{
                 session
             }
         } =
@@ -1821,7 +1912,7 @@ async function showApp(){
 
 
 /* =====================================================
-   CARREGAR CLASSIFIERS
+   CLASSIFIERS
 ===================================================== */
 
 async function loadClassifiers(){
@@ -1870,10 +1961,13 @@ async function loadClassifiers(){
 
 
 /* =====================================================
-   IDENTIFICAR CÓDIGO CLC
+   IDENTIFICAR CÓDIGO
 ===================================================== */
 
-function getClassifierCode(item,index){
+function getClassifierCode(
+    item,
+    index
+){
 
     const possibleValues = [
 
@@ -1888,7 +1982,9 @@ function getClassifierCode(item,index){
     ];
 
 
-    for(const value of possibleValues){
+    for(
+        const value of possibleValues
+    ){
 
         if(!value)
             continue;
@@ -1906,15 +2002,6 @@ function getClassifierCode(item,index){
     }
 
 
-    /*
-       Fallback:
-
-       Caso a tabela classifiers não tenha
-       um campo com o código CLC, usamos
-       a ordem dos classifiers somente como
-       último recurso.
-    */
-
     const codes =
         Object.keys(
             classifierMetadata
@@ -1927,48 +2014,13 @@ function getClassifierCode(item,index){
 
 
 /* =====================================================
-   NOME DO CLASSIFIER
-===================================================== */
-
-function classifierName(item,index=null){
-
-    const code =
-        getClassifierCode(
-            item,
-            index ?? 0
-        );
-
-
-    const metadata =
-        classifierMetadata[code];
-
-
-    if(metadata){
-
-        return code;
-
-    }
-
-
-    return (
-
-        item?.name ||
-        item?.title ||
-        item?.classifier_name ||
-        item?.classifier ||
-        item?.description ||
-        "Classifier"
-
-    );
-
-}
-
-
-/* =====================================================
    METADATA
 ===================================================== */
 
-function getMetadata(item,index){
+function getMetadata(
+    item,
+    index
+){
 
     const code =
         getClassifierCode(
@@ -1986,7 +2038,9 @@ function getMetadata(item,index){
             type:"-",
             rounds:"-",
             competencies:[],
-            features:[]
+            features:[],
+            diagramUrl:"",
+            documentUrl:""
 
         })
 
@@ -1996,7 +2050,7 @@ function getMetadata(item,index){
 
 
 /* =====================================================
-   POPULAR FILTROS
+   FILTROS
 ===================================================== */
 
 function populateFilters(){
@@ -2029,7 +2083,8 @@ function populateFilters(){
 
     Object.values(
         classifierMetadata
-    ).forEach(metadata=>{
+    )
+    .forEach(metadata=>{
 
         metadata.competencies
         .forEach(item =>
@@ -2090,7 +2145,7 @@ function populateFilters(){
 
 
 /* =====================================================
-   CRIAR BOTÃO DE FILTRO
+   BOTÃO DE FILTRO
 ===================================================== */
 
 function createFilterButton(
@@ -2101,7 +2156,9 @@ function createFilterButton(
 ){
 
     const button =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
 
     button.type =
@@ -2112,12 +2169,22 @@ function createFilterButton(
         "filter-btn";
 
 
+    button.dataset.value =
+        value;
+
+
     if(
-        (type === "competency" &&
-        selectedCompetency === value)
+        (
+            type === "competency"
+            &&
+            selectedCompetency === value
+        )
         ||
-        (type === "feature" &&
-        selectedFeature === value)
+        (
+            type === "feature"
+            &&
+            selectedFeature === value
+        )
     ){
 
         button.classList.add(
@@ -2156,13 +2223,15 @@ function createFilterButton(
     );
 
 
-    container.appendChild(button);
+    container.appendChild(
+        button
+    );
 
 }
 
 
 /* =====================================================
-   ATUALIZAR BOTÕES DE FILTRO
+   ATUALIZAR FILTROS
 ===================================================== */
 
 function updateFilterButtons(){
@@ -2173,32 +2242,11 @@ function updateFilterButtons(){
     )
     .forEach(button=>{
 
-        const value =
-            button.dataset.value ||
-            button.textContent;
-
-
-        if(
-            button.textContent ===
-            (
-                selectedCompetency ===
-                "ALL"
-                ? "Todas"
-                : selectedCompetency
-            )
-        ){
-
-            button.classList.add(
-                "active"
-            );
-
-        }else{
-
-            button.classList.remove(
-                "active"
-            );
-
-        }
+        button.classList.toggle(
+            "active",
+            button.dataset.value ===
+            selectedCompetency
+        );
 
     });
 
@@ -2209,27 +2257,11 @@ function updateFilterButtons(){
     )
     .forEach(button=>{
 
-        if(
-            button.textContent ===
-            (
-                selectedFeature ===
-                "ALL"
-                ? "Todas"
-                : selectedFeature
-            )
-        ){
-
-            button.classList.add(
-                "active"
-            );
-
-        }else{
-
-            button.classList.remove(
-                "active"
-            );
-
-        }
+        button.classList.toggle(
+            "active",
+            button.dataset.value ===
+            selectedFeature
+        );
 
     });
 
@@ -2242,23 +2274,26 @@ function updateFilterButtons(){
 
 document
 .getElementById("clearFilters")
-.addEventListener("click",function(){
+.addEventListener(
+    "click",
+    function(){
 
-    selectedCompetency =
-        "ALL";
+        selectedCompetency =
+            "ALL";
 
-    selectedFeature =
-        "ALL";
+        selectedFeature =
+            "ALL";
 
-    updateFilterButtons();
+        updateFilterButtons();
 
-    renderClassifiers();
+        renderClassifiers();
 
-});
+    }
+);
 
 
 /* =====================================================
-   CLASSIFIER PASSA PELO FILTRO?
+   MATCH DOS FILTROS
 ===================================================== */
 
 function classifierMatchesFilters(
@@ -2269,18 +2304,23 @@ function classifierMatchesFilters(
         selectedCompetency === "ALL"
         ||
         metadata.competencies
-        .includes(selectedCompetency);
+        .includes(
+            selectedCompetency
+        );
 
 
     const featureMatch =
         selectedFeature === "ALL"
         ||
         metadata.features
-        .includes(selectedFeature);
+        .includes(
+            selectedFeature
+        );
 
 
     return (
-        competencyMatch &&
+        competencyMatch
+        &&
         featureMatch
     );
 
@@ -2351,26 +2391,26 @@ function renderClassifiers(){
 
 
         if(
-            selectedCompetency !==
-            "ALL"
+            selectedCompetency !== "ALL"
         ){
 
             parts.push(
                 "Competência: "
-                + selectedCompetency
+                +
+                selectedCompetency
             );
 
         }
 
 
         if(
-            selectedFeature !==
-            "ALL"
+            selectedFeature !== "ALL"
         ){
 
             parts.push(
                 "Característica: "
-                + selectedFeature
+                +
+                selectedFeature
             );
 
         }
@@ -2378,7 +2418,8 @@ function renderClassifiers(){
 
         filterStatus.textContent =
             `Exibindo ${filtered.length} classifier(s) — `
-            + parts.join(" · ");
+            +
+            parts.join(" · ");
 
     }
 
@@ -2404,7 +2445,9 @@ function renderClassifiers(){
     filtered.forEach(item=>{
 
         const originalIndex =
-            classifiers.indexOf(item);
+            classifiers.indexOf(
+                item
+            );
 
 
         const metadata =
@@ -2426,7 +2469,7 @@ function renderClassifiers(){
 
         const competencyTags =
             metadata.competencies
-            .map(item => `
+            .map(item=>`
 
                 <span class="tag competency">
                     ${escapeHTML(item)}
@@ -2438,7 +2481,7 @@ function renderClassifiers(){
 
         const featureTags =
             metadata.features
-            .map(item => `
+            .map(item=>`
 
                 <span class="tag feature">
                     ${escapeHTML(item)}
@@ -2448,22 +2491,62 @@ function renderClassifiers(){
             .join("");
 
 
+        const officialLinks = `
+
+            <div class="official-links">
+
+                <a
+                    class="official-btn diagram"
+                    href="${metadata.diagramUrl}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    DIAGRAMA
+                </a>
+
+
+                <a
+                    class="official-btn document"
+                    href="${metadata.documentUrl}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    DOCUMENTO OFICIAL
+                </a>
+
+            </div>
+
+        `;
+
+
         card.innerHTML = `
 
             <div class="classifier-number">
-                ${escapeHTML(metadata.code || "CLASSIFIER")}
+                ${escapeHTML(
+                    metadata.code ||
+                    "CLASSIFIER"
+                )}
             </div>
 
 
             <h3>
-                ${escapeHTML(metadata.code || classifierName(item,originalIndex))}
+                ${escapeHTML(
+                    metadata.code ||
+                    "Classifier"
+                )}
             </h3>
 
 
             <div class="classifier-meta">
-                ${escapeHTML(metadata.type)}
+                ${escapeHTML(
+                    metadata.type
+                )}
                 ·
-                ${escapeHTML(String(metadata.rounds))}
+                ${escapeHTML(
+                    String(
+                        metadata.rounds
+                    )
+                )}
                 tiros
             </div>
 
@@ -2488,10 +2571,17 @@ function renderClassifiers(){
                 </div>
 
                 <div class="tags">
-                    ${featureTags || '<span class="tag feature">Nenhuma</span>'}
+                    ${
+                        featureTags
+                        ||
+                        '<span class="tag feature">Nenhuma</span>'
+                    }
                 </div>
 
             </div>
+
+
+            ${officialLinks}
 
 
             <button
@@ -2520,7 +2610,9 @@ function renderClassifiers(){
         );
 
 
-        grid.appendChild(card);
+        grid.appendChild(
+            card
+        );
 
     });
 
@@ -2545,44 +2637,44 @@ function populateClassifierSelect(){
         </option>`;
 
 
-    classifiers.forEach((item,index)=>{
+    classifiers.forEach(
+        (item,index)=>{
 
-        const option =
-            document.createElement(
-                "option"
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                item.id;
+
+
+            const metadata =
+                getMetadata(
+                    item,
+                    index
+                );
+
+
+            option.textContent =
+                metadata.code
+                ||
+                "Classifier";
+
+
+            select.appendChild(
+                option
             );
 
-
-        option.value =
-            item.id;
-
-
-        const metadata =
-            getMetadata(
-                item,
-                index
-            );
-
-
-        option.textContent =
-            metadata.code ||
-            classifierName(
-                item,
-                index
-            );
-
-
-        select.appendChild(
-            option
-        );
-
-    });
+        }
+    );
 
 }
 
 
 /* =====================================================
-   CARREGAR RESULTADOS
+   RESULTADOS
 ===================================================== */
 
 async function loadResults(){
@@ -2616,7 +2708,8 @@ async function loadResults(){
 
         alert(
             "Erro ao carregar resultados: "
-            + error.message
+            +
+            error.message
         );
 
         return;
@@ -2720,7 +2813,7 @@ function updateKPIs(){
 
 
 /* =====================================================
-   RESULTADOS NAS TABELAS
+   RENDER RESULTADOS
 ===================================================== */
 
 function renderResults(){
@@ -2740,7 +2833,6 @@ function renderResults(){
     table.innerHTML =
         "";
 
-
     history.innerHTML =
         "";
 
@@ -2757,40 +2849,39 @@ function renderResults(){
 
         const classifierIndex =
             classifier
-            ? classifiers.indexOf(
-                classifier
-            )
-            : -1;
+            ?
+                classifiers.indexOf(
+                    classifier
+                )
+            :
+                -1;
 
 
         const metadata =
             classifier
-            ? getMetadata(
-                classifier,
-                classifierIndex
-            )
-            : null;
+            ?
+                getMetadata(
+                    classifier,
+                    classifierIndex
+                )
+            :
+                null;
 
 
         const name =
             metadata?.code
             ||
-            (
-                classifier
-                ? classifierName(
-                    classifier,
-                    classifierIndex
-                )
-                : "Classifier"
-            );
+            "Classifier";
 
 
         const date =
             result.date
-            ? formatDate(
-                result.date
-            )
-            : "-";
+            ?
+                formatDate(
+                    result.date
+                )
+            :
+                "-";
 
 
         const hitFactor =
@@ -2813,46 +2904,39 @@ function renderResults(){
             "-";
 
 
-        const row =
-            document.createElement(
-                "tr"
-            );
+        const rowHTML = `
 
+            <tr>
 
-        row.innerHTML = `
+                <td>
+                    ${escapeHTML(date)}
+                </td>
 
-            <td>
-                ${escapeHTML(date)}
-            </td>
+                <td>
+                    ${escapeHTML(name)}
+                </td>
 
+                <td>
+                    <strong>
+                        ${escapeHTML(hitFactor)}
+                    </strong>
+                </td>
 
-            <td>
-                ${escapeHTML(name)}
-            </td>
+                <td>
+                    ${escapeHTML(observations)}
+                </td>
 
-
-            <td>
-                <strong>
-                    ${escapeHTML(hitFactor)}
-                </strong>
-            </td>
-
-
-            <td>
-                ${escapeHTML(observations)}
-            </td>
+            </tr>
 
         `;
 
 
-        table.appendChild(
-            row.cloneNode(true)
-        );
+        table.innerHTML +=
+            rowHTML;
 
 
-        history.appendChild(
-            row
-        );
+        history.innerHTML +=
+            rowHTML;
 
     });
 
@@ -2874,7 +2958,6 @@ function renderResults(){
 
         table.innerHTML =
             empty;
-
 
         history.innerHTML =
             empty;
@@ -2995,7 +3078,7 @@ function openResultModal(
 
 
 /* =====================================================
-   ABRIR RESULTADO DE UM CLASSIFIER
+   ABRIR CLASSIFIER
 ===================================================== */
 
 function openResultForClassifier(
@@ -3133,7 +3216,8 @@ document
 
             message.textContent =
                 "Erro ao salvar: "
-                + error.message;
+                +
+                error.message;
 
             return;
 
@@ -3201,8 +3285,10 @@ document
             .style.display =
                 selectedTab ===
                 "dashboard"
-                ? "block"
-                : "none";
+                ?
+                    "block"
+                :
+                    "none";
 
 
             document
@@ -3212,8 +3298,10 @@ document
             .style.display =
                 selectedTab ===
                 "classifiers"
-                ? "block"
-                : "none";
+                ?
+                    "block"
+                :
+                    "none";
 
 
             document
@@ -3223,8 +3311,10 @@ document
             .style.display =
                 selectedTab ===
                 "history"
-                ? "block"
-                : "none";
+                ?
+                    "block"
+                :
+                    "none";
 
         }
     );
@@ -3250,14 +3340,20 @@ function getTodayLocal(){
         String(
             now.getMonth()+1
         )
-        .padStart(2,"0");
+        .padStart(
+            2,
+            "0"
+        );
 
 
     const day =
         String(
             now.getDate()
         )
-        .padStart(2,"0");
+        .padStart(
+            2,
+            "0"
+        );
 
 
     return `${year}-${month}-${day}`;
@@ -3327,3 +3423,4 @@ init();
 
 </body>
 </html>
+```
