@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Live Fire Classifier</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg:#101010;--card:#1b1b1b;--border:#333;--red:#e50909;--red2:#ff1a1a;--white:#fff;--muted:#a7a7a7;--green:#35d07f;--yellow:#f5c542}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:Arial,Helvetica,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.container{width:min(1200px,94%);margin:auto}
@@ -17,7 +18,15 @@
 .competency-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.competency-row{background:#141414;border:1px solid #333;border-radius:12px;padding:15px}.competency-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:9px;font-size:13px;font-weight:800}.competency-count{color:#aaa}.progress{height:9px;background:#292929;border-radius:20px;overflow:hidden}.progress-bar{height:100%;background:var(--red);border-radius:20px;transition:width .3s}
 .classifiers{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.classifier{background:#141414;border:1px solid #333;border-radius:14px;padding:20px}.classifier:hover{border-color:#555}.classifier h3{margin:8px 0 4px;font-size:22px}.classifier-meta{color:#777;font-size:13px;margin-bottom:14px}.tag-section{margin-top:14px}.tag-title{color:#777;font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:7px}.tags{display:flex;flex-wrap:wrap;gap:5px}.tag{background:#252525;border:1px solid #414141;color:#ccc;border-radius:5px;padding:5px 7px;font-size:10px;font-weight:800}.official-links{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}.official-btn{display:flex;align-items:center;justify-content:center;min-height:42px;background:#202020;color:#fff;border:1px solid #444;border-radius:9px;font-size:11px;font-weight:900;text-decoration:none}.best-hf{margin-top:15px;padding:10px 12px;background:#181818;border:1px solid #333;border-radius:8px;display:flex;justify-content:space-between}.best-hf-label{color:#777;font-size:11px;font-weight:900;text-transform:uppercase}.best-hf-value{color:var(--yellow);font-size:18px;font-weight:900}.register-result{width:100%;margin-top:10px}
 .filters-box,.history-filters{background:#141414;border:1px solid #333;border-radius:15px;padding:20px;margin-bottom:20px}.filter-title{color:#aaa;font-size:13px;font-weight:900;text-transform:uppercase;margin-bottom:10px}.filter-group{margin-bottom:18px}.filter-buttons{display:flex;flex-wrap:wrap;gap:8px}.filter-btn{background:#202020;color:#aaa;border:1px solid #3a3a3a;border-radius:20px;padding:8px 13px;font-size:13px;font-weight:700}.filter-btn.active{background:var(--red);border-color:var(--red);color:#fff}.filter-status,.filtered-summary{color:var(--muted);font-size:13px}.clear-filters{background:transparent;color:#aaa;border:1px solid #444;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700}
-.history-filter-grid{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:15px}.history-filter-item label{margin:0 0 8px;font-size:12px;color:#aaa;text-transform:uppercase}.history-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}.danger-zone{margin-top:20px;padding-top:20px;border-top:1px solid #333;display:flex;justify-content:space-between;align-items:center;gap:15px}.danger-zone-text{color:#777;font-size:13px}
+.history-filter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.history-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.history-mini-kpi{background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:12px 14px}
+.history-mini-kpi span{display:block;color:#777;font-size:11px;text-transform:uppercase;font-weight:900}
+.history-mini-kpi strong{display:block;margin-top:5px;font-size:20px}
+.chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:12px;color:#777;font-size:12px}
+.trend-note{color:#aaa}
+@media(max-width:900px){.history-filter-grid{grid-template-columns:1fr 1fr}.history-kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.history-filter-grid{grid-template-columns:1fr}.history-kpis{grid-template-columns:1fr 1fr}}.history-filter-item label{margin:0 0 8px;font-size:12px;color:#aaa;text-transform:uppercase}.history-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}.danger-zone{margin-top:20px;padding-top:20px;border-top:1px solid #333;display:flex;justify-content:space-between;align-items:center;gap:15px}.danger-zone-text{color:#777;font-size:13px}
 .table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{padding:14px 12px;border-bottom:1px solid #333;text-align:left}th{color:#aaa;font-size:13px;text-transform:uppercase}td{font-size:14px}.action-buttons{display:flex;gap:6px;flex-wrap:wrap}.action-btn{border-radius:7px;padding:7px 10px;font-size:11px;font-weight:900}.action-btn.edit{background:#292929;color:#fff;border:1px solid #444}.action-btn.delete{background:#421515;color:#fff;border:1px solid #692222}
 .modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:20px;z-index:100}.modal-card,.confirm-card{width:min(550px,100%);max-height:90vh;overflow-y:auto;background:#1b1b1b;border:1px solid #444;border-radius:20px;padding:28px}.modal-header{display:flex;justify-content:space-between;align-items:center}.close{background:none;border:0;color:#aaa;font-size:28px}.confirm-card{width:min(500px,100%)}.confirm-text{color:#aaa;line-height:1.5}.confirm-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:25px}.confirm-actions .btn{margin:0}
 .no-data{padding:30px;text-align:center;color:#777;border:1px dashed #444;border-radius:12px}.last-training{font-weight:800}.last-training span{color:var(--yellow)}
@@ -137,6 +146,43 @@ header{
 }
 
 @media(max-width:1050px){.kpis{grid-template-columns:repeat(3,1fr)}}@media(max-width:900px){.classifiers{grid-template-columns:repeat(2,1fr)}.history-filter-grid{grid-template-columns:1fr 1fr}}@media(max-width:650px){.kpis{grid-template-columns:1fr 1fr}.classifiers,.competency-grid,.history-filter-grid{grid-template-columns:1fr}.header-inner{align-items:flex-start;padding:15px 0;flex-direction:column}.user-area{width:100%;justify-content:space-between}.hero h1{font-size:31px}.section{padding:18px}.section-header{align-items:flex-start;flex-direction:column}.official-links{grid-template-columns:1fr}}
+
+/* =========================
+   GRÁFICO DE EVOLUÇÃO DO HF
+========================= */
+.chart-subtitle{
+    margin-top:7px;
+    color:var(--muted);
+    font-size:14px;
+}
+
+.hf-chart-wrap{
+    position:relative;
+    width:100%;
+    height:360px;
+    padding:8px 0 0;
+}
+
+.hf-chart-wrap canvas{
+    width:100% !important;
+    height:100% !important;
+}
+
+.chart-empty{
+    padding:28px 15px;
+    text-align:center;
+    color:var(--muted);
+    background:#141414;
+    border:1px dashed #333;
+    border-radius:12px;
+}
+
+@media(max-width:600px){
+    .hf-chart-wrap{
+        height:280px;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -211,6 +257,16 @@ header{
 </section>
 
 <section class="section">
+<div class="section-header"><h2>Resumo de atividade</h2><span class="filter-status" id="activitySummary"></span></div>
+<div class="history-kpis">
+<div class="history-mini-kpi"><span>Treinos últimos 30 dias</span><strong id="kpiLast30">0</strong></div>
+<div class="history-mini-kpi"><span>Classifiers únicos</span><strong id="kpiUniqueClassifiers">0</strong></div>
+<div class="history-mini-kpi"><span>Melhor HF</span><strong id="kpiBestHF2">-</strong></div>
+<div class="history-mini-kpi"><span>HF Médio</span><strong id="kpiAverageHF2">-</strong></div>
+</div>
+</section>
+
+<section class="section">
 <div class="section-header"><h2>Últimos resultados</h2><button class="btn btn-red" id="newResultBtn">+ Novo resultado</button></div>
 <div class="table-wrap"><table><thead><tr><th>Data</th><th>Classifier</th><th>Hit Factor</th><th>Observações</th></tr></thead><tbody id="resultsTable"></tbody></table></div>
 </section>
@@ -227,15 +283,55 @@ header{
 <div class="classifiers" id="classifiersGrid"></div>
 </section></section>
 
-<section id="historyTab" style="display:none"><section class="section">
+<section id="historyTab" style="display:none">
+
+    <section class="section hf-chart-section">
+
+        <div class="section-header">
+            <div>
+                <h2>Evolução do Hit Factor</h2>
+                <div class="chart-subtitle">
+                    Acompanhe a evolução dos seus resultados ao longo do tempo.
+                </div>
+            </div>
+        </div>
+
+        <div class="hf-chart-wrap">
+<canvas id="hfEvolutionChart"></canvas>
+</div>
+<div class="chart-toolbar">
+<span id="chartFilterSummary">Todos os resultados</span>
+<span class="trend-note" id="chartTrendNote"></span>
+</div>
+<div id="hfChartEmpty" class="chart-empty" style="display:none">
+Registre pelo menos um resultado para visualizar a evolução do Hit Factor.
+</div>
+
+    </section>
+
+<section class="section">
 <div class="section-header"><h2>Histórico de desempenho</h2></div>
 <div class="history-filters">
 <div class="history-filter-grid">
 <div class="history-filter-item"><label>Data inicial</label><input id="historyStartDate" type="date"></div>
 <div class="history-filter-item"><label>Data final</label><input id="historyEndDate" type="date"></div>
 <div class="history-filter-item"><label>Classifier</label><select id="historyClassifier"><option value="">Todos os classifiers</option></select></div>
+<div class="history-filter-item"><label>Competência</label><select id="historyCompetency"><option value="">Todas as competências</option></select></div>
+<div class="history-filter-item"><label>Característica</label><select id="historyFeature"><option value="">Todas as características</option></select></div>
 </div>
-<div class="history-actions"><button class="btn btn-red" id="applyHistoryFilters">FILTRAR</button><button class="btn btn-dark" id="clearHistoryFilters">LIMPAR FILTROS</button></div>
+
+<div class="history-actions">
+<button class="btn btn-red" id="applyHistoryFilters">FILTRAR</button>
+<button class="btn btn-dark" id="clearHistoryFilters">LIMPAR FILTROS</button>
+</div>
+
+<div class="history-kpis">
+<div class="history-mini-kpi"><span>Resultados</span><strong id="historyKpiResults">0</strong></div>
+<div class="history-mini-kpi"><span>Classifiers</span><strong id="historyKpiClassifiers">0</strong></div>
+<div class="history-mini-kpi"><span>Melhor HF</span><strong id="historyKpiBest">-</strong></div>
+<div class="history-mini-kpi"><span>HF Médio</span><strong id="historyKpiAverage">-</strong></div>
+</div>
+
 <div class="filtered-summary" id="historySummary">Exibindo todos os resultados.</div>
 <div class="danger-zone"><div class="danger-zone-text">Excluir todos os seus resultados registrados.</div><button class="btn btn-danger" id="clearAllHistory">LIMPAR TODO O HISTÓRICO</button></div>
 </div>
@@ -269,7 +365,7 @@ const SUPABASE_URL="https://pzbvaskwyjgfgclwdzbp.supabase.co";
 const SUPABASE_KEY="sb_publishable_M18H8TMwBV-EeM6YMLtlbQ_pyx0u_BZ";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let currentUser=null,classifiers=[],results=[],filteredHistory=[],selectedCompetency="ALL",selectedFeature="ALL",editingResultId=null,confirmAction=null;
+let currentUser=null,classifiers=[],results=[],filteredHistory=[],selectedCompetency="ALL",selectedFeature="ALL",editingResultId=null,confirmAction=null,hfChart=null;
 
 const meta={
 "CLC-01":["Short",7,["Mão Forte","Transição","Precisão"],["No Shoot","Posição Inicial Especial"]],
@@ -323,12 +419,12 @@ await loadClassifiers();await loadResults();
 async function loadClassifiers(){
 const {data,error}=await supabaseClient.from("classifiers").select("*").order("id");
 if(error){alert("Erro ao carregar classifiers: "+error.message);return}
-classifiers=data||[];populateFilters();populateClassifierSelect();populateHistoryClassifier();renderClassifiers();
+classifiers=data||[];populateFilters();populateClassifierSelect();populateHistoryClassifier();populateHistoryMetaFilters();renderClassifiers();
 }
 async function loadResults(){
 const {data,error}=await supabaseClient.from("training_results").select("*").eq("user_id",currentUser.id).order("date",{ascending:false});
 if(error){alert("Erro ao carregar resultados: "+error.message);return}
-results=data||[];filteredHistory=[...results];updateDashboard();renderResults();renderHistory();renderClassifiers();
+results=data||[];filteredHistory=[...results];updateDashboard();renderResults();applyHistoryFilters(false);renderClassifiers();
 }
 function bestFor(id){let a=results.filter(r=>r.classifier_id===id).map(r=>Number(r.hit_factor)).filter(Number.isFinite);return a.length?Math.max(...a):null}
 function updateDashboard(){
@@ -336,7 +432,17 @@ let ids=new Set(results.map(r=>r.classifier_id)),vals=results.map(r=>Number(r.hi
 let best=vals.length?Math.max(...vals):null,avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
 kpiClassifiers.textContent=`${ids.size} / 28`;kpiCoverage.textContent=`${((ids.size/28)*100).toFixed(0)}%`;kpiResults.textContent=results.length;
 kpiHF.textContent=best===null?"-":`${best.toFixed(2)} · ${avg.toFixed(2)}`;
-if(results.length){let r=results[0],c=classifiers.find(x=>x.id===r.classifier_id),i=c?classifiers.indexOf(c):-1;kpiLast.textContent=`${md(c||{},i).code||"-"} — ${Number(r.hit_factor).toFixed(2)}`}else kpiLast.textContent="-";
+if(results.length){let r=results[0],c=classifiers.find(x=>String(x.id)===String(r.classifier_id)),i=c?classifiers.indexOf(c):-1;kpiLast.textContent=`${md(c||{},i).code||"-"} — ${Number(r.hit_factor).toFixed(2)}`}else kpiLast.textContent="-";
+
+let cutoff=new Date();
+cutoff.setHours(0,0,0,0);
+cutoff.setDate(cutoff.getDate()-29);
+let last30=results.filter(r=>r.date&&new Date(r.date+"T00:00:00")>=cutoff).length;
+document.getElementById("kpiLast30").textContent=last30;
+document.getElementById("kpiUniqueClassifiers").textContent=ids.size;
+document.getElementById("kpiBestHF2").textContent=best===null?"-":best.toFixed(2);
+document.getElementById("kpiAverageHF2").textContent=avg===null?"-":avg.toFixed(2);
+document.getElementById("activitySummary").textContent=last30?"Atividade registrada nos últimos 30 dias":"Sem treinos nos últimos 30 dias";
 renderCompetencies();
 }
 function renderCompetencies(){
@@ -382,12 +488,199 @@ function renderResults(){
 resultsTable.innerHTML="";results.slice(0,10).forEach(r=>{let c=classifiers.find(x=>x.id===r.classifier_id),i=c?classifiers.indexOf(c):-1;resultsTable.innerHTML+=`<tr><td>${dateBR(r.date)}</td><td>${esc(md(c||{},i).code||"Classifier")}</td><td><strong>${Number(r.hit_factor).toFixed(3)}</strong></td><td>${esc(r.observations||"-")}</td></tr>`});
 if(!results.length)resultsTable.innerHTML='<tr><td colspan="4">Nenhum resultado registrado ainda.</td></tr>';
 }
-function renderHistory(){
-historyTable.innerHTML="";if(!filteredHistory.length){historyTable.innerHTML='<tr><td colspan="5">Nenhum resultado encontrado.</td></tr>';return}
-filteredHistory.forEach(r=>{let c=classifiers.find(x=>x.id===r.classifier_id),i=c?classifiers.indexOf(c):-1,row=document.createElement("tr");row.innerHTML=`<td>${dateBR(r.date)}</td><td>${esc(md(c||{},i).code||"Classifier")}</td><td><strong>${Number(r.hit_factor).toFixed(3)}</strong></td><td>${esc(r.observations||"-")}</td><td><div class="action-buttons"><button class="action-btn edit">EDITAR</button><button class="action-btn delete">EXCLUIR</button></div></td>`;row.querySelector(".edit").onclick=()=>editResult(r.id);row.querySelector(".delete").onclick=()=>confirmDelete(r.id);historyTable.appendChild(row)})
+function classifierMetaForResult(r){
+let c=classifiers.find(x=>String(x.id)===String(r.classifier_id));
+let i=c?classifiers.indexOf(c):-1;
+return {classifier:c,meta:md(c||{},i)};
 }
-applyHistoryFilters.onclick=()=>{let s=historyStartDate.value,e=historyEndDate.value,c=historyClassifier.value;filteredHistory=results.filter(r=>(!s||r.date>=s)&&(!e||r.date<=e)&&(!c||r.classifier_id===c));historySummary.textContent=`Exibindo ${filteredHistory.length} de ${results.length} resultado(s).`;renderHistory()}
-clearHistoryFilters.onclick=()=>{historyStartDate.value="";historyEndDate.value="";historyClassifier.value="";filteredHistory=[...results];historySummary.textContent="Exibindo todos os resultados.";renderHistory()}
+
+function populateHistoryMetaFilters(){
+let comp=document.getElementById("historyCompetency");
+let feat=document.getElementById("historyFeature");
+if(!comp||!feat)return;
+
+let comps=[...new Set(Object.values(meta).flatMap(x=>x[2]))].sort();
+let feats=[...new Set(Object.values(meta).flatMap(x=>x[3]))].sort();
+
+comp.innerHTML='<option value="">Todas as competências</option>';
+feat.innerHTML='<option value="">Todas as características</option>';
+
+comps.forEach(x=>{
+let o=document.createElement("option");
+o.value=x;o.textContent=x;comp.appendChild(o);
+});
+feats.forEach(x=>{
+let o=document.createElement("option");
+o.value=x;o.textContent=x;feat.appendChild(o);
+});
+}
+
+function historyMatches(r){
+let s=historyStartDate.value,e=historyEndDate.value,c=historyClassifier.value;
+let comp=historyCompetency.value,feat=historyFeature.value;
+let info=classifierMetaForResult(r),m=info.meta;
+
+return (!s||r.date>=s)
+&&(!e||r.date<=e)
+&&(!c||String(r.classifier_id)===String(c))
+&&(!comp||m.competencies.includes(comp))
+&&(!feat||m.features.includes(feat));
+}
+
+function updateHistoryKPIs(){
+let vals=filteredHistory.map(r=>Number(r.hit_factor)).filter(Number.isFinite);
+let ids=new Set(filteredHistory.map(r=>String(r.classifier_id)));
+historyKpiResults.textContent=filteredHistory.length;
+historyKpiClassifiers.textContent=ids.size;
+historyKpiBest.textContent=vals.length?Math.max(...vals).toFixed(2):"-";
+historyKpiAverage.textContent=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2):"-";
+}
+
+function renderHistory(){
+historyTable.innerHTML="";
+if(!filteredHistory.length){
+historyTable.innerHTML='<tr><td colspan="5">Nenhum resultado encontrado com os filtros selecionados.</td></tr>';
+return;
+}
+
+filteredHistory.forEach(r=>{
+let info=classifierMetaForResult(r),m=info.meta,row=document.createElement("tr");
+row.innerHTML=`<td>${dateBR(r.date)}</td>
+<td>${esc(m.code||"Classifier")}</td>
+<td><strong>${Number(r.hit_factor).toFixed(3)}</strong></td>
+<td>${esc(r.observations||"-")}</td>
+<td><div class="action-buttons">
+<button class="action-btn edit">EDITAR</button>
+<button class="action-btn delete">EXCLUIR</button>
+</div></td>`;
+row.querySelector(".edit").onclick=()=>editResult(r.id);
+row.querySelector(".delete").onclick=()=>confirmDelete(r.id);
+historyTable.appendChild(row);
+});
+}
+
+function updateHFChart(){
+let canvas=document.getElementById("hfEvolutionChart");
+let empty=document.getElementById("hfChartEmpty");
+let wrap=document.querySelector(".hf-chart-wrap");
+let chartSummary=document.getElementById("chartFilterSummary");
+let trendNote=document.getElementById("chartTrendNote");
+
+if(!canvas)return;
+
+let data=[...filteredHistory]
+.filter(r=>r.date&&Number.isFinite(Number(r.hit_factor)))
+.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+
+if(hfChart){hfChart.destroy();hfChart=null;}
+
+if(!data.length){
+if(wrap)wrap.style.display="none";
+empty.style.display="block";
+chartSummary.textContent="Nenhum resultado para os filtros atuais.";
+trendNote.textContent="";
+return;
+}
+
+if(wrap)wrap.style.display="block";
+empty.style.display="none";
+
+let labels=data.map(r=>dateBR(r.date));
+let values=data.map(r=>Number(r.hit_factor));
+let codes=data.map(r=>classifierMetaForResult(r).meta.code||"Classifier");
+
+let trend=values.map((_,i)=>{
+if(values.length<2)return values[i];
+let n=values.length,sumX=n*(n-1)/2,sumY=values.reduce((a,b)=>a+b,0);
+let sumXY=values.reduce((s,y,x)=>s+x*y,0);
+let sumX2=values.reduce((s,_,x)=>s+x*x,0);
+let den=n*sumX2-sumX*sumX;
+let slope=den?((n*sumXY-sumX*sumY)/den):0;
+let intercept=(sumY-slope*sumX)/n;
+return intercept+slope*i;
+});
+
+let slope=values.length>1?trend[trend.length-1]-trend[0]:0;
+trendNote.textContent=values.length>1
+?(slope>0.01?"Tendência: evolução positiva ↑":slope<-0.01?"Tendência: evolução negativa ↓":"Tendência: estável →")
+:"";
+
+chartSummary.textContent=`${data.length} resultado(s) no gráfico`;
+
+hfChart=new Chart(canvas,{
+type:"line",
+data:{
+labels,
+datasets:[
+{
+label:"Hit Factor",
+data:values,
+borderWidth:3,
+pointRadius:5,
+pointHoverRadius:7,
+tension:.25
+},
+{
+label:"Tendência",
+data:trend,
+borderWidth:2,
+borderDash:[6,6],
+pointRadius:0,
+tension:0
+}
+]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+interaction:{mode:"index",intersect:false},
+plugins:{
+legend:{labels:{color:"#aaa"}},
+tooltip:{
+callbacks:{
+title:(items)=>items[0]?`${codes[items[0].dataIndex]} — ${labels[items[0].dataIndex]}`:"",
+label:(ctx)=>`${ctx.dataset.label}: ${Number(ctx.parsed.y).toFixed(3)}`
+}
+}
+},
+scales:{
+x:{ticks:{color:"#888"},grid:{color:"#292929"}},
+y:{beginAtZero:false,ticks:{color:"#888"},grid:{color:"#292929"}}
+}
+}
+});
+}
+
+function applyHistoryFilters(shouldRender=true){
+filteredHistory=results.filter(historyMatches);
+
+let active=[];
+if(historyStartDate.value)active.push("Data inicial");
+if(historyEndDate.value)active.push("Data final");
+if(historyClassifier.value)active.push(historyClassifier.options[historyClassifier.selectedIndex].text);
+if(historyCompetency.value)active.push(historyCompetency.value);
+if(historyFeature.value)active.push(historyFeature.value);
+
+historySummary.textContent=active.length
+?`Exibindo ${filteredHistory.length} de ${results.length} resultado(s) · ${active.join(" · ")}`
+:`Exibindo todos os resultados (${results.length}).`;
+
+updateHistoryKPIs();
+if(shouldRender)renderHistory();
+updateHFChart();
+}
+
+function clearHistoryFiltersNow(){
+historyStartDate.value="";
+historyEndDate.value="";
+historyClassifier.value="";
+historyCompetency.value="";
+historyFeature.value="";
+applyHistoryFilters();
+}
+
+document.getElementById("applyHistoryFilters").onclick=()=>applyHistoryFilters();
+document.getElementById("clearHistoryFilters").onclick=()=>clearHistoryFiltersNow();
 
 function openResultModal(id=null){
 editingResultId=null;resultModalTitle.textContent="Novo resultado";saveResultBtn.textContent="SALVAR RESULTADO";resultForm.reset();resultDate.value=today();classifierSelect.value=id||"";resultMessage.textContent="";resultMessage.className="message";resultModal.style.display="flex";
@@ -405,7 +698,11 @@ resultMessage.className="message success";resultMessage.textContent=editingResul
 function openConfirm(title,text,fn){confirmTitle.textContent=title;confirmText.textContent=text;confirmAction=fn;confirmModal.style.display="flex"}
 confirmCancel.onclick=()=>{confirmAction=null;confirmModal.style.display="none"};confirmOk.onclick=async()=>{let f=confirmAction;confirmAction=null;confirmModal.style.display="none";if(f)await f()}
 function confirmDelete(id){openConfirm("Excluir resultado?","Tem certeza que deseja excluir este resultado? Esta ação não pode ser desfeita.",async()=>{let {error}=await supabaseClient.from("training_results").delete().eq("id",id).eq("user_id",currentUser.id);if(error){alert("Erro ao excluir: "+error.message);return}await loadResults();applyHistoryFilters()})}
-clearAllHistory.onclick=()=>{if(!results.length){alert("Você não possui resultados para excluir.");return}openConfirm("Limpar todo o histórico?","ATENÇÃO: todos os seus resultados serão excluídos permanentemente. Os resultados de outros usuários não serão afetados. Esta ação não pode ser desfeita.",async()=>{let {error}=await supabaseClient.from("training_results").delete().eq("user_id",currentUser.id);if(error){alert("Erro ao limpar histórico: "+error.message);return}await loadResults();clearHistoryFilters.click()})}
+clearAllHistory.onclick=()=>{if(!results.length){alert("Você não possui resultados para excluir.");return}openConfirm("Limpar todo o histórico?","ATENÇÃO: todos os seus resultados serão excluídos permanentemente. Os resultados de outros usuários não serão afetados. Esta ação não pode ser desfeita.",async()=>{let {error}=await supabaseClient.from("training_results").delete().eq("user_id",currentUser.id);if(error){alert("Erro ao limpar histórico: "+error.message);return}await loadResults();clearHistoryFiltersNow()})}
+
+[historyStartDate,historyEndDate,historyClassifier,historyCompetency,historyFeature].forEach(el=>{
+if(el)el.addEventListener("change",()=>applyHistoryFilters());
+});
 
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");let s=t.dataset.tab;dashboardTab.style.display=s==="dashboard"?"block":"none";classifiersTab.style.display=s==="classifiers"?"block":"none";historyTab.style.display=s==="history"?"block":"none"});
 resultModal.onclick=e=>{if(e.target===resultModal)resultModal.style.display="none"};confirmModal.onclick=e=>{if(e.target===confirmModal){confirmAction=null;confirmModal.style.display="none"}}
