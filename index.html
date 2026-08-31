@@ -168,6 +168,24 @@ header{
     height:100% !important;
 }
 
+.competency-training-chart-wrap{
+    position:relative;
+    width:100%;
+    height:360px;
+    padding:8px 0 0;
+}
+
+.competency-training-chart-wrap canvas{
+    width:100% !important;
+    height:100% !important;
+}
+
+@media(max-width:600px){
+    .competency-training-chart-wrap{
+        height:420px;
+    }
+}
+
 .chart-empty{
     padding:28px 15px;
     text-align:center;
@@ -192,24 +210,10 @@ header{
 <div class="logo-title">LIVE FIRE <span>CLASSIFIER</span></div>
 <div class="subtitle">Seu desempenho. Seus resultados. Sua evolução.</div>
 <form id="loginForm">
-<label>E-mail</label>
-<input id="email" type="email" required autocomplete="email">
-
-<label>Senha</label>
-<input id="password" type="password" required autocomplete="current-password">
-
+<label>E-mail</label><input id="email" type="email" required autocomplete="email">
+<label>Senha</label><input id="password" type="password" required autocomplete="current-password">
 <button class="btn btn-red full" type="submit">ENTRAR</button>
-
-<button
-  class="btn btn-dark full"
-  type="button"
-  id="signupBtn"
-  style="margin-top:10px;"
->
-  CADASTRAR
-</button>
 </form>
-
 <div id="loginMessage" class="message">Aguardando login...</div>
 </div></section>
 
@@ -269,6 +273,22 @@ header{
 <section class="section">
 <div class="section-header"><h2>Competências treinadas</h2><span class="filter-status" id="competencySummary"></span></div>
 <div class="competency-grid" id="competencyGrid"></div>
+</section>
+
+<section class="section competency-training-section">
+<div class="section-header">
+  <div>
+    <h2>Treinos por competência</h2>
+    <div class="chart-subtitle">Quantidade de resultados registrados para cada competência, da mais treinada à menos treinada.</div>
+  </div>
+  <span class="filter-status" id="competencyTrainingSummary"></span>
+</div>
+<div class="competency-training-chart-wrap">
+  <canvas id="competencyTrainingChart"></canvas>
+</div>
+<div id="competencyTrainingEmpty" class="chart-empty" style="display:none">
+  Registre pelo menos um resultado para visualizar a distribuição dos treinos por competência.
+</div>
 </section>
 
 <section class="section">
@@ -380,7 +400,7 @@ const SUPABASE_URL="https://pzbvaskwyjgfgclwdzbp.supabase.co";
 const SUPABASE_KEY="sb_publishable_M18H8TMwBV-EeM6YMLtlbQ_pyx0u_BZ";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let currentUser=null,classifiers=[],results=[],filteredHistory=[],selectedCompetency="ALL",selectedFeature="ALL",editingResultId=null,confirmAction=null,hfChart=null;
+let currentUser=null,classifiers=[],results=[],filteredHistory=[],selectedCompetency="ALL",selectedFeature="ALL",editingResultId=null,confirmAction=null,hfChart=null,competencyTrainingChart=null;
 
 const meta={
 "CLC-01":["Short",7,["Mão Forte","Transição","Precisão"],["No Shoot","Posição Inicial Especial"]],
@@ -459,6 +479,7 @@ document.getElementById("kpiBestHF2").textContent=best===null?"-":best.toFixed(2
 document.getElementById("kpiAverageHF2").textContent=avg===null?"-":avg.toFixed(2);
 document.getElementById("activitySummary").textContent=last30?"Atividade registrada nos últimos 30 dias":"Sem treinos nos últimos 30 dias";
 renderCompetencies();
+renderCompetencyTrainingChart();
 }
 function renderCompetencies(){
 const grid=document.getElementById("competencyGrid"),all=[...new Set(Object.values(meta).flatMap(x=>x[2]))].sort(),trained=new Set();
@@ -467,6 +488,101 @@ grid.innerHTML="";
 all.forEach(comp=>{let n=classifiers.filter((c,i)=>{let m=md(c,i);return m.competencies.includes(comp)&&results.some(r=>r.classifier_id===c.id)}).length;let total=classifiers.filter((c,i)=>md(c,i).competencies.includes(comp)).length;let pct=total?Math.round(n/total*100):0;grid.innerHTML+=`<div class="competency-row"><div class="competency-head"><span>${esc(comp)}</span><span class="competency-count">${n} / ${total} classifiers</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div></div>`});
 document.getElementById("competencySummary").textContent=`Cobertura das competências nos classifiers realizados`;
 }
+
+function renderCompetencyTrainingChart(){
+    const canvas=document.getElementById("competencyTrainingChart");
+    const empty=document.getElementById("competencyTrainingEmpty");
+    const summary=document.getElementById("competencyTrainingSummary");
+    if(!canvas||!empty||!summary)return;
+
+    const counts={};
+
+    // Cada resultado conta uma vez para cada competência associada
+    // ao classifier realizado.
+    results.forEach(r=>{
+        const c=classifiers.find(x=>String(x.id)===String(r.classifier_id));
+        if(!c)return;
+        const i=classifiers.indexOf(c);
+        md(c,i).competencies.forEach(comp=>{
+            counts[comp]=(counts[comp]||0)+1;
+        });
+    });
+
+    const ranking=Object.entries(counts)
+        .map(([label,count])=>({label,count}))
+        .sort((a,b)=>b.count-a.count || a.label.localeCompare(b.label));
+
+    if(competencyTrainingChart){
+        competencyTrainingChart.destroy();
+        competencyTrainingChart=null;
+    }
+
+    if(!ranking.length){
+        canvas.style.display="none";
+        empty.style.display="block";
+        summary.textContent="Nenhum treino registrado";
+        return;
+    }
+
+    canvas.style.display="block";
+    empty.style.display="none";
+    summary.textContent=`${results.length} treino${results.length===1?"":"s"} contabilizado${results.length===1?"":"s"}`;
+
+    competencyTrainingChart=new Chart(canvas,{
+        type:"bar",
+        data:{
+            labels:ranking.map(x=>x.label),
+            datasets:[{
+                label:"Treinos",
+                data:ranking.map(x=>x.count),
+                backgroundColor:"#e50909",
+                borderColor:"#e50909",
+                borderWidth:1,
+                borderRadius:6
+            }]
+        },
+        options:{
+            indexAxis:"y",
+            responsive:true,
+            maintainAspectRatio:false,
+            plugins:{
+                legend:{display:false},
+                tooltip:{
+                    callbacks:{
+                        label:ctx=>` ${ctx.parsed.x} treino${ctx.parsed.x===1?"":"s"}`
+                    }
+                }
+            },
+            scales:{
+                x:{
+                    beginAtZero:true,
+                    ticks:{
+                        precision:0,
+                        color:"#aaa"
+                    },
+                    grid:{
+                        color:"#333"
+                    },
+                    title:{
+                        display:true,
+                        text:"Número de treinos",
+                        color:"#aaa"
+                    }
+                },
+                y:{
+                    ticks:{
+                        color:"#fff",
+                        autoSkip:false
+                    },
+                    grid:{
+                        display:false
+                    }
+                }
+            }
+        }
+    });
+}
+
 function createFilter(container,value,label,type){
 let b=document.createElement("button");b.className="filter-btn";b.textContent=label;b.dataset.value=value;b.classList.toggle("active",type==="c"?selectedCompetency===value:selectedFeature===value);
 b.onclick=()=>{if(type==="c")selectedCompetency=value;else selectedFeature=value;updateFilterButtons();renderClassifiers()};container.appendChild(b);
@@ -721,60 +837,8 @@ if(el)el.addEventListener("change",()=>applyHistoryFilters());
 
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");let s=t.dataset.tab;dashboardTab.style.display=s==="dashboard"?"block":"none";classifiersTab.style.display=s==="classifiers"?"block":"none";historyTab.style.display=s==="history"?"block":"none"});
 resultModal.onclick=e=>{if(e.target===resultModal)resultModal.style.display="none"};confirmModal.onclick=e=>{if(e.target===confirmModal){confirmAction=null;confirmModal.style.display="none"}}
-loginForm.onsubmit=async e=>{
-  e.preventDefault();
-  loginMessage.textContent="Entrando...";
-
-  let {data,error}=await supabaseClient.auth.signInWithPassword({
-    email:email.value.trim(),
-    password:password.value
-  });
-
-  if(error){
-    loginMessage.className="message error";
-    loginMessage.textContent="Erro ao entrar: "+error.message;
-    return
-  }
-
-  currentUser=data.user;
-  await showApp()
-};
-
-
-signupBtn.onclick=async()=>{
-  const userEmail=email.value.trim();
-  const userPassword=password.value;
-
-  if(!userEmail || !userPassword){
-    loginMessage.className="message error";
-    loginMessage.textContent="Informe e-mail e senha para se cadastrar.";
-    return;
-  }
-
-  loginMessage.className="message";
-  loginMessage.textContent="Criando usuário...";
-
-  const {error}=await supabaseClient.auth.signUp({
-    email:userEmail,
-    password:userPassword
-  });
-
-  if(error){
-    loginMessage.className="message error";
-    loginMessage.textContent="Erro ao cadastrar: "+error.message;
-    return;
-  }
-
-  loginMessage.className="message success";
-  loginMessage.textContent="Usuário criado! Agora faça login.";
-};
-
-
-logoutBtn.onclick=async()=>{
-  await supabaseClient.auth.signOut();
-  location.reload()
-};
-
+loginForm.onsubmit=async e=>{e.preventDefault();loginMessage.textContent="Entrando...";let {data,error}=await supabaseClient.auth.signInWithPassword({email:email.value.trim(),password:password.value});if(error){loginMessage.className="message error";loginMessage.textContent="Erro ao entrar: "+error.message;return}currentUser=data.user;await showApp()}
+logoutBtn.onclick=async()=>{await supabaseClient.auth.signOut();location.reload()};
 init();
 </script>
 </body>
