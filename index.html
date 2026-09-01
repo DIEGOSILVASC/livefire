@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Live Fire Classifier</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="./supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg:#101010;--card:#1b1b1b;--border:#333;--red:#e50909;--red2:#ff1a1a;--white:#fff;--muted:#a7a7a7;--green:#35d07f;--yellow:#f5c542}
@@ -211,11 +210,24 @@ header{
 <div class="logo-title">LIVE FIRE <span>CLASSIFIER</span></div>
 <div class="subtitle">Seu desempenho. Seus resultados. Sua evolução.</div>
 <form id="loginForm">
-<label>E-mail</label><input id="email" type="email" required autocomplete="email">
-<label>Senha</label><input id="password" type="password" required autocomplete="current-password">
+<label>E-mail</label>
+<input id="email" type="email" required autocomplete="email">
+
+<label>Senha</label>
+<input id="password" type="password" required autocomplete="current-password">
+
 <button class="btn btn-red full" type="submit">ENTRAR</button>
-<button class="btn btn-dark full" type="button" id="btnSignup">CADASTRAR NOVO USUÁRIO</button>
+
+<button
+  class="btn btn-dark full"
+  type="button"
+  id="signupBtn"
+  style="margin-top:10px;"
+>
+  CADASTRAR
+</button>
 </form>
+
 <div id="loginMessage" class="message">Aguardando login...</div>
 </div></section>
 
@@ -395,7 +407,12 @@ Registre pelo menos um resultado para visualizar a evolução do Hit Factor.
 </div></div>
 
 <script>
-const supabaseClient=window.supabaseClient;
+const SUPABASE_URL="https://pzbvaskwyjgfgclwdzbp.supabase.co";
+/* =========================================================
+   COLE AQUI A MESMA CHAVE PÚBLICA DO SUPABASE QUE JÁ FUNCIONOU
+========================================================= */
+const SUPABASE_KEY="sb_publishable_M18H8TMwBV-EeM6YMLtlbQ_pyx0u_BZ";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let currentUser=null,classifiers=[],results=[],filteredHistory=[],selectedCompetency="ALL",selectedFeature="ALL",editingResultId=null,confirmAction=null,hfChart=null,competencyTrainingChart=null;
 
@@ -834,17 +851,60 @@ if(el)el.addEventListener("change",()=>applyHistoryFilters());
 
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");let s=t.dataset.tab;dashboardTab.style.display=s==="dashboard"?"block":"none";classifiersTab.style.display=s==="classifiers"?"block":"none";historyTab.style.display=s==="history"?"block":"none"});
 resultModal.onclick=e=>{if(e.target===resultModal)resultModal.style.display="none"};confirmModal.onclick=e=>{if(e.target===confirmModal){confirmAction=null;confirmModal.style.display="none"}}
-document.getElementById("btnSignup").onclick=async()=>{
-let e=email.value.trim(),p=password.value;
-if(!e||!p){loginMessage.className="message error";loginMessage.textContent="Informe e-mail e senha para cadastrar.";return}
-loginMessage.className="message";loginMessage.textContent="Cadastrando...";
-let {error}=await supabaseClient.auth.signUp({email:e,password:p});
-if(error){loginMessage.className="message error";loginMessage.textContent="Erro ao cadastrar: "+error.message;return}
-loginMessage.className="message success";loginMessage.textContent="Usuário criado! Agora faça login.";
+loginForm.onsubmit=async e=>{
+  e.preventDefault();
+  loginMessage.textContent="Entrando...";
+
+  let {data,error}=await supabaseClient.auth.signInWithPassword({
+    email:email.value.trim(),
+    password:password.value
+  });
+
+  if(error){
+    loginMessage.className="message error";
+    loginMessage.textContent="Erro ao entrar: "+error.message;
+    return
+  }
+
+  currentUser=data.user;
+  await showApp()
 };
 
-loginForm.onsubmit=async e=>{e.preventDefault();loginMessage.textContent="Entrando...";let {data,error}=await supabaseClient.auth.signInWithPassword({email:email.value.trim(),password:password.value});if(error){loginMessage.className="message error";loginMessage.textContent="Erro ao entrar: "+error.message;return}currentUser=data.user;await showApp()}
-logoutBtn.onclick=async()=>{await supabaseClient.auth.signOut();location.reload()};
+
+signupBtn.onclick=async()=>{
+  const userEmail=email.value.trim();
+  const userPassword=password.value;
+
+  if(!userEmail || !userPassword){
+    loginMessage.className="message error";
+    loginMessage.textContent="Informe e-mail e senha para se cadastrar.";
+    return;
+  }
+
+  loginMessage.className="message";
+  loginMessage.textContent="Criando usuário...";
+
+  const {error}=await supabaseClient.auth.signUp({
+    email:userEmail,
+    password:userPassword
+  });
+
+  if(error){
+    loginMessage.className="message error";
+    loginMessage.textContent="Erro ao cadastrar: "+error.message;
+    return;
+  }
+
+  loginMessage.className="message success";
+  loginMessage.textContent="Usuário criado! Agora faça login.";
+};
+
+
+logoutBtn.onclick=async()=>{
+  await supabaseClient.auth.signOut();
+  location.reload()
+};
+
 init();
 </script>
 </body>
