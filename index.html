@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Fire Classifier</title>
+<title>Live Fire Classifier — V2.1 LOCAL</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
@@ -11,6 +11,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:Arial,Helvetica,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.container{width:min(1200px,94%);margin:auto}
 #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:25px}.login-card{width:min(500px,100%);background:var(--card);border:1px solid var(--border);border-radius:24px;padding:38px;box-shadow:0 20px 60px #0007}.login-logo-wrap{width:150px;height:150px;margin:0 auto 24px;background:#f3f3f3;border-radius:22px;display:flex;align-items:center;justify-content:center;padding:12px;box-shadow:0 12px 35px rgba(0,0,0,.35)}.login-logo{width:100%;height:100%;object-fit:contain;display:block}.logo-title{font-size:38px;font-weight:800}.logo-title span,.classifier-number{color:var(--red)}.subtitle{color:var(--muted);font-size:18px;margin:8px 0 32px}label{display:block;margin:18px 0 8px;font-weight:700}input,select,textarea{width:100%;padding:14px 15px;background:#101010;color:#fff;border:1px solid #444;border-radius:10px;outline:0}input:focus,select:focus,textarea:focus{border-color:var(--red)}
 .btn{border:0;border-radius:10px;padding:12px 18px;font-weight:800;transition:.2s}.btn-red{background:var(--red);color:#fff}.btn-red:hover{background:var(--red2)}.btn-dark{background:#292929;color:#fff;border:1px solid #444}.btn-danger{background:#5e1616;color:#fff;border:1px solid #8d2929}.full{width:100%;margin-top:25px}.message{margin-top:18px;padding:14px;border-radius:10px;background:#111;color:var(--muted)}.message.error{color:#ff6565}.message.success{color:var(--green)}
+.hhf-preview{margin-top:12px;padding:12px 14px;background:#181818;border:1px solid #333;border-radius:10px;display:none}.hhf-preview.show{display:block}.hhf-preview-title{color:#777;font-size:11px;text-transform:uppercase;font-weight:900}.hhf-preview-value{margin-top:5px;font-size:18px;font-weight:900}.hhf-preview-value span{color:var(--yellow)}
 #app{display:none}
 .hero{padding:45px 0 25px}.hero h1{margin:0;font-size:42px}.hero p{color:var(--muted);font-size:18px;margin-top:10px}.tabs{display:flex;gap:10px;margin:20px 0 30px;flex-wrap:wrap}.tab{background:#1b1b1b;color:#aaa;border:1px solid #333;padding:12px 20px;border-radius:10px;font-weight:700}.tab.active{background:var(--red);color:#fff;border-color:var(--red)}
 .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:15px;margin-bottom:25px}.kpi{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:20px}.kpi-title{color:var(--muted);font-size:12px;text-transform:uppercase;font-weight:800}.kpi-value{font-size:28px;font-weight:900;margin-top:8px}.kpi-sub{color:#777;font-size:12px;margin-top:5px}
@@ -23,6 +24,7 @@
 .history-mini-kpi{background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:12px 14px}
 .history-mini-kpi span{display:block;color:#777;font-size:11px;text-transform:uppercase;font-weight:900}
 .history-mini-kpi strong{display:block;margin-top:5px;font-size:20px}
+.classification-badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;padding:4px 8px;border:1px solid #555;border-radius:7px;font-weight:900;font-size:12px}.classification-d{color:#aaa}.classification-c{color:#fff}.classification-b{color:#fff}.classification-a{color:#fff}.classification-m{color:#fff}.classification-gm{color:var(--yellow)}
 .chart-toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:12px;color:#777;font-size:12px}
 .trend-note{color:#aaa}
 @media(max-width:900px){.history-filter-grid{grid-template-columns:1fr 1fr}.history-kpis{grid-template-columns:1fr 1fr}}
@@ -316,9 +318,53 @@ header{
 </div>
 </section>
 
+<section class="section uspsa-performance-section">
+<div class="section-header">
+  <div>
+    <h2>Desempenho USPSA</h2>
+    <div class="chart-subtitle">Indicadores calculados sobre os resultados USPSA ACTIVE com divisão e HHF identificados.</div>
+  </div>
+  <span class="filter-status" id="uspsaPerformanceSummary"></span>
+</div>
+<div class="history-kpis">
+<div class="history-mini-kpi"><span>Melhor % HHF</span><strong id="kpiBestHHF">-</strong></div>
+<div class="history-mini-kpi"><span>% HHF Médio</span><strong id="kpiAverageHHF">-</strong></div>
+<div class="history-mini-kpi"><span>Resultados com HHF</span><strong id="kpiHHFResults">0</strong></div>
+<div class="history-mini-kpi"><span>Melhor divisão</span><strong id="kpiBestDivision">-</strong></div>
+</div>
+<div class="hf-chart-wrap uspsa-hhf-chart-wrap">
+  <canvas id="uspsaHHFEvolutionChart"></canvas>
+</div>
+<div id="uspsaHHFChartEmpty" class="chart-empty" style="display:none">
+  Registre um resultado USPSA ACTIVE com divisão para visualizar sua evolução em % HHF.
+</div>
+</section>
+
+<section class="section uspsa-division-section">
+<div class="section-header">
+  <div>
+    <h2>Desempenho por divisão</h2>
+    <div class="chart-subtitle">Compare sua média e seu melhor desempenho em % HHF nas divisões em que você já treinou.</div>
+  </div>
+  <span class="filter-status" id="uspsaDivisionSummary"></span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Divisão</th><th>Resultados</th><th>Melhor</th><th>Média</th><th>Atual</th></tr></thead>
+<tbody id="uspsaDivisionTable"></tbody>
+</table>
+</div>
+<div id="uspsaDivisionEmpty" class="chart-empty" style="display:none">
+  Registre resultados USPSA ACTIVE com divisão e HHF para comparar suas divisões.
+</div>
+<div class="chart-subtitle" style="margin-top:14px">Classificação de desempenho Live Fire: <strong>Melhor</strong> = melhor resultado de todos os tempos; <strong>Média</strong> = média dos resultados dos últimos 12 meses; <strong>Atual</strong> = resultado mais recente da divisão. A classificação é uma referência de desempenho do Live Fire e não representa classificação oficial USPSA.</div>
+</section>
+
+
+
 <section class="section">
 <div class="section-header"><h2>Últimos resultados</h2><button class="btn btn-red" id="newResultBtn">+ Novo resultado</button></div>
-<div class="table-wrap"><table><thead><tr><th>Data</th><th>Classifier</th><th>Hit Factor</th><th>Observações</th></tr></thead><tbody id="resultsTable"></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Data</th><th>Classifier</th><th>Divisão</th><th>Hit Factor</th><th>HHF / % HHF</th><th>Classificação</th><th>Observações</th></tr></thead><tbody id="resultsTable"></tbody></table></div>
 </section>
 </section>
 
@@ -359,6 +405,18 @@ Registre pelo menos um resultado para visualizar a evolução do Hit Factor.
 
     </section>
 
+<section class="section uspsa-progress-section">
+<div class="section-header"><div><h2>Evolução por divisão — USPSA</h2><div class="chart-subtitle">Analise sua evolução em % HHF dentro de uma divisão específica, considerando os resultados atualmente filtrados.</div></div><span class="filter-status" id="historyProgressSummary"></span></div>
+<div class="history-kpis">
+<div class="history-mini-kpi"><span>Média — primeiros 3</span><strong id="historyFirst3HHF">-</strong></div>
+<div class="history-mini-kpi"><span>Média — últimos 3</span><strong id="historyLast3HHF">-</strong></div>
+<div class="history-mini-kpi"><span>Evolução</span><strong id="historyHHFEvolution">-</strong></div>
+<div class="history-mini-kpi"><span>Resultados comparáveis</span><strong id="historyHHFComparable">0</strong></div>
+</div>
+<div class="hf-chart-wrap uspsa-progress-chart-wrap"><canvas id="historyUSPSAProgressChart"></canvas></div>
+<div id="historyProgressEmpty" class="chart-empty" style="display:none">Selecione uma divisão USPSA e tenha pelo menos 3 resultados com HHF para visualizar a evolução.</div>
+</section>
+
 <section class="section">
 <div class="section-header"><h2>Histórico de desempenho</h2></div>
 <div class="history-filters">
@@ -366,6 +424,7 @@ Registre pelo menos um resultado para visualizar a evolução do Hit Factor.
 <div class="history-filter-item"><label>Data inicial</label><input id="historyStartDate" type="date"></div>
 <div class="history-filter-item"><label>Data final</label><input id="historyEndDate" type="date"></div>
 <div class="history-filter-item"><label>Classifier</label><select id="historyClassifier"><option value="">Todos os classifiers</option></select></div>
+<div class="history-filter-item"><label>Divisão USPSA</label><select id="historyDivision"><option value="">Todas as divisões</option></select></div>
 <div class="history-filter-item"><label>Competência</label><select id="historyCompetency"><option value="">Todas as competências</option></select></div>
 <div class="history-filter-item"><label>Característica</label><select id="historyFeature"><option value="">Todas as características</option></select></div>
 </div>
@@ -385,7 +444,7 @@ Registre pelo menos um resultado para visualizar a evolução do Hit Factor.
 <div class="filtered-summary" id="historySummary">Exibindo todos os resultados.</div>
 <div class="danger-zone"><div class="danger-zone-text">Excluir todos os seus resultados registrados.</div><button class="btn btn-danger" id="clearAllHistory">LIMPAR TODO O HISTÓRICO</button></div>
 </div>
-<div class="table-wrap"><table><thead><tr><th>Data</th><th>Classifier</th><th>Hit Factor</th><th>Observações</th><th>Ações</th></tr></thead><tbody id="historyTable"></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Data</th><th>Classifier</th><th>Divisão</th><th>Hit Factor</th><th>HHF / % HHF</th><th>Observações</th><th>Ações</th></tr></thead><tbody id="historyTable"></tbody></table></div>
 </section></section>
 </main>
 </div>
@@ -396,6 +455,9 @@ Registre pelo menos um resultado para visualizar a evolução do Hit Factor.
 <label>Classifier</label><select id="classifierSelect" required></select>
 <label>Data</label><input id="resultDate" type="date" required>
 <label>Hit Factor</label><input id="hitFactor" type="number" step="0.001" min="0" required>
+<label>Divisão do equipamento <span style="color:#777;font-weight:400">(opcional)</span></label>
+<select id="resultDivision"><option value="">Não informar</option></select>
+<div id="hhfPreview" class="hhf-preview"><div class="hhf-preview-title">Referência USPSA</div><div id="hhfPreviewValue" class="hhf-preview-value"></div></div>
 <label>Observações</label><textarea id="observations" rows="4"></textarea>
 <button class="btn btn-red full" type="submit" id="saveResultBtn">SALVAR RESULTADO</button>
 </form>
@@ -414,8 +476,35 @@ const SUPABASE_URL="https://pzbvaskwyjgfgclwdzbp.supabase.co";
 ========================================================= */
 const SUPABASE_KEY="sb_publishable_M18H8TMwBV-EeM6YMLtlbQ_pyx0u_BZ";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const resultDivision=document.getElementById("resultDivision");
+const hhfPreview=document.getElementById("hhfPreview");
+const hhfPreviewValue=document.getElementById("hhfPreviewValue");
 
-let currentUser=null,classifiers=[],results=[],filteredHistory=[],selectedOrganization="ALL",selectedCompetency="ALL",selectedFeature="ALL",classifierSearchText="",editingResultId=null,confirmAction=null,hfChart=null,competencyTrainingChart=null;
+const DIVISIONS={
+  IPSC:["Open","Standard","Production","Production Optics","Classic","Revolver","PCC","Optics"],
+  USPSA:["Open","Carry Optics","Limited Optics","Limited","Production","Single Stack","Revolver","PCC"]
+};
+
+function selectedClassifier(){
+  return classifiers.find(c=>String(c.id)===String(classifierSelect.value))||null;
+}
+
+function populateResultDivisions(selected=""){
+  if(!resultDivision)return;
+  const c=selectedClassifier();
+  const org=String(c?.organization||"").toUpperCase();
+  const options=DIVISIONS[org]||[...new Set([...DIVISIONS.IPSC,...DIVISIONS.USPSA])];
+  resultDivision.innerHTML='<option value="">Não informar</option>';
+  options.forEach(d=>{
+    const o=document.createElement("option");
+    o.value=d;o.textContent=d;
+    resultDivision.appendChild(o);
+  });
+  resultDivision.value=selected||"";
+}
+
+
+let currentUser=null,classifiers=[],results=[],hhfs=[],filteredHistory=[],selectedOrganization="ALL",selectedCompetency="ALL",selectedFeature="ALL",classifierSearchText="",editingResultId=null,confirmAction=null,hfChart=null,competencyTrainingChart=null,uspsaHHFChart=null,historyProgressChart=null;
 
 const meta={
 "CLC-01":["Short",7,["Mão Forte","Transição","Precisão"],["No Shoot","Posição Inicial Especial"]],
@@ -478,13 +567,61 @@ if(session){currentUser=session.user;await showApp()}
 }
 async function showApp(){
 loginScreen.style.display="none";app.style.display="block";userEmail.textContent=currentUser.email;
-await loadClassifiers();await loadResults();
+await loadClassifiers();await loadHHFs();await loadResults();
 }
 async function loadClassifiers(){
 const {data,error}=await supabaseClient.from("classifiers").select("*").order("id");
 if(error){alert("Erro ao carregar classifiers: "+error.message);return}
 classifiers=data||[];
 populateFilters();populateClassifierSelect();populateHistoryClassifier();populateHistoryMetaFilters();renderClassifiers();
+}
+async function loadHHFs(){
+const {data,error}=await supabaseClient.from("uspsa_hhf").select("*").order("effective_from");
+if(error){alert("Erro ao carregar HHFs USPSA: "+error.message);return}
+hhfs=data||[];
+}
+
+function getHHF(classifierId,division,date){
+if(!classifierId||!division||!date)return null;
+let c=classifiers.find(x=>String(x.id)===String(classifierId));
+if(!c||String(c.organization).toUpperCase()!=="USPSA"||String(c.status).toUpperCase()!=="ACTIVE")return null;
+let candidates=hhfs.filter(h=>String(h.classifier_id)===String(classifierId)
+ &&String(h.division)===String(division)
+ &&String(h.effective_from)<=String(date)
+ &&(!h.effective_to||String(date)<=String(h.effective_to)));
+if(!candidates.length)return null;
+candidates.sort((a,b)=>String(b.effective_from).localeCompare(String(a.effective_from)));
+return candidates[0];
+}
+
+function hhfPercent(r){
+let info=classifierMetaForResult(r);
+let m=info.meta;
+if(m.organization!=="USPSA"||m.status!=="ACTIVE"||!r.division)return null;
+let h=getHHF(r.classifier_id,r.division,r.date);
+if(!h)return null;
+let hf=Number(r.hit_factor),base=Number(h.hhf);
+return Number.isFinite(hf)&&Number.isFinite(base)&&base>0?(hf/base)*100:null;
+}
+
+function formatHHF(r){
+let pct=hhfPercent(r);
+if(pct===null)return "-";
+let h=getHHF(r.classifier_id,r.division,r.date);
+return `${Number(h.hhf).toFixed(4)} · ${pct.toFixed(2)}%`;
+}
+
+function updateHHFPreview(){
+if(!hhfPreview||!hhfPreviewValue)return;
+let c=selectedClassifier(),org=String(c?.organization||"").toUpperCase(),status=String(c?.status||"").toUpperCase();
+let division=resultDivision?.value||"",date=resultDate?.value||"",hf=Number(hitFactor?.value);
+if(org!=="USPSA"||status!=="ACTIVE"){hhfPreview.classList.remove("show");return}
+if(!division){hhfPreview.classList.add("show");hhfPreviewValue.innerHTML="Informe a divisão para calcular o <strong>% HHF</strong>.";return}
+let h=getHHF(c.id,division,date);
+if(!h){hhfPreview.classList.add("show");hhfPreviewValue.textContent="HHF não encontrado para esta data.";return}
+let pct=Number.isFinite(hf)&&hf>=0?(hf/Number(h.hhf))*100:null;
+hhfPreview.classList.add("show");
+hhfPreviewValue.innerHTML=`HHF: <span>${Number(h.hhf).toFixed(4)}</span>${pct===null?"":` &nbsp;|&nbsp; % HHF: <span>${pct.toFixed(2)}%</span>`}`;
 }
 async function migrateLegacyUspsaResults(){
 const localKey=`livefire_uspsa_results_${currentUser.id}`;
@@ -494,18 +631,18 @@ if(!Array.isArray(localResults)||!localResults.length)return;
 
 const {data:existing,error:existingError}=await supabaseClient
  .from("training_results")
- .select("date,classifier_id,hit_factor,observations")
+ .select("date,classifier_id,hit_factor,division,observations")
  .eq("user_id",currentUser.id);
 if(existingError){console.warn("Não foi possível verificar resultados antigos:",existingError.message);return}
 
 const dbByCode=new Map(classifiers.map(c=>[String(c.code).toUpperCase(),c]));
-const existingKeys=new Set((existing||[]).map(r=>`${r.date}|${r.classifier_id}|${Number(r.hit_factor)}|${r.observations||""}`));
+const existingKeys=new Set((existing||[]).map(r=>`${r.date}|${r.classifier_id}|${Number(r.hit_factor)}|${r.division||""}|${r.observations||""}`));
 const pending=localResults.map(r=>{
  const code=String(r.classifier_id||"").replace(/^uspsa:/i,"").toUpperCase();
  const c=dbByCode.get(code);
  if(!c)return null;
- const payload={classifier_id:c.id,user_id:currentUser.id,date:r.date,hit_factor:Number(r.hit_factor),observations:r.observations||null};
- const key=`${payload.date}|${payload.classifier_id}|${payload.hit_factor}|${payload.observations||""}`;
+ const payload={classifier_id:c.id,user_id:currentUser.id,date:r.date,hit_factor:Number(r.hit_factor),division:r.division||null,observations:r.observations||null};
+ const key=`${payload.date}|${payload.classifier_id}|${payload.hit_factor}|${payload.division||""}|${payload.observations||""}`;
  return existingKeys.has(key)?null:payload;
 }).filter(Boolean);
 
@@ -520,7 +657,7 @@ async function loadResults(){
 await migrateLegacyUspsaResults();
 const {data,error}=await supabaseClient.from("training_results").select("*").eq("user_id",currentUser.id).order("date",{ascending:false});
 if(error){alert("Erro ao carregar resultados: "+error.message);return}
-results=data||[];filteredHistory=[...results];updateDashboard();renderResults();applyHistoryFilters(false);renderClassifiers();
+results=data||[];filteredHistory=[...results];populateHistoryMetaFilters();updateDashboard();renderResults();applyHistoryFilters(false);renderClassifiers();
 }
 function bestFor(id){let a=results.filter(r=>r.classifier_id===id).map(r=>Number(r.hit_factor)).filter(Number.isFinite);return a.length?Math.max(...a):null}
 function updateDashboard(){
@@ -541,6 +678,167 @@ document.getElementById("kpiAverageHF2").textContent=avg===null?"-":avg.toFixed(
 document.getElementById("activitySummary").textContent=last30?"Atividade registrada nos últimos 30 dias":"Sem treinos nos últimos 30 dias";
 renderCompetencies();
 renderCompetencyTrainingChart();
+updateUSPSAPerformance();
+updateUSPSADivisionPerformance();
+}
+
+function getLiveFireClassification(pct){
+    const n=Number(pct);
+    if(!Number.isFinite(n))return null;
+    if(n>=95)return "GM";
+    if(n>=85)return "M";
+    if(n>=75)return "A";
+    if(n>=60)return "B";
+    if(n>=40)return "C";
+    return "D";
+}
+function classificationBadge(pct){
+    const c=getLiveFireClassification(pct);
+    if(!c)return "-";
+    return `<span class="classification-badge classification-${c.toLowerCase()}">${c}</span>`;
+}
+
+function updateUSPSADivisionPerformance(){
+    const table=document.getElementById("uspsaDivisionTable");
+    const summary=document.getElementById("uspsaDivisionSummary");
+    const empty=document.getElementById("uspsaDivisionEmpty");
+    if(!table)return;
+
+    const stats={};
+    results.forEach(r=>{
+        const pct=hhfPercent(r);
+        if(pct===null)return;
+        const division=String(r.division||"").trim();
+        if(!division)return;
+        if(!stats[division])stats[division]={items:[]};
+        stats[division].items.push({r,pct});
+    });
+
+    const cutoff=new Date();
+    cutoff.setFullYear(cutoff.getFullYear()-1);
+    const cutoffDate=cutoff.toISOString().slice(0,10);
+
+    const rows=Object.entries(stats).map(([division,x])=>{
+        const items=x.items.sort((a,b)=>String(a.r.date).localeCompare(String(b.r.date)));
+        const values=items.map(x=>x.pct);
+        const best=Math.max(...values);
+        const recent=items.filter(x=>String(x.r.date)>=cutoffDate);
+        const average=recent.length?recent.reduce((sum,x)=>sum+x.pct,0)/recent.length:null;
+        const current=items[items.length-1].pct;
+        return {division,count:items.length,best,average,current,recentCount:recent.length};
+    }).sort((a,b)=>{
+        const aa=a.average===null?-Infinity:a.average, bb=b.average===null?-Infinity:b.average;
+        return bb-aa||b.best-a.best||a.division.localeCompare(b.division,"pt-BR");
+    });
+
+    table.innerHTML="";
+    if(!rows.length){
+        table.innerHTML='<tr><td colspan="5">Nenhum resultado com HHF calculável.</td></tr>';
+        summary.textContent="";
+        empty.style.display="block";
+        return;
+    }
+
+    empty.style.display="none";
+    summary.textContent=`${rows.length} divisão(ões) com resultados`;
+    rows.forEach(x=>{
+        table.innerHTML+=`<tr>
+          <td><strong>${esc(x.division)}</strong></td>
+          <td>${x.count}</td>
+          <td>${x.best.toFixed(2)}% ${classificationBadge(x.best)}</td>
+          <td>${x.average===null?"—":`${x.average.toFixed(2)}% ${classificationBadge(x.average)}`}</td>
+          <td>${x.current.toFixed(2)}% ${classificationBadge(x.current)}</td>
+        </tr>`;
+    });
+}
+
+function updateUSPSAPerformance(){
+    const summary=document.getElementById("uspsaPerformanceSummary");
+    const bestEl=document.getElementById("kpiBestHHF");
+    const avgEl=document.getElementById("kpiAverageHHF");
+    const countEl=document.getElementById("kpiHHFResults");
+    const divisionEl=document.getElementById("kpiBestDivision");
+    const canvas=document.getElementById("uspsaHHFEvolutionChart");
+    const empty=document.getElementById("uspsaHHFChartEmpty");
+
+    if(!canvas)return;
+
+    const valid=results.map(r=>{
+        const pct=hhfPercent(r);
+        return pct===null?null:{r,pct};
+    }).filter(Boolean);
+
+    const values=valid.map(x=>x.pct).filter(Number.isFinite);
+    const best=values.length?Math.max(...values):null;
+    const avg=values.length?values.reduce((a,b)=>a+b,0)/values.length:null;
+
+    bestEl.textContent=best===null?"-":`${best.toFixed(2)}%`;
+    avgEl.textContent=avg===null?"-":`${avg.toFixed(2)}%`;
+    countEl.textContent=String(valid.length);
+
+    const divisionStats={};
+    valid.forEach(({r,pct})=>{
+        const d=r.division||"-";
+        if(!divisionStats[d])divisionStats[d]={sum:0,count:0,best:0};
+        divisionStats[d].sum+=pct;
+        divisionStats[d].count++;
+        divisionStats[d].best=Math.max(divisionStats[d].best,pct);
+    });
+    const divisionRanking=Object.entries(divisionStats)
+        .map(([division,x])=>({division,average:x.sum/x.count,best:x.best,count:x.count}))
+        .sort((a,b)=>b.average-a.average||b.best-a.best||a.division.localeCompare(b.division));
+    divisionEl.textContent=divisionRanking.length?`${divisionRanking[0].division} · ${divisionRanking[0].average.toFixed(1)}%`:"-";
+    summary.textContent=valid.length?`${valid.length} resultado(s) com HHF calculável`:`Nenhum resultado USPSA com HHF calculável`;
+
+    if(uspsaHHFChart){uspsaHHFChart.destroy();uspsaHHFChart=null;}
+
+    if(!valid.length){
+        canvas.style.display="none";
+        empty.style.display="block";
+        return;
+    }
+
+    canvas.style.display="block";
+    empty.style.display="none";
+
+    const data=[...valid].sort((a,b)=>String(a.r.date).localeCompare(String(b.r.date)));
+    const labels=data.map(x=>dateBR(x.r.date));
+    const chartValues=data.map(x=>x.pct);
+    const codes=data.map(x=>classifierMetaForResult(x.r).meta.code||"Classifier");
+    const divisions=data.map(x=>x.r.division||"-");
+
+    uspsaHHFChart=new Chart(canvas,{
+        type:"line",
+        data:{
+            labels,
+            datasets:[{
+                label:"% HHF",
+                data:chartValues,
+                borderWidth:3,
+                pointRadius:5,
+                pointHoverRadius:7,
+                tension:.25
+            }]
+        },
+        options:{
+            responsive:true,
+            maintainAspectRatio:false,
+            interaction:{mode:"index",intersect:false},
+            plugins:{
+                legend:{labels:{color:"#aaa"}},
+                tooltip:{
+                    callbacks:{
+                        title:(items)=>items[0]?`${codes[items[0].dataIndex]} — ${labels[items[0].dataIndex]}`:"",
+                        label:(ctx)=>`% HHF: ${Number(ctx.parsed.y).toFixed(2)}% · ${divisions[ctx.dataIndex]}`
+                    }
+                }
+            },
+            scales:{
+                x:{ticks:{color:"#888"},grid:{color:"#292929"}},
+                y:{beginAtZero:false,min:0,max:110,ticks:{color:"#888",callback:(v)=>`${v}%`},grid:{color:"#292929"}}
+            }
+        }
+    });
 }
 function renderCompetencies(){
 const grid=document.getElementById("competencyGrid"),all=[...new Set(classifiers.flatMap((c,i)=>md(c,i).competencies))].sort(),trained=new Set();
@@ -677,11 +975,11 @@ function populateClassifierSelect(){
 classifierSelect.innerHTML='<option value="">Selecione...</option>';classifiers.forEach((c,i)=>{let o=document.createElement("option");o.value=c.id;o.textContent=md(c,i).code;classifierSelect.appendChild(o)})
 }
 function populateHistoryClassifier(){
-historyClassifier.innerHTML='<option value="">Todos os classifiers</option>';classifiers.forEach((c,i)=>{let o=document.createElement("option");o.value=c.id;o.textContent=md(c,i).code;historyClassifier.appendChild(o)})
+historyClassifier.innerHTML='<option value="">Todos os classifiers</option>';[...classifiers].sort((a,b)=>{let ca=md(a,classifiers.indexOf(a)).code||"",cb=md(b,classifiers.indexOf(b)).code||"";return ca.localeCompare(cb,"pt-BR",{numeric:true,sensitivity:"base"})}).forEach(c=>{let o=document.createElement("option");o.value=c.id;o.textContent=md(c,classifiers.indexOf(c)).code;historyClassifier.appendChild(o)})
 }
 function renderResults(){
-resultsTable.innerHTML="";results.slice(0,10).forEach(r=>{let c=classifiers.find(x=>x.id===r.classifier_id),i=c?classifiers.indexOf(c):-1;resultsTable.innerHTML+=`<tr><td>${dateBR(r.date)}</td><td>${esc(md(c||{},i).code||"Classifier")}</td><td><strong>${Number(r.hit_factor).toFixed(3)}</strong></td><td>${esc(r.observations||"-")}</td></tr>`});
-if(!results.length)resultsTable.innerHTML='<tr><td colspan="4">Nenhum resultado registrado ainda.</td></tr>';
+resultsTable.innerHTML="";results.slice(0,10).forEach(r=>{let c=classifiers.find(x=>x.id===r.classifier_id),i=c?classifiers.indexOf(c):-1;resultsTable.innerHTML+=`<tr><td>${dateBR(r.date)}</td><td>${esc(md(c||{},i).code||"Classifier")}</td><td>${esc(r.division||"-")}</td><td><strong>${Number(r.hit_factor).toFixed(3)}</strong></td><td>${esc(formatHHF(r))}</td><td>${esc(r.observations||"-")}</td></tr>`});
+if(!results.length)resultsTable.innerHTML='<tr><td colspan="7">Nenhum resultado registrado ainda.</td></tr>';
 }
 function classifierMetaForResult(r){
 let c=classifiers.find(x=>String(x.id)===String(r.classifier_id));
@@ -690,12 +988,16 @@ return {classifier:c,meta:md(c||{},i)};
 }
 
 function populateHistoryMetaFilters(){
+let division=document.getElementById("historyDivision");
 let comp=document.getElementById("historyCompetency");
 let feat=document.getElementById("historyFeature");
-if(!comp||!feat)return;
+if(!division||!comp||!feat)return;
 
 let comps=[...new Set(classifiers.flatMap((c,i)=>md(c,i).competencies))].sort();
 let feats=[...new Set(classifiers.flatMap((c,i)=>md(c,i).features))].sort();
+let divisions=[...new Set(results.map(r=>String(r.division||"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+division.innerHTML='<option value="">Todas as divisões</option>';
+divisions.forEach(x=>{let o=document.createElement("option");o.value=x;o.textContent=x;division.appendChild(o);});
 
 comp.innerHTML='<option value="">Todas as competências</option>';
 feat.innerHTML='<option value="">Todas as características</option>';
@@ -711,13 +1013,14 @@ o.value=x;o.textContent=x;feat.appendChild(o);
 }
 
 function historyMatches(r){
-let s=historyStartDate.value,e=historyEndDate.value,c=historyClassifier.value;
+let s=historyStartDate.value,e=historyEndDate.value,c=historyClassifier.value,div=historyDivision.value;
 let comp=historyCompetency.value,feat=historyFeature.value;
 let info=classifierMetaForResult(r),m=info.meta;
 
 return (!s||r.date>=s)
 &&(!e||r.date<=e)
 &&(!c||String(r.classifier_id)===String(c))
+&&(!div||String(r.division||"")===String(div))
 &&(!comp||m.competencies.includes(comp))
 &&(!feat||m.features.includes(feat));
 }
@@ -734,7 +1037,7 @@ historyKpiAverage.textContent=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length
 function renderHistory(){
 historyTable.innerHTML="";
 if(!filteredHistory.length){
-historyTable.innerHTML='<tr><td colspan="5">Nenhum resultado encontrado com os filtros selecionados.</td></tr>';
+historyTable.innerHTML='<tr><td colspan="8">Nenhum resultado encontrado com os filtros selecionados.</td></tr>';
 return;
 }
 
@@ -742,7 +1045,10 @@ filteredHistory.forEach(r=>{
 let info=classifierMetaForResult(r),m=info.meta,row=document.createElement("tr");
 row.innerHTML=`<td>${dateBR(r.date)}</td>
 <td>${esc(m.code||"Classifier")}</td>
+<td>${esc(r.division||"-")}</td>
 <td><strong>${Number(r.hit_factor).toFixed(3)}</strong></td>
+<td>${esc(formatHHF(r))}</td>
+<td>${classificationBadge(hhfPercent(r))}</td>
 <td>${esc(r.observations||"-")}</td>
 <td><div class="action-buttons">
 <button class="action-btn edit">EDITAR</button>
@@ -846,6 +1152,22 @@ y:{beginAtZero:false,ticks:{color:"#888"},grid:{color:"#292929"}}
 });
 }
 
+function updateHistoryUSPSAProgress(){
+const summary=document.getElementById("historyProgressSummary"),firstEl=document.getElementById("historyFirst3HHF"),lastEl=document.getElementById("historyLast3HHF"),evolutionEl=document.getElementById("historyHHFEvolution"),countEl=document.getElementById("historyHHFComparable"),canvas=document.getElementById("historyUSPSAProgressChart"),empty=document.getElementById("historyProgressEmpty");
+if(!canvas)return;
+const division=historyDivision.value;
+let valid=filteredHistory.map(r=>{const pct=hhfPercent(r);return pct===null?null:{r,pct};}).filter(Boolean).filter(x=>String(x.r.division||"")===String(division)).sort((a,b)=>String(a.r.date).localeCompare(String(b.r.date)));
+if(historyProgressChart){historyProgressChart.destroy();historyProgressChart=null;}
+countEl.textContent=String(valid.length);
+if(!division){firstEl.textContent="-";lastEl.textContent="-";evolutionEl.textContent="-";summary.textContent="Selecione uma divisão USPSA para analisar a evolução.";canvas.style.display="none";empty.style.display="block";return;}
+if(valid.length<3){firstEl.textContent="-";lastEl.textContent="-";evolutionEl.textContent="-";summary.textContent=valid.length?`${valid.length} resultado(s) comparável(is) em ${division}`:`Nenhum resultado com HHF calculável em ${division}`;canvas.style.display="none";empty.style.display="block";return;}
+const firstAvg=valid.slice(0,3).reduce((s,x)=>s+x.pct,0)/3,lastAvg=valid.slice(-3).reduce((s,x)=>s+x.pct,0)/3,delta=lastAvg-firstAvg;
+firstEl.textContent=`${firstAvg.toFixed(2)}%`;lastEl.textContent=`${lastAvg.toFixed(2)}%`;evolutionEl.textContent=`${delta>=0?"+":""}${delta.toFixed(2)} p.p.`;summary.textContent=`${valid.length} resultado(s) comparável(is) em ${division}`;canvas.style.display="block";empty.style.display="none";
+const labels=valid.map(x=>dateBR(x.r.date)),values=valid.map(x=>x.pct),codes=valid.map(x=>classifierMetaForResult(x.r).meta.code||"Classifier");
+const movingAvg=values.map((_,i)=>{const a=values.slice(Math.max(0,i-2),i+1);return a.reduce((x,y)=>x+y,0)/a.length;});
+historyProgressChart=new Chart(canvas,{type:"line",data:{labels,datasets:[{label:"% HHF",data:values,borderWidth:3,pointRadius:5,pointHoverRadius:7,tension:.25},{label:"Média móvel (3)",data:movingAvg,borderWidth:2,borderDash:[6,6],pointRadius:0,tension:.15}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#aaa"}},tooltip:{callbacks:{title:(items)=>items[0]?`${codes[items[0].dataIndex]} — ${labels[items[0].dataIndex]}`:"",label:(ctx)=>`${ctx.dataset.label}: ${Number(ctx.parsed.y).toFixed(2)}%`}}},scales:{x:{ticks:{color:"#888"},grid:{color:"#292929"}},y:{beginAtZero:false,min:0,max:110,ticks:{color:"#888",callback:v=>`${v}%`},grid:{color:"#292929"}}}}});
+}
+
 function applyHistoryFilters(shouldRender=true){
 filteredHistory=results.filter(historyMatches);
 
@@ -853,6 +1175,7 @@ let active=[];
 if(historyStartDate.value)active.push("Data inicial");
 if(historyEndDate.value)active.push("Data final");
 if(historyClassifier.value)active.push(historyClassifier.options[historyClassifier.selectedIndex].text);
+if(historyDivision.value)active.push(historyDivision.value);
 if(historyCompetency.value)active.push(historyCompetency.value);
 if(historyFeature.value)active.push(historyFeature.value);
 
@@ -863,12 +1186,14 @@ historySummary.textContent=active.length
 updateHistoryKPIs();
 if(shouldRender)renderHistory();
 updateHFChart();
+updateHistoryUSPSAProgress();
 }
 
 function clearHistoryFiltersNow(){
 historyStartDate.value="";
 historyEndDate.value="";
 historyClassifier.value="";
+historyDivision.value="";
 historyCompetency.value="";
 historyFeature.value="";
 applyHistoryFilters();
@@ -878,15 +1203,19 @@ document.getElementById("applyHistoryFilters").onclick=()=>applyHistoryFilters()
 document.getElementById("clearHistoryFilters").onclick=()=>clearHistoryFiltersNow();
 
 function openResultModal(id=null){
-editingResultId=null;resultModalTitle.textContent="Novo resultado";saveResultBtn.textContent="SALVAR RESULTADO";resultForm.reset();resultDate.value=today();classifierSelect.value=id||"";resultMessage.textContent="";resultMessage.className="message";resultModal.style.display="flex";
+editingResultId=null;resultModalTitle.textContent="Novo resultado";saveResultBtn.textContent="SALVAR RESULTADO";resultForm.reset();resultDate.value=today();classifierSelect.value=id||"";populateResultDivisions("");updateHHFPreview();resultMessage.textContent="";resultMessage.className="message";resultModal.style.display="flex";
 }
 newResultBtn.onclick=()=>openResultModal();closeModal.onclick=()=>{resultModal.style.display="none";editingResultId=null}
 function editResult(id){
-let r=results.find(x=>x.id===id);if(!r)return;editingResultId=id;resultModalTitle.textContent="Editar resultado";saveResultBtn.textContent="SALVAR ALTERAÇÕES";classifierSelect.value=r.classifier_id;resultDate.value=r.date;hitFactor.value=r.hit_factor;observations.value=r.observations||"";resultMessage.textContent="";resultModal.style.display="flex";
+let r=results.find(x=>x.id===id);if(!r)return;editingResultId=id;resultModalTitle.textContent="Editar resultado";saveResultBtn.textContent="SALVAR ALTERAÇÕES";classifierSelect.value=r.classifier_id;resultDate.value=r.date;hitFactor.value=r.hit_factor;populateResultDivisions(r.division||"");observations.value=r.observations||"";updateHHFPreview();resultMessage.textContent="";resultModal.style.display="flex";
 }
+classifierSelect.addEventListener("change",()=>{populateResultDivisions("");updateHHFPreview()});
+resultDivision.addEventListener("change",updateHHFPreview);
+resultDate.addEventListener("change",updateHHFPreview);
+hitFactor.addEventListener("input",updateHHFPreview);
 resultForm.onsubmit=async e=>{
  e.preventDefault();
- let payload={classifier_id:classifierSelect.value,date:resultDate.value,hit_factor:Number(hitFactor.value),observations:observations.value.trim()||null};
+ let payload={classifier_id:classifierSelect.value,date:resultDate.value,hit_factor:Number(hitFactor.value),division:resultDivision.value||null,observations:observations.value.trim()||null};
  let response=editingResultId
   ?await supabaseClient.from("training_results").update(payload).eq("id",editingResultId).eq("user_id",currentUser.id)
   :await supabaseClient.from("training_results").insert({...payload,user_id:currentUser.id});
@@ -901,7 +1230,7 @@ function confirmDelete(id){openConfirm("Excluir resultado?","Tem certeza que des
  await loadResults();applyHistoryFilters()})}
 clearAllHistory.onclick=()=>{if(!results.length){alert("Você não possui resultados para excluir.");return}openConfirm("Limpar todo o histórico?","ATENÇÃO: todos os seus resultados serão excluídos permanentemente. Os resultados de outros usuários não serão afetados. Esta ação não pode ser desfeita.",async()=>{let {error}=await supabaseClient.from("training_results").delete().eq("user_id",currentUser.id);if(error){alert("Erro ao limpar histórico: "+error.message);return}await loadResults();clearHistoryFiltersNow()})}
 
-[historyStartDate,historyEndDate,historyClassifier,historyCompetency,historyFeature].forEach(el=>{
+[historyStartDate,historyEndDate,historyClassifier,historyDivision,historyCompetency,historyFeature].forEach(el=>{
 if(el)el.addEventListener("change",()=>applyHistoryFilters());
 });
 
