@@ -17,7 +17,7 @@
 .section{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:25px;margin-bottom:25px}.section-header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.section h2{margin:0}
 .competency-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.competency-row{background:#141414;border:1px solid #333;border-radius:12px;padding:15px}.competency-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:9px;font-size:13px;font-weight:800}.competency-count{color:#aaa}.progress{height:9px;background:#292929;border-radius:20px;overflow:hidden}.progress-bar{height:100%;background:var(--red);border-radius:20px;transition:width .3s}
 .classifiers{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.classifier{background:#141414;border:1px solid #333;border-radius:14px;padding:20px}.classifier:hover{border-color:#555}.classifier h3{margin:8px 0 4px;font-size:22px}.classifier-meta{color:#777;font-size:13px;margin-bottom:14px}.tag-section{margin-top:14px}.tag-title{color:#777;font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:7px}.tags{display:flex;flex-wrap:wrap;gap:5px}.tag{background:#252525;border:1px solid #414141;color:#ccc;border-radius:5px;padding:5px 7px;font-size:10px;font-weight:800}.official-links{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}.official-btn{display:flex;align-items:center;justify-content:center;min-height:42px;background:#202020;color:#fff;border:1px solid #444;border-radius:9px;font-size:11px;font-weight:900;text-decoration:none}.best-hf{margin-top:15px;padding:10px 12px;background:#181818;border:1px solid #333;border-radius:8px;display:flex;justify-content:space-between}.best-hf-label{color:#777;font-size:11px;font-weight:900;text-transform:uppercase}.best-hf-value{color:var(--yellow);font-size:18px;font-weight:900}.register-result{width:100%;margin-top:10px}
-.filters-box,.history-filters{background:#141414;border:1px solid #333;border-radius:15px;padding:20px;margin-bottom:20px}.filter-title{color:#aaa;font-size:13px;font-weight:900;text-transform:uppercase;margin-bottom:10px}.filter-group{margin-bottom:18px}.filter-buttons{display:flex;flex-wrap:wrap;gap:8px}.filter-btn{background:#202020;color:#aaa;border:1px solid #3a3a3a;border-radius:20px;padding:8px 13px;font-size:13px;font-weight:700}.filter-btn.active{background:var(--red);border-color:var(--red);color:#fff}.filter-status,.filtered-summary{color:var(--muted);font-size:13px}.clear-filters{background:transparent;color:#aaa;border:1px solid #444;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700}
+.filters-box,.history-filters{background:#141414;border:1px solid #333;border-radius:15px;padding:20px;margin-bottom:20px}.filter-title{color:#aaa;font-size:13px;font-weight:900;text-transform:uppercase;margin-bottom:10px}.filter-group{margin-bottom:18px}.filter-buttons{display:flex;flex-wrap:wrap;gap:8px}.filter-btn{background:#202020;color:#aaa;border:1px solid #3a3a3a;border-radius:20px;padding:8px 13px;font-size:13px;font-weight:700}.filter-btn.active{background:var(--red);border-color:var(--red);color:#fff}.filter-status,.filtered-summary{color:var(--muted);font-size:13px}.classifier-search{margin-bottom:18px}.classifier-search input{background:#101010}.clear-filters{background:transparent;color:#aaa;border:1px solid #444;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700}
 .history-filter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
 .history-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
 .history-mini-kpi{background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:12px 14px}
@@ -202,7 +202,8 @@ header{
 }
 
 </style>
-</head>
+<style>
+.v2-org-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.08em;padding:5px 8px;border:1px solid #333;border-radius:999px;margin:4px 0 8px}.v2-org-uspsa{border-color:#e50909}.v2-trial{border-color:#c98a00;color:#e6b84d}.v2-card-name{font-size:14px;font-weight:700;margin:0 0 8px;line-height:1.3}.v2-demo-note{margin:0 0 16px;padding:12px 14px;border:1px solid #3a3a3a;border-radius:10px;color:#bbb;font-size:12px;line-height:1.5}.v2-demo-note strong{color:#fff}</style></head>
 <body>
 
 <section id="loginScreen"><div class="login-card">
@@ -324,7 +325,7 @@ header{
 <section id="classifiersTab" style="display:none"><section class="section">
 <div class="section-header"><h2>Classifiers disponíveis</h2><span id="classifierCount" class="filter-status"></span></div>
 <div class="filters-box">
-<div class="filter-group"><div class="filter-title">Competências</div><div class="filter-buttons" id="competencyFilters"></div></div>
+<div class="filter-group"><div class="filter-title">Filtro: IPSC - USPSA</div><div class="filter-buttons" id="organizationFilters"></div></div><div class="classifier-search"><div class="filter-title">Buscar classifier</div><input id="classifierSearch" type="search" placeholder="Digite código ou nome do classifier..."></div><div class="filter-group"><div class="filter-title">Competências</div><div class="filter-buttons" id="competencyFilters"></div></div>
 <div class="filter-group"><div class="filter-title">Características</div><div class="filter-buttons" id="featureFilters"></div></div>
 <button class="clear-filters" id="clearFilters">LIMPAR FILTROS</button>
 <div class="filter-status" id="filterStatus"></div>
@@ -414,7 +415,7 @@ const SUPABASE_URL="https://pzbvaskwyjgfgclwdzbp.supabase.co";
 const SUPABASE_KEY="sb_publishable_M18H8TMwBV-EeM6YMLtlbQ_pyx0u_BZ";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let currentUser=null,classifiers=[],results=[],filteredHistory=[],selectedCompetency="ALL",selectedFeature="ALL",editingResultId=null,confirmAction=null,hfChart=null,competencyTrainingChart=null;
+let currentUser=null,classifiers=[],results=[],filteredHistory=[],selectedOrganization="ALL",selectedCompetency="ALL",selectedFeature="ALL",classifierSearchText="",editingResultId=null,confirmAction=null,hfChart=null,competencyTrainingChart=null;
 
 const meta={
 "CLC-01":["Short",7,["Mão Forte","Transição","Precisão"],["No Shoot","Posição Inicial Especial"]],
@@ -448,11 +449,25 @@ const meta={
 };
 
 function codeOf(c,i){
-let s=[c?.code,c?.classifier_code,c?.classifier,c?.name,c?.title,c?.classifier_name,c?.description].find(Boolean);
-let m=s&&String(s).toUpperCase().match(/CLC-\d+/);
-return m?m[0]:Object.keys(meta)[i]||null;
+ if(c?.code)return String(c.code).toUpperCase();
+ let s=[c?.classifier_code,c?.classifier,c?.name,c?.title,c?.classifier_name,c?.description].find(Boolean);
+ let m=s&&String(s).toUpperCase().match(/CLC-\\d+|\\b(?:03|06|08|09|13|18|19|20|21|22|23|24|25|26|99)-\\d+\\b/);
+ return m?m[0].toUpperCase():Object.keys(meta)[i]||null;
 }
-function md(c,i){let code=codeOf(c,i),m=meta[code]||["-","-",[],[]];return{code,type:m[0],rounds:m[1],competencies:m[2],features:m[3]};}
+function md(c,i){
+ let code=codeOf(c,i),legacy=meta[code]||["-","-",[],[]];
+ return {
+  code:code||"-",
+  type:c?.course_type||c?.type||legacy[0],
+  rounds:c?.rounds??legacy[1],
+  competencies:Array.isArray(c?.competencies)?c.competencies:legacy[2],
+  features:Array.isArray(c?.features)?c.features:legacy[3],
+  organization:c?.organization||"IPSC",
+  status:c?.status||"ACTIVE",
+  name:c?.name||code||"-",
+  scoring:c?.scoring||"-"
+ };
+}
 function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
 function today(){let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
 function dateBR(d){if(!d)return"-";let p=String(d).split("-");return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:d}
@@ -468,9 +483,41 @@ await loadClassifiers();await loadResults();
 async function loadClassifiers(){
 const {data,error}=await supabaseClient.from("classifiers").select("*").order("id");
 if(error){alert("Erro ao carregar classifiers: "+error.message);return}
-classifiers=data||[];populateFilters();populateClassifierSelect();populateHistoryClassifier();populateHistoryMetaFilters();renderClassifiers();
+classifiers=data||[];
+populateFilters();populateClassifierSelect();populateHistoryClassifier();populateHistoryMetaFilters();renderClassifiers();
 }
+async function migrateLegacyUspsaResults(){
+const localKey=`livefire_uspsa_results_${currentUser.id}`;
+let localResults=[];
+try{localResults=JSON.parse(localStorage.getItem(localKey)||"[]")}catch(e){localResults=[]}
+if(!Array.isArray(localResults)||!localResults.length)return;
+
+const {data:existing,error:existingError}=await supabaseClient
+ .from("training_results")
+ .select("date,classifier_id,hit_factor,observations")
+ .eq("user_id",currentUser.id);
+if(existingError){console.warn("Não foi possível verificar resultados antigos:",existingError.message);return}
+
+const dbByCode=new Map(classifiers.map(c=>[String(c.code).toUpperCase(),c]));
+const existingKeys=new Set((existing||[]).map(r=>`${r.date}|${r.classifier_id}|${Number(r.hit_factor)}|${r.observations||""}`));
+const pending=localResults.map(r=>{
+ const code=String(r.classifier_id||"").replace(/^uspsa:/i,"").toUpperCase();
+ const c=dbByCode.get(code);
+ if(!c)return null;
+ const payload={classifier_id:c.id,user_id:currentUser.id,date:r.date,hit_factor:Number(r.hit_factor),observations:r.observations||null};
+ const key=`${payload.date}|${payload.classifier_id}|${payload.hit_factor}|${payload.observations||""}`;
+ return existingKeys.has(key)?null:payload;
+}).filter(Boolean);
+
+if(pending.length){
+ const {error}=await supabaseClient.from("training_results").insert(pending);
+ if(error){console.warn("Não foi possível migrar resultados USPSA antigos:",error.message);return}
+}
+localStorage.removeItem(localKey);
+}
+
 async function loadResults(){
+await migrateLegacyUspsaResults();
 const {data,error}=await supabaseClient.from("training_results").select("*").eq("user_id",currentUser.id).order("date",{ascending:false});
 if(error){alert("Erro ao carregar resultados: "+error.message);return}
 results=data||[];filteredHistory=[...results];updateDashboard();renderResults();applyHistoryFilters(false);renderClassifiers();
@@ -479,7 +526,7 @@ function bestFor(id){let a=results.filter(r=>r.classifier_id===id).map(r=>Number
 function updateDashboard(){
 let ids=new Set(results.map(r=>r.classifier_id)),vals=results.map(r=>Number(r.hit_factor)).filter(Number.isFinite);
 let best=vals.length?Math.max(...vals):null,avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
-kpiClassifiers.textContent=`${ids.size} / 28`;kpiCoverage.textContent=`${((ids.size/28)*100).toFixed(0)}%`;kpiResults.textContent=results.length;
+kpiClassifiers.textContent=`${ids.size} / ${classifiers.length}`;kpiCoverage.textContent=`${classifiers.length?((ids.size/classifiers.length)*100).toFixed(0):0}%`;kpiResults.textContent=results.length;
 kpiHF.textContent=best===null?"-":`${best.toFixed(2)} · ${avg.toFixed(2)}`;
 if(results.length){let r=results[0],c=classifiers.find(x=>String(x.id)===String(r.classifier_id)),i=c?classifiers.indexOf(c):-1;kpiLast.textContent=`${md(c||{},i).code||"-"} — ${Number(r.hit_factor).toFixed(2)}`}else kpiLast.textContent="-";
 
@@ -496,7 +543,7 @@ renderCompetencies();
 renderCompetencyTrainingChart();
 }
 function renderCompetencies(){
-const grid=document.getElementById("competencyGrid"),all=[...new Set(Object.values(meta).flatMap(x=>x[2]))].sort(),trained=new Set();
+const grid=document.getElementById("competencyGrid"),all=[...new Set(classifiers.flatMap((c,i)=>md(c,i).competencies))].sort(),trained=new Set();
 results.forEach(r=>{let c=classifiers.find(x=>x.id===r.classifier_id),i=c?classifiers.indexOf(c):-1;if(c)md(c,i).competencies.forEach(x=>trained.add(x))});
 grid.innerHTML="";
 all.forEach(comp=>{let n=classifiers.filter((c,i)=>{let m=md(c,i);return m.competencies.includes(comp)&&results.some(r=>r.classifier_id===c.id)}).length;let total=classifiers.filter((c,i)=>md(c,i).competencies.includes(comp)).length;let pct=total?Math.round(n/total*100):0;grid.innerHTML+=`<div class="competency-row"><div class="competency-head"><span>${esc(comp)}</span><span class="competency-count">${n} / ${total} classifiers</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div></div>`});
@@ -597,29 +644,32 @@ function renderCompetencyTrainingChart(){
     });
 }
 
+function createOrgFilter(value,label){let b=document.createElement("button");b.className="filter-btn";b.textContent=label;b.dataset.value=value;b.classList.toggle("active",selectedOrganization===value);b.onclick=()=>{selectedOrganization=value;updateFilterButtons();renderClassifiers()};organizationFilters.appendChild(b)}
 function createFilter(container,value,label,type){
 let b=document.createElement("button");b.className="filter-btn";b.textContent=label;b.dataset.value=value;b.classList.toggle("active",type==="c"?selectedCompetency===value:selectedFeature===value);
 b.onclick=()=>{if(type==="c")selectedCompetency=value;else selectedFeature=value;updateFilterButtons();renderClassifiers()};container.appendChild(b);
 }
 function populateFilters(){
-competencyFilters.innerHTML="";featureFilters.innerHTML="";
-let cs=[...new Set(Object.values(meta).flatMap(x=>x[2]))].sort(),fs=[...new Set(Object.values(meta).flatMap(x=>x[3]))].sort();
+organizationFilters.innerHTML="";competencyFilters.innerHTML="";featureFilters.innerHTML="";["ALL","IPSC","USPSA"].forEach(x=>createOrgFilter(x,x==="ALL"?"Todos":x));
+let cs=[...new Set(classifiers.flatMap((c,i)=>md(c,i).competencies))].sort(),fs=[...new Set(classifiers.flatMap((c,i)=>md(c,i).features))].sort();
 createFilter(competencyFilters,"ALL","Todas","c");cs.forEach(x=>createFilter(competencyFilters,x,x,"c"));
 createFilter(featureFilters,"ALL","Todas","f");fs.forEach(x=>createFilter(featureFilters,x,x,"f"));updateFilterButtons();
 }
 function updateFilterButtons(){
+document.querySelectorAll("#organizationFilters .filter-btn").forEach(b=>b.classList.toggle("active",b.dataset.value===selectedOrganization));
 document.querySelectorAll("#competencyFilters .filter-btn").forEach(b=>b.classList.toggle("active",b.dataset.value===selectedCompetency));
 document.querySelectorAll("#featureFilters .filter-btn").forEach(b=>b.classList.toggle("active",b.dataset.value===selectedFeature));
 }
-clearFilters.onclick=()=>{selectedCompetency="ALL";selectedFeature="ALL";updateFilterButtons();renderClassifiers()}
+clearFilters.onclick=()=>{selectedOrganization="ALL";selectedCompetency="ALL";selectedFeature="ALL";classifierSearchText="";classifierSearch.value="";updateFilterButtons();renderClassifiers()}
+classifierSearch.oninput=()=>{classifierSearchText=classifierSearch.value;renderClassifiers()};
 function renderClassifiers(){
-classifiersGrid.innerHTML="";let list=classifiers.filter((c,i)=>{let m=md(c,i);return(selectedCompetency==="ALL"||m.competencies.includes(selectedCompetency))&&(selectedFeature==="ALL"||m.features.includes(selectedFeature))});
-classifierCount.textContent=`${list.length} de ${classifiers.length} classifiers`;filterStatus.textContent=(selectedCompetency==="ALL"&&selectedFeature==="ALL")?"Exibindo todos os classifiers.":`Filtros ativos: ${selectedCompetency!=="ALL"?selectedCompetency:""}${selectedFeature!=="ALL"?" · "+selectedFeature:""}`;
+classifiersGrid.innerHTML="";let q=classifierSearchText.trim().toLowerCase();let list=classifiers.filter((c,i)=>{let m=md(c,i),hay=[m.organization,m.code,m.name,m.type,m.scoring].filter(Boolean).join(" ").toLowerCase();return(selectedOrganization==="ALL"||m.organization===selectedOrganization)&&(selectedCompetency==="ALL"||m.competencies.includes(selectedCompetency))&&(selectedFeature==="ALL"||m.features.includes(selectedFeature))&&(!q||hay.includes(q))});
+classifierCount.textContent=`${list.length} de ${classifiers.length} classifiers`;filterStatus.textContent=(selectedOrganization==="ALL"&&selectedCompetency==="ALL"&&selectedFeature==="ALL"&&!q)?"Exibindo todos os classifiers.":`Filtros ativos: ${selectedOrganization!=="ALL"?selectedOrganization:""}${selectedCompetency!=="ALL"?" · "+selectedCompetency:""}${selectedFeature!=="ALL"?" · "+selectedFeature:""}${q?" · Busca: "+q:""}`;
 if(!list.length){classifiersGrid.innerHTML='<div class="no-data">Nenhum classifier encontrado.</div>';return}
 list.forEach(c=>{let i=classifiers.indexOf(c),m=md(c,i),best=bestFor(c.id),card=document.createElement("div");card.className="classifier";
 let tags=m.competencies.map(x=>`<span class="tag">${esc(x)}</span>`).join(""),features=m.features.map(x=>`<span class="tag">${esc(x)}</span>`).join("");
 let db=c.diagram_url||c.diagramUrl||"",doc=c.procedure_url||c.procedureUrl||c.document_url||"";
-card.innerHTML=`<div class="classifier-number">${esc(m.code)}</div><h3>${esc(m.code)}</h3><div class="classifier-meta">${esc(m.type)} · ${m.rounds} tiros</div><div class="tag-section"><div class="tag-title">Competências</div><div class="tags">${tags}</div></div><div class="tag-section"><div class="tag-title">Características</div><div class="tags">${features||'<span class="tag">Nenhuma</span>'}</div></div><div class="best-hf"><span class="best-hf-label">Melhor HF</span><span class="best-hf-value">${best===null?"-":best.toFixed(3)}</span></div>${db||doc?`<div class="official-links">${db?`<a class="official-btn" href="${esc(db)}" target="_blank" rel="noopener">DIAGRAMA</a>`:""}${doc?`<a class="official-btn" href="${esc(doc)}" target="_blank" rel="noopener">DOCUMENTO OFICIAL</a>`:""}</div>`:""}<button class="btn btn-red register-result">REGISTRAR RESULTADO</button>`;
+card.innerHTML=`<div class="classifier-number">${esc(m.code)}</div><div class="v2-org-badge ${m.organization==="USPSA"?"v2-org-uspsa":""} ${m.status==="TRIAL"?"v2-trial":""}">${esc(m.organization)} · ${esc(m.status)}</div><h3>${esc(m.code)}</h3><div class="v2-card-name">${esc(m.name||m.code)}</div><div class="classifier-meta">${esc(m.type)} · ${m.rounds} tiros · ${esc(m.scoring||"")}</div><div class="tag-section"><div class="tag-title">Competências</div><div class="tags">${tags}</div></div><div class="tag-section"><div class="tag-title">Características</div><div class="tags">${features||'<span class="tag">Nenhuma</span>'}</div></div><div class="best-hf"><span class="best-hf-label">Melhor HF</span><span class="best-hf-value">${best===null?"-":best.toFixed(3)}</span></div>${db||doc?`<div class="official-links">${m.organization==="USPSA"?`<a class="official-btn" href="${esc(doc||db)}" target="_blank" rel="noopener">DOCUMENTO OFICIAL</a>`:`<a class="official-btn" href="${esc(db)}" target="_blank" rel="noopener">DIAGRAMA</a>${doc?`<a class="official-btn" href="${esc(doc)}" target="_blank" rel="noopener">DOCUMENTO OFICIAL</a>`:""}`}</div>`:""}<button class="btn btn-red register-result">REGISTRAR RESULTADO</button>`;
 card.querySelector(".register-result").onclick=()=>openResultModal(c.id);classifiersGrid.appendChild(card);
 });
 }
@@ -644,8 +694,8 @@ let comp=document.getElementById("historyCompetency");
 let feat=document.getElementById("historyFeature");
 if(!comp||!feat)return;
 
-let comps=[...new Set(Object.values(meta).flatMap(x=>x[2]))].sort();
-let feats=[...new Set(Object.values(meta).flatMap(x=>x[3]))].sort();
+let comps=[...new Set(classifiers.flatMap((c,i)=>md(c,i).competencies))].sort();
+let feats=[...new Set(classifiers.flatMap((c,i)=>md(c,i).features))].sort();
 
 comp.innerHTML='<option value="">Todas as competências</option>';
 feat.innerHTML='<option value="">Todas as características</option>';
@@ -835,14 +885,20 @@ function editResult(id){
 let r=results.find(x=>x.id===id);if(!r)return;editingResultId=id;resultModalTitle.textContent="Editar resultado";saveResultBtn.textContent="SALVAR ALTERAÇÕES";classifierSelect.value=r.classifier_id;resultDate.value=r.date;hitFactor.value=r.hit_factor;observations.value=r.observations||"";resultMessage.textContent="";resultModal.style.display="flex";
 }
 resultForm.onsubmit=async e=>{
-e.preventDefault();let payload={classifier_id:classifierSelect.value,date:resultDate.value,hit_factor:Number(hitFactor.value),observations:observations.value.trim()||null};
-let response=editingResultId?await supabaseClient.from("training_results").update(payload).eq("id",editingResultId).eq("user_id",currentUser.id):await supabaseClient.from("training_results").insert({...payload,user_id:currentUser.id});
-if(response.error){resultMessage.className="message error";resultMessage.textContent="Erro ao salvar: "+response.error.message;return}
-resultMessage.className="message success";resultMessage.textContent=editingResultId?"Alterações salvas com sucesso!":"Resultado salvo com sucesso!";await loadResults();setTimeout(()=>{resultModal.style.display="none";editingResultId=null},500)
+ e.preventDefault();
+ let payload={classifier_id:classifierSelect.value,date:resultDate.value,hit_factor:Number(hitFactor.value),observations:observations.value.trim()||null};
+ let response=editingResultId
+  ?await supabaseClient.from("training_results").update(payload).eq("id",editingResultId).eq("user_id",currentUser.id)
+  :await supabaseClient.from("training_results").insert({...payload,user_id:currentUser.id});
+ if(response.error){resultMessage.className="message error";resultMessage.textContent="Erro ao salvar: "+response.error.message;return}
+ resultMessage.className="message success";resultMessage.textContent=editingResultId?"Alterações salvas com sucesso!":"Resultado salvo com sucesso!";await loadResults();setTimeout(()=>{resultModal.style.display="none";editingResultId=null},500)
 }
 function openConfirm(title,text,fn){confirmTitle.textContent=title;confirmText.textContent=text;confirmAction=fn;confirmModal.style.display="flex"}
 confirmCancel.onclick=()=>{confirmAction=null;confirmModal.style.display="none"};confirmOk.onclick=async()=>{let f=confirmAction;confirmAction=null;confirmModal.style.display="none";if(f)await f()}
-function confirmDelete(id){openConfirm("Excluir resultado?","Tem certeza que deseja excluir este resultado? Esta ação não pode ser desfeita.",async()=>{let {error}=await supabaseClient.from("training_results").delete().eq("id",id).eq("user_id",currentUser.id);if(error){alert("Erro ao excluir: "+error.message);return}await loadResults();applyHistoryFilters()})}
+function confirmDelete(id){openConfirm("Excluir resultado?","Tem certeza que deseja excluir este resultado? Esta ação não pode ser desfeita.",async()=>{
+ let {error}=await supabaseClient.from("training_results").delete().eq("id",id).eq("user_id",currentUser.id);
+ if(error){alert("Erro ao excluir: "+error.message);return}
+ await loadResults();applyHistoryFilters()})}
 clearAllHistory.onclick=()=>{if(!results.length){alert("Você não possui resultados para excluir.");return}openConfirm("Limpar todo o histórico?","ATENÇÃO: todos os seus resultados serão excluídos permanentemente. Os resultados de outros usuários não serão afetados. Esta ação não pode ser desfeita.",async()=>{let {error}=await supabaseClient.from("training_results").delete().eq("user_id",currentUser.id);if(error){alert("Erro ao limpar histórico: "+error.message);return}await loadResults();clearHistoryFiltersNow()})}
 
 [historyStartDate,historyEndDate,historyClassifier,historyCompetency,historyFeature].forEach(el=>{
