@@ -444,7 +444,7 @@ Registre pelo menos um resultado para visualizar a evolução do Hit Factor.
 <div class="filtered-summary" id="historySummary">Exibindo todos os resultados.</div>
 <div class="danger-zone"><div class="danger-zone-text">Excluir todos os seus resultados registrados.</div><button class="btn btn-danger" id="clearAllHistory">LIMPAR TODO O HISTÓRICO</button></div>
 </div>
-<div class="table-wrap"><table><thead><tr><th>Data</th><th>Classifier</th><th>Divisão</th><th>Hit Factor</th><th>HHF / % HHF</th><th>Observações</th><th>Ações</th></tr></thead><tbody id="historyTable"></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Data</th><th>Classifier</th><th>Divisão</th><th>Hit Factor</th><th>HHF / % HHF</th><th>Classificação</th><th>Observações</th><th>Ações</th></tr></thead><tbody id="historyTable"></tbody></table></div>
 </section></section>
 </main>
 </div>
@@ -653,11 +653,35 @@ if(pending.length){
 localStorage.removeItem(localKey);
 }
 
+function resultCreatedTime(r){
+    const candidates=[r.created_at,r.inserted_at,r.createdAt,r.created];
+    for(const value of candidates){
+        if(value===null||value===undefined||value==="")continue;
+        const t=Date.parse(String(value));
+        if(Number.isFinite(t))return t;
+    }
+    return null;
+}
+
+function compareResultsNewestFirst(a,b){
+    const dateCmp=String(b.date||"").localeCompare(String(a.date||""));
+    if(dateCmp)return dateCmp;
+    const ta=resultCreatedTime(a),tb=resultCreatedTime(b);
+    if(ta!==null&&tb!==null&&ta!==tb)return tb-ta;
+    const ia=Number(a.id),ib=Number(b.id);
+    if(Number.isFinite(ia)&&Number.isFinite(ib)&&ia!==ib)return ib-ia;
+    return 0;
+}
+
+function compareResultsOldestFirst(a,b){
+    return -compareResultsNewestFirst(a,b);
+}
+
 async function loadResults(){
 await migrateLegacyUspsaResults();
 const {data,error}=await supabaseClient.from("training_results").select("*").eq("user_id",currentUser.id).order("date",{ascending:false});
 if(error){alert("Erro ao carregar resultados: "+error.message);return}
-results=data||[];filteredHistory=[...results];populateHistoryMetaFilters();updateDashboard();renderResults();applyHistoryFilters(false);renderClassifiers();
+results=(data||[]).sort(compareResultsNewestFirst);filteredHistory=[...results];populateHistoryMetaFilters();updateDashboard();renderResults();applyHistoryFilters(false);renderClassifiers();
 }
 function bestFor(id){let a=results.filter(r=>r.classifier_id===id).map(r=>Number(r.hit_factor)).filter(Number.isFinite);return a.length?Math.max(...a):null}
 function updateDashboard(){
@@ -719,7 +743,7 @@ function updateUSPSADivisionPerformance(){
     const cutoffDate=cutoff.toISOString().slice(0,10);
 
     const rows=Object.entries(stats).map(([division,x])=>{
-        const items=x.items.sort((a,b)=>String(a.r.date).localeCompare(String(b.r.date)));
+        const items=x.items.sort((a,b)=>compareResultsOldestFirst(a.r,b.r));
         const values=items.map(x=>x.pct);
         const best=Math.max(...values);
         const recent=items.filter(x=>String(x.r.date)>=cutoffDate);
@@ -978,7 +1002,7 @@ function populateHistoryClassifier(){
 historyClassifier.innerHTML='<option value="">Todos os classifiers</option>';[...classifiers].sort((a,b)=>{let ca=md(a,classifiers.indexOf(a)).code||"",cb=md(b,classifiers.indexOf(b)).code||"";return ca.localeCompare(cb,"pt-BR",{numeric:true,sensitivity:"base"})}).forEach(c=>{let o=document.createElement("option");o.value=c.id;o.textContent=md(c,classifiers.indexOf(c)).code;historyClassifier.appendChild(o)})
 }
 function renderResults(){
-resultsTable.innerHTML="";results.slice(0,10).forEach(r=>{let c=classifiers.find(x=>x.id===r.classifier_id),i=c?classifiers.indexOf(c):-1;resultsTable.innerHTML+=`<tr><td>${dateBR(r.date)}</td><td>${esc(md(c||{},i).code||"Classifier")}</td><td>${esc(r.division||"-")}</td><td><strong>${Number(r.hit_factor).toFixed(3)}</strong></td><td>${esc(formatHHF(r))}</td><td>${esc(r.observations||"-")}</td></tr>`});
+resultsTable.innerHTML="";results.slice(0,10).forEach(r=>{let c=classifiers.find(x=>x.id===r.classifier_id),i=c?classifiers.indexOf(c):-1;resultsTable.innerHTML+=`<tr><td>${dateBR(r.date)}</td><td>${esc(md(c||{},i).code||"Classifier")}</td><td>${esc(r.division||"-")}</td><td><strong>${Number(r.hit_factor).toFixed(3)}</strong></td><td>${esc(formatHHF(r))}</td><td>${classificationBadge(hhfPercent(r))}</td><td>${esc(r.observations||"-")}</td></tr>`});
 if(!results.length)resultsTable.innerHTML='<tr><td colspan="7">Nenhum resultado registrado ainda.</td></tr>';
 }
 function classifierMetaForResult(r){
@@ -1156,7 +1180,7 @@ function updateHistoryUSPSAProgress(){
 const summary=document.getElementById("historyProgressSummary"),firstEl=document.getElementById("historyFirst3HHF"),lastEl=document.getElementById("historyLast3HHF"),evolutionEl=document.getElementById("historyHHFEvolution"),countEl=document.getElementById("historyHHFComparable"),canvas=document.getElementById("historyUSPSAProgressChart"),empty=document.getElementById("historyProgressEmpty");
 if(!canvas)return;
 const division=historyDivision.value;
-let valid=filteredHistory.map(r=>{const pct=hhfPercent(r);return pct===null?null:{r,pct};}).filter(Boolean).filter(x=>String(x.r.division||"")===String(division)).sort((a,b)=>String(a.r.date).localeCompare(String(b.r.date)));
+let valid=filteredHistory.map(r=>{const pct=hhfPercent(r);return pct===null?null:{r,pct};}).filter(Boolean).filter(x=>String(x.r.division||"")===String(division)).sort((a,b)=>compareResultsOldestFirst(a.r,b.r));
 if(historyProgressChart){historyProgressChart.destroy();historyProgressChart=null;}
 countEl.textContent=String(valid.length);
 if(!division){firstEl.textContent="-";lastEl.textContent="-";evolutionEl.textContent="-";summary.textContent="Selecione uma divisão USPSA para analisar a evolução.";canvas.style.display="none";empty.style.display="block";return;}
