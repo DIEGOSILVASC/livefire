@@ -670,9 +670,6 @@ function compareResultsNewestFirst(a,b){
     if(ta!==null&&tb!==null&&ta!==tb)return tb-ta;
     const ia=Number(a.id),ib=Number(b.id);
     if(Number.isFinite(ia)&&Number.isFinite(ib)&&ia!==ib)return ib-ia;
-    // Fallback for same-date rows when no usable timestamp/sequence field exists.
-    const oa=Number(a.__loadOrder),ob=Number(b.__loadOrder);
-    if(Number.isFinite(oa)&&Number.isFinite(ob)&&oa!==ob)return oa-ob;
     return 0;
 }
 
@@ -684,7 +681,7 @@ async function loadResults(){
 await migrateLegacyUspsaResults();
 const {data,error}=await supabaseClient.from("training_results").select("*").eq("user_id",currentUser.id).order("date",{ascending:false});
 if(error){alert("Erro ao carregar resultados: "+error.message);return}
-results=(data||[]).map((r,i)=>({...r,__loadOrder:i})).sort(compareResultsNewestFirst);filteredHistory=[...results];populateHistoryMetaFilters();updateDashboard();renderResults();applyHistoryFilters(false);renderClassifiers();
+results=(data||[]).sort(compareResultsNewestFirst);filteredHistory=[...results];populateHistoryMetaFilters();updateDashboard();renderResults();applyHistoryFilters(false);renderClassifiers();
 }
 function bestFor(id){let a=results.filter(r=>r.classifier_id===id).map(r=>Number(r.hit_factor)).filter(Number.isFinite);return a.length?Math.max(...a):null}
 function updateDashboard(){
@@ -828,7 +825,7 @@ function updateUSPSAPerformance(){
     canvas.style.display="block";
     empty.style.display="none";
 
-    const data=[...valid].sort((a,b)=>compareResultsOldestFirst(a.r,b.r));
+    const data=[...valid].sort((a,b)=>String(a.r.date).localeCompare(String(b.r.date)));
     const labels=data.map(x=>dateBR(x.r.date));
     const chartValues=data.map(x=>x.pct);
     const codes=data.map(x=>classifierMetaForResult(x.r).meta.code||"Classifier");
@@ -1096,9 +1093,17 @@ let trendNote=document.getElementById("chartTrendNote");
 
 if(!canvas)return;
 
-let data=[...filteredHistory]
-.filter(r=>r.date&&Number.isFinite(Number(r.hit_factor)))
-.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+let data=filteredHistory
+.map((r,i)=>({r,i}))
+.filter(x=>x.r.date&&Number.isFinite(Number(x.r.hit_factor)))
+.sort((a,b)=>{
+    const dateCmp=String(a.r.date).localeCompare(String(b.r.date));
+    if(dateCmp)return dateCmp;
+    const cmp=compareResultsOldestFirst(a.r,b.r);
+    if(cmp)return cmp;
+    return b.i-a.i;
+})
+.map(x=>x.r);
 
 if(hfChart){hfChart.destroy();hfChart=null;}
 
@@ -1183,7 +1188,14 @@ function updateHistoryUSPSAProgress(){
 const summary=document.getElementById("historyProgressSummary"),firstEl=document.getElementById("historyFirst3HHF"),lastEl=document.getElementById("historyLast3HHF"),evolutionEl=document.getElementById("historyHHFEvolution"),countEl=document.getElementById("historyHHFComparable"),canvas=document.getElementById("historyUSPSAProgressChart"),empty=document.getElementById("historyProgressEmpty");
 if(!canvas)return;
 const division=historyDivision.value;
-let valid=filteredHistory.map(r=>{const pct=hhfPercent(r);return pct===null?null:{r,pct};}).filter(Boolean).filter(x=>String(x.r.division||"")===String(division)).sort((a,b)=>compareResultsOldestFirst(a.r,b.r));
+let valid=filteredHistory
+    .map((r,i)=>{const pct=hhfPercent(r);return pct===null?null:{r,pct,i};})
+    .filter(Boolean)
+    .filter(x=>String(x.r.division||"")===String(division))
+    .sort((a,b)=>{
+        const cmp=compareResultsOldestFirst(a.r,b.r);
+        return cmp || (b.i-a.i);
+    });
 if(historyProgressChart){historyProgressChart.destroy();historyProgressChart=null;}
 countEl.textContent=String(valid.length);
 if(!division){firstEl.textContent="-";lastEl.textContent="-";evolutionEl.textContent="-";summary.textContent="Selecione uma divisão USPSA para analisar a evolução.";canvas.style.display="none";empty.style.display="block";return;}
