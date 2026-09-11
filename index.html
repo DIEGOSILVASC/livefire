@@ -670,6 +670,9 @@ function compareResultsNewestFirst(a,b){
     if(ta!==null&&tb!==null&&ta!==tb)return tb-ta;
     const ia=Number(a.id),ib=Number(b.id);
     if(Number.isFinite(ia)&&Number.isFinite(ib)&&ia!==ib)return ib-ia;
+    // Fallback for same-date rows when no usable timestamp/sequence field exists.
+    const oa=Number(a.__loadOrder),ob=Number(b.__loadOrder);
+    if(Number.isFinite(oa)&&Number.isFinite(ob)&&oa!==ob)return oa-ob;
     return 0;
 }
 
@@ -681,7 +684,7 @@ async function loadResults(){
 await migrateLegacyUspsaResults();
 const {data,error}=await supabaseClient.from("training_results").select("*").eq("user_id",currentUser.id).order("date",{ascending:false});
 if(error){alert("Erro ao carregar resultados: "+error.message);return}
-results=(data||[]).sort(compareResultsNewestFirst);filteredHistory=[...results];populateHistoryMetaFilters();updateDashboard();renderResults();applyHistoryFilters(false);renderClassifiers();
+results=(data||[]).map((r,i)=>({...r,__loadOrder:i})).sort(compareResultsNewestFirst);filteredHistory=[...results];populateHistoryMetaFilters();updateDashboard();renderResults();applyHistoryFilters(false);renderClassifiers();
 }
 function bestFor(id){let a=results.filter(r=>r.classifier_id===id).map(r=>Number(r.hit_factor)).filter(Number.isFinite);return a.length?Math.max(...a):null}
 function updateDashboard(){
@@ -825,7 +828,7 @@ function updateUSPSAPerformance(){
     canvas.style.display="block";
     empty.style.display="none";
 
-    const data=[...valid].sort((a,b)=>String(a.r.date).localeCompare(String(b.r.date)));
+    const data=[...valid].sort((a,b)=>compareResultsOldestFirst(a.r,b.r));
     const labels=data.map(x=>dateBR(x.r.date));
     const chartValues=data.map(x=>x.pct);
     const codes=data.map(x=>classifierMetaForResult(x.r).meta.code||"Classifier");
