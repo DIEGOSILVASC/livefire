@@ -1095,12 +1095,7 @@ if(!canvas)return;
 
 let data=[...filteredHistory]
 .filter(r=>r.date&&Number.isFinite(Number(r.hit_factor)))
-.map((r,i)=>({r,i}))
-.sort((a,b)=>{
-    const dateCmp=String(a.r.date||"").localeCompare(String(b.r.date||""));
-    return dateCmp || (a.i-b.i);
-})
-.map(x=>x.r);
+.sort(compareResultsOldestFirst);
 
 if(hfChart){hfChart.destroy();hfChart=null;}
 
