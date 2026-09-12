@@ -1093,17 +1093,9 @@ let trendNote=document.getElementById("chartTrendNote");
 
 if(!canvas)return;
 
-let data=filteredHistory
-.map((r,i)=>({r,i}))
-.filter(x=>x.r.date&&Number.isFinite(Number(x.r.hit_factor)))
-.sort((a,b)=>{
-    const dateCmp=String(a.r.date).localeCompare(String(b.r.date));
-    if(dateCmp)return dateCmp;
-    const cmp=compareResultsOldestFirst(a.r,b.r);
-    if(cmp)return cmp;
-    return b.i-a.i;
-})
-.map(x=>x.r);
+let data=[...filteredHistory]
+.filter(r=>r.date&&Number.isFinite(Number(r.hit_factor)))
+.reverse();
 
 if(hfChart){hfChart.destroy();hfChart=null;}
 
