@@ -825,7 +825,7 @@ function updateUSPSAPerformance(){
     canvas.style.display="block";
     empty.style.display="none";
 
-    const data=[...valid].sort((a,b)=>String(a.r.date).localeCompare(String(b.r.date)));
+    const data=[...valid].sort((a,b)=>compareResultsOldestFirst(a.r,b.r));
     const labels=data.map(x=>dateBR(x.r.date));
     const chartValues=data.map(x=>x.pct);
     const codes=data.map(x=>classifierMetaForResult(x.r).meta.code||"Classifier");
